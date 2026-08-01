@@ -200,6 +200,26 @@
     font-weight:800;
     font-size:24px;
   }
+  .live-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-top:8px;
+    font-size:11px;
+    color:var(--muted);
+    letter-spacing:0.05em;
+  }
+  .live-badge .dot{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:#e05a4a;
+    animation:pulse 1.6s infinite;
+  }
+  @keyframes pulse{
+    0%{ opacity:1; transform:scale(1); }
+    50%{ opacity:0.4; transform:scale(1.4); }
+    100%{ opacity:1; transform:scale(1); }
+  }
   .live-count{
     text-align:center;
     margin-bottom:18px;
@@ -293,6 +313,86 @@
     margin-top:12px;
   }
   .admin-panel.show{ display:block; }
+
+  .suggest-note{
+    font-size:11.5px;
+    color:var(--muted);
+    margin-top:6px;
+    margin-bottom:0;
+  }
+
+  .progress-wrap{
+    max-width:400px;
+    margin:0 auto 30px;
+  }
+  .progress-label{
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+  .progress-label b{ color:var(--paper); }
+  .progress-track{
+    width:100%;
+    height:10px;
+    border-radius:6px;
+    background:#181f29;
+    overflow:hidden;
+    border:1px solid rgba(141,151,164,0.25);
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--red), #e05a4a);
+    border-radius:6px;
+    transition:width 0.6s ease;
+    width:0%;
+  }
+
+  .faq-item{
+    background:#181f29;
+    border-radius:10px;
+    margin-bottom:8px;
+    overflow:hidden;
+  }
+  .faq-q{
+    padding:14px 16px;
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--paper);
+    cursor:pointer;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .faq-q .arrow{
+    color:var(--red);
+    transition:transform 0.2s;
+    font-size:12px;
+  }
+  .faq-item.open .faq-q .arrow{ transform:rotate(180deg); }
+  .faq-a{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.25s ease;
+    font-size:13.5px;
+    color:var(--muted);
+    line-height:1.75;
+  }
+  .faq-item.open .faq-a{ max-height:300px; }
+  .faq-a-inner{ padding:0 16px 16px; }
+
+  .div-breakdown{
+    margin-top:14px;
+    font-size:13px;
+  }
+  .div-breakdown div{
+    display:flex;
+    justify-content:space-between;
+    padding:6px 0;
+    border-bottom:1px solid rgba(141,151,164,0.15);
+    color:var(--paper);
+  }
 </style>
 </head>
 <body>
@@ -309,13 +409,35 @@
 
   <p class="lead">अगर तुम भी मानते हो कि ठेका प्रथा खत्म होनी चाहिए और मज़दूरी-सुविधाएं समय पर बढ़नी चाहिए, तो अपना नाम दर्ज करो — यह सूची आगे की मांग रखने के लिए इस्तेमाल होगी।</p>
 
+  <div class="wall-header">
+    <h2>अक्सर पूछे जाने वाले सवाल</h2>
+  </div>
+  <div id="faqList">
+    <div class="faq-item">
+      <div class="faq-q"><span>क्या इससे मेरी नौकरी जाने का ख़तरा है?</span><span class="arrow">▾</span></div>
+      <div class="faq-a"><div class="faq-a-inner">तुम्हारा नाम या फ़ोन नंबर कहीं भी सार्वजनिक नहीं दिखता। सिर्फ़ अभियान चलाने वाला ही यह डेटा देख सकता है, वो भी एक निजी Google Sheet में।</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>मेरा डेटा कहाँ जाता है, कौन देख सकता है?</span><span class="arrow">▾</span></div>
+      <div class="faq-a"><div class="faq-a-inner">हर एंट्री सीधे एक निजी Google Sheet में सेव होती है। यह पेज पर कहीं भी दिखाई नहीं देती, न ही किसी और विज़िटर को दिखती है।</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>आगे क्या होगा, यह डेटा किस काम आएगा?</span><span class="arrow">▾</span></div>
+      <div class="faq-a"><div class="faq-a-inner">जैसे-जैसे सदस्य जुड़ेंगे, इकट्ठा हुई मांगों को एक औपचारिक चार्टर में डालकर आगे रखा जाएगा। "अभियान की अपडेट" सेक्शन में समय-समय पर अगला कदम बताया जाएगा।</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>क्या यह करना कानूनी रूप से सुरक्षित है?</span><span class="arrow">▾</span></div>
+      <div class="faq-a"><div class="faq-a-inner">अपनी बात रखना और साथ मिलकर मांग करना हर कर्मचारी का अधिकार है। फिर भी, सावधानी और गोपनीयता बनाए रखना ही सबसे समझदारी वाला रास्ता है — इसीलिए यह पूरा सिस्टम पहचान छुपाकर बनाया गया है।</div></div>
+    </div>
+  </div>
+
   <div class="card">
     <div class="form-body" id="formBody">
       <label for="name">नाम *</label>
       <input type="text" id="name" placeholder="अपना पूरा नाम लिखो">
 
       <label for="phone">फ़ोन नंबर (व्हाट्सएप ग्रुप के लिए ज़रूरी) *</label>
-      <input type="tel" id="phone" placeholder="10 अंकों का नंबर">
+      <input type="tel" id="phone" placeholder="10 अंकों का नंबर" maxlength="10" inputmode="numeric">
       <div class="hint">इसी नंबर से तुम्हें व्हाट्सएप ग्रुप में जोड़ा जाएगा।</div>
 
       <label for="division">डिवीज़न *</label>
@@ -360,11 +482,20 @@
 
   <div class="wall-header">
     <h2>हमारा समुदाय</h2>
+    <div class="live-badge"><span class="dot"></span> लाइव</div>
   </div>
 
   <div class="live-count">
     <div class="n" id="memberCount">—</div>
     <div class="l">सदस्य जुड़ चुके हैं</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>लक्ष्य की ओर</span>
+      <span><b id="progressCount">0</b> / <span id="progressTarget">500</span></span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
   </div>
 
   <div class="card">
@@ -381,6 +512,18 @@
     <div class="wall-empty">लोड हो रहा है...</div>
   </div>
 
+  <div class="wall-header">
+    <h2>निजी सुझाव</h2>
+  </div>
+  <div class="card">
+    <p class="suggest-note">यह सिर्फ़ अभियान चलाने वाले तक पहुँचेगा — बाकी किसी को नहीं दिखेगा।</p>
+    <label for="suggestName">नाम (वैकल्पिक)</label>
+    <input type="text" id="suggestName" placeholder="चाहो तो नाम छोड़ सकते हो">
+    <label for="suggestText">अपना सुझाव लिखो</label>
+    <textarea id="suggestText" placeholder="कोई सुझाव, शिकायत या जानकारी जो सिर्फ़ आयोजक को बतानी हो..."></textarea>
+    <button id="suggestBtn">सुझाव भेजो</button>
+  </div>
+
   <div class="admin-toggle">
     <span id="adminToggle">आयोजक लॉगिन</span>
     <div class="admin-panel" id="adminPanel">
@@ -388,8 +531,10 @@
         <label for="adminKey">पासकोड</label>
         <input type="text" id="adminKey" placeholder="secret passcode">
         <label for="updateText">आज की रणनीति / अपडेट</label>
-        <textarea id="updateText" placeholder="आगे की रणनीति यहाँ लिखो..."></textarea>
+        <textarea id="updateText" placeholder="आगे की रणनीति यहाँ लिखो... (Meet/Zoom लिंक भी डाल सकते हो)"></textarea>
         <button id="updateBtn">अपडेट पोस्ट करो</button>
+        <button id="divisionBtn" style="margin-top:10px; background:#181f29; border:1px solid rgba(141,151,164,0.35);">डिवीज़न के अनुसार देखो</button>
+        <div class="div-breakdown" id="divisionResult"></div>
       </div>
     </div>
   </div>
@@ -414,6 +559,18 @@
     const division = divisionInput.value.trim();
     if(!name){ nameInput.focus(); nameInput.style.borderColor = '#c8392a'; return; }
     if(!phone){ phoneInput.focus(); phoneInput.style.borderColor = '#c8392a'; return; }
+    if(!/^[6-9]\d{9}$/.test(phone)){
+      phoneInput.focus();
+      phoneInput.style.borderColor = '#c8392a';
+      alert('सही 10 अंकों का मोबाइल नंबर डालो (जो 6, 7, 8 या 9 से शुरू हो)।');
+      return;
+    }
+    if(!/^[6-9]\d{9}$/.test(phone)){
+      phoneInput.focus();
+      phoneInput.style.borderColor = '#c8392a';
+      alert('कृपया सही 10 अंकों का फ़ोन नंबर डालो (जो 6, 7, 8 या 9 से शुरू हो)।');
+      return;
+    }
     if(!division){ divisionInput.focus(); divisionInput.style.borderColor = '#c8392a'; return; }
     if(!consentInput.checked){ consentInput.focus(); return; }
 
@@ -453,12 +610,20 @@
   const wallBtn = document.getElementById('wallBtn');
   const wallList = document.getElementById('wallList');
   const memberCount = document.getElementById('memberCount');
+  const progressCount = document.getElementById('progressCount');
+  const progressTarget = document.getElementById('progressTarget');
+  const progressFill = document.getElementById('progressFill');
 
   async function loadWall(){
     try{
       const res = await fetch(SCRIPT_URL, { method: 'GET' });
       const data = await res.json();
       memberCount.textContent = data.count || 0;
+
+      const target = parseInt(progressTarget.textContent) || 500;
+      const current = data.count || 0;
+      progressCount.textContent = current;
+      progressFill.style.width = Math.min((current / target) * 100, 100) + '%';
 
       if(!data.messages || data.messages.length === 0){
         wallList.innerHTML = '<div class="wall-empty">अभी तक कोई बात नहीं लिखी गई — पहली बात तुम रख सकते हो।</div>';
@@ -503,8 +668,44 @@
     }
   });
 
+  // --- Private Suggestions (organizer-only visibility) ---
+  const suggestName = document.getElementById('suggestName');
+  const suggestText = document.getElementById('suggestText');
+  const suggestBtn = document.getElementById('suggestBtn');
+
+  suggestBtn.addEventListener('click', async () => {
+    const text = suggestText.value.trim();
+    if(!text){ suggestText.focus(); return; }
+
+    suggestBtn.disabled = true;
+    suggestBtn.textContent = 'भेजा जा रहा है...';
+
+    try{
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ type: 'suggestion', name: suggestName.value.trim(), suggestion: text })
+      });
+      suggestText.value = '';
+      suggestName.value = '';
+      suggestBtn.textContent = 'भेज दिया ✓';
+      setTimeout(() => { suggestBtn.textContent = 'सुझाव भेजो'; }, 2000);
+    }catch(e){
+      alert('कुछ गड़बड़ हुई, दोबारा कोशिश करो।');
+      suggestBtn.textContent = 'सुझाव भेजो';
+    }finally{
+      suggestBtn.disabled = false;
+    }
+  });
+
   // --- Updates (read for everyone) ---
   const updatesList = document.getElementById('updatesList');
+
+  function linkify(text){
+    var escaped = text.replace(/</g,'&lt;');
+    return escaped.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener" style="color:#c8392a; text-decoration:underline;">$1</a>');
+  }
 
   function renderUpdates(updates){
     if(!updates || updates.length === 0){
@@ -514,7 +715,7 @@
     updatesList.innerHTML = updates.map(u => `
       <div class="update-item">
         <div class="time">${(u.time || '').replace(/</g,'&lt;')}</div>
-        <div class="text">${(u.text || '').replace(/</g,'&lt;')}</div>
+        <div class="text">${linkify(u.text || '')}</div>
       </div>
     `).join('');
   }
@@ -555,6 +756,43 @@
   });
 
   loadWall();
+  setInterval(loadWall, 15000);
+
+  // --- FAQ accordion ---
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q').addEventListener('click', () => {
+      item.classList.toggle('open');
+    });
+  });
+
+  // --- Division breakdown (admin-only) ---
+  const divisionBtn = document.getElementById('divisionBtn');
+  const divisionResult = document.getElementById('divisionResult');
+
+  divisionBtn.addEventListener('click', async () => {
+    const key = adminKeyInput.value.trim();
+    if(!key){ adminKeyInput.focus(); return; }
+
+    divisionBtn.disabled = true;
+    divisionBtn.textContent = 'लोड हो रहा है...';
+
+    try{
+      const res = await fetch(SCRIPT_URL + '?key=' + encodeURIComponent(key));
+      const data = await res.json();
+      if(!data.divisions || Object.keys(data.divisions).length === 0){
+        divisionResult.innerHTML = '<div style="color:var(--muted);">अभी कोई डेटा नहीं, या पासकोड ग़लत है।</div>';
+      }else{
+        divisionResult.innerHTML = Object.entries(data.divisions)
+          .sort((a,b) => b[1] - a[1])
+          .map(([div, n]) => `<div><span>${div.replace(/</g,'&lt;')}</span><b>${n}</b></div>`).join('');
+      }
+    }catch(e){
+      divisionResult.innerHTML = '<div style="color:var(--muted);">लोड नहीं हो पाया।</div>';
+    }finally{
+      divisionBtn.disabled = false;
+      divisionBtn.textContent = 'डिवीज़न के अनुसार देखो';
+    }
+  });
 </script>
 
 </body>
