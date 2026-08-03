@@ -348,6 +348,12 @@
     transition:width 0.6s ease;
     width:0%;
   }
+  .milestone-text{
+    text-align:center;
+    font-size:12px;
+    color:var(--muted);
+    margin-top:8px;
+  }
 
   .faq-item{
     background:#181f29;
@@ -393,6 +399,14 @@
     border-bottom:1px solid rgba(141,151,164,0.15);
     color:var(--paper);
   }
+
+  .body-text-list p{
+    font-size:14px;
+    line-height:1.8;
+    color:var(--paper);
+    margin-bottom:10px;
+  }
+  .body-text-list p:last-child{ margin-bottom:0; }
 </style>
 </head>
 <body>
@@ -431,6 +445,44 @@
     </div>
   </div>
 
+  <div class="wall-header">
+    <h2>अपना हक़ जानो</h2>
+  </div>
+  <div id="rightsList">
+    <div class="faq-item">
+      <div class="faq-q"><span>⚖️ न्यूनतम मज़दूरी अधिनियम, 1948</span><span class="arrow">▾</span></div>
+      <div class="faq-a"><div class="faq-a-inner">कंपनी किसी भी हाल में सरकार द्वारा तय न्यूनतम मज़दूरी से कम नहीं दे सकती — चाहे कर्मचारी कॉन्ट्रैक्ट पर हो या स्थायी। यह हर वर्कर का बुनियादी कानूनी हक़ है।</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>⚖️ कॉन्ट्रैक्ट लेबर एक्ट, 1970</span><span class="arrow">▾</span></div>
+      <div class="faq-a"><div class="faq-a-inner">अगर कॉन्ट्रैक्ट वर्कर वही काम कर रहा है जो स्थायी कर्मचारी करता है, तो बराबर वेतन और सुविधाओं की मांग करना कानूनन जायज़ है।</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>⚖️ वेतन भुगतान अधिनियम</span><span class="arrow">▾</span></div>
+      <div class="faq-a"><div class="faq-a-inner">तय तारीख़ पर पूरी सैलरी मिलना कानूनी हक़ है। बार-बार देरी करना नियमों का उल्लंघन है।</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>⚖️ नौकरी से निकालने का नियम</span><span class="arrow">▾</span></div>
+      <div class="faq-a"><div class="faq-a-inner">बिना ठोस कारण और उचित नोटिस के अचानक नौकरी से निकालना गैर-कानूनी माना जाता है।</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>⚖️ एकजुट होकर आवाज़ उठाने का हक़</span><span class="arrow">▾</span></div>
+      <div class="faq-a"><div class="faq-a-inner">साथ मिलकर अपनी बात रखना, मांग करना — यह संविधान का दिया हुआ अधिकार है। शांतिपूर्ण तरीक़े से यह करना किसी भी कानून का उल्लंघन नहीं है।</div></div>
+    </div>
+  </div>
+
+  <div class="wall-header">
+    <h2>सुरक्षित कैसे रहें</h2>
+  </div>
+  <div class="card">
+    <div class="body-text-list">
+      <p>🔒 अपना नाम और नंबर सिर्फ़ इसी फ़ॉर्म पर दो — ऑफ़िस या ग्रुप में इस अभियान की चर्चा मत करो।</p>
+      <p>🔒 काम की जगह पर इस पेज को मत खोलो, न ही सहकर्मियों से खुलकर इस बारे में बात करो जब तक भरोसा पक्का न हो।</p>
+      <p>🔒 सोच-समझकर, सिर्फ़ उन्हीं साथियों को लिंक भेजो जिन पर भरोसा हो।</p>
+      <p>🔒 कोई भी जल्दबाज़ी में कोई कदम मत उठाओ — यह अभियान धीरे-धीरे, सुरक्षित तरीक़े से आगे बढ़ रहा है।</p>
+    </div>
+  </div>
+
   <div class="card">
     <div class="form-body" id="formBody">
       <label for="name">नाम *</label>
@@ -443,7 +495,7 @@
       <label for="division">डिवीज़न *</label>
       <input type="text" id="division" placeholder="जैसे — Dwarka, Janakpuri, आदि">
 
-      <label for="org">कंपनी (वैकल्पिक)</label>
+      <label for="org">कंपनी *</label>
       <input type="text" id="org" placeholder="जैसे — BSES, Safeguard, आदि">
 
       <label>तुम किस बात से सहमत हो? (एक या ज़्यादा चुनो)</label>
@@ -496,13 +548,11 @@
       <span><b id="progressCount">0</b> / <span id="progressTarget">500</span></span>
     </div>
     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="milestone-text" id="milestoneText"></div>
   </div>
 
   <div class="card">
-    <label for="wallName">तुम्हारा नाम (वैकल्पिक)</label>
-    <input type="text" id="wallName" placeholder="चाहो तो नाम छोड़ सकते हो">
-
-    <label for="wallMessage">अपनी एक बात कहो</label>
+    <label for="wallMessage">अपनी एक बात कहो <span style="color:var(--muted); font-weight:400;">(पूरी तरह गुमनाम रहेगा)</span></label>
     <textarea id="wallMessage" placeholder="जो दिल में है, वो लिखो..."></textarea>
 
     <button id="wallBtn">बात रखो</button>
@@ -572,6 +622,8 @@
       return;
     }
     if(!division){ divisionInput.focus(); divisionInput.style.borderColor = '#c8392a'; return; }
+    const org = orgInput.value.trim();
+    if(!org){ orgInput.focus(); orgInput.style.borderColor = '#c8392a'; return; }
     if(!consentInput.checked){ consentInput.focus(); return; }
 
     const demands = Array.from(document.querySelectorAll('#demands input:checked')).map(i => i.value);
@@ -605,7 +657,6 @@
   });
 
   // --- Community Wall ---
-  const wallName = document.getElementById('wallName');
   const wallMessage = document.getElementById('wallMessage');
   const wallBtn = document.getElementById('wallBtn');
   const wallList = document.getElementById('wallList');
@@ -625,6 +676,15 @@
       progressCount.textContent = current;
       progressFill.style.width = Math.min((current / target) * 100, 100) + '%';
 
+      const milestones = [10, 25, 50, 100, 250, 500];
+      const next = milestones.find(m => m > current);
+      const milestoneText = document.getElementById('milestoneText');
+      if(next){
+        milestoneText.textContent = `अगला पड़ाव: ${next} सदस्य — अभी ${next - current} और चाहिए`;
+      }else{
+        milestoneText.textContent = 'लक्ष्य पूरा हो चुका है! 🎉';
+      }
+
       if(!data.messages || data.messages.length === 0){
         wallList.innerHTML = '<div class="wall-empty">अभी तक कोई बात नहीं लिखी गई — पहली बात तुम रख सकते हो।</div>';
         renderUpdates(data.updates);
@@ -632,7 +692,7 @@
       }
       wallList.innerHTML = data.messages.map(m => `
         <div class="wall-item">
-          <div class="who">${(m.name || 'एक श्रमिक').replace(/</g,'&lt;')}</div>
+          <div class="who">एक साथी</div>
           <div class="what">${(m.message || '').replace(/</g,'&lt;')}</div>
         </div>
       `).join('');
@@ -655,10 +715,9 @@
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ type: 'message', name: wallName.value.trim(), message })
+        body: JSON.stringify({ type: 'message', message })
       });
       wallMessage.value = '';
-      wallName.value = '';
       setTimeout(loadWall, 800);
     }catch(e){
       alert('कुछ गड़बड़ हुई, दोबारा कोशिश करो।');
