@@ -274,6 +274,44 @@
   .benefit-item .txt{ font-size:13px; line-height:1.6; color:var(--paper); }
   .benefit-item .txt b{ color:var(--green); }
 
+  /* ---- Gated dashboard ---- */
+  .locked-box{ text-align:center; padding:34px 18px; }
+  .locked-box .icon{ font-size:38px; margin-bottom:10px; }
+  .locked-box h3{ font-family:'Baloo 2', sans-serif; font-size:18px; margin-bottom:8px; color:var(--paper); }
+  .locked-box p{ color:var(--muted); font-size:13px; line-height:1.6; margin-bottom:18px; }
+  .locked-actions{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .locked-actions .action-btn{ width:auto; padding:11px 18px; font-size:13.5px; margin-top:0; }
+
+  .dash-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+  .dash-stat{ background:#ffffff; border:1px solid var(--line); border-radius:12px; padding:14px; text-align:center; }
+  .dash-stat .num{ font-family:'Teko', sans-serif; font-weight:700; font-size:30px; color:var(--red); line-height:1; }
+  .dash-stat .lbl{ font-size:11px; color:var(--muted); margin-top:4px; }
+
+  .today-right{ background:#ffffff; border:1px solid var(--line); border-left:3px solid var(--chakra); border-radius:12px; padding:14px 16px; margin-bottom:16px; }
+  .today-right .tag{ font-size:11px; color:var(--chakra); font-weight:700; margin-bottom:6px; letter-spacing:0.5px; }
+  .today-right .q{ font-size:14px; font-weight:700; margin-bottom:6px; color:var(--paper); }
+  .today-right .a{ font-size:13px; color:var(--muted); line-height:1.6; }
+
+  .timeline{ margin:6px 0 20px; }
+  .tl-item{ display:flex; gap:10px; align-items:flex-start; padding:7px 0; }
+  .tl-dot{ width:22px; height:22px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; }
+  .tl-done .tl-dot{ background:var(--green); color:#fff; }
+  .tl-current .tl-dot{ background:var(--saffron); color:#fff; }
+  .tl-pending .tl-dot{ background:#e5e7eb; color:#9aa1ab; }
+  .tl-text{ font-size:13px; padding-top:2px; color:var(--paper); }
+  .tl-pending .tl-text{ color:var(--muted); }
+
+  .calc-result{ display:flex; justify-content:space-around; margin-top:14px; }
+  .calc-result .amt{ font-family:'Teko', sans-serif; font-weight:700; font-size:24px; color:var(--green); }
+  .calc-result .clbl{ font-size:11px; color:var(--muted); margin-top:2px; }
+
+  .poll-option{ display:block; padding:10px 12px; border:1px solid var(--line); border-radius:8px; margin-bottom:8px; cursor:pointer; font-size:13.5px; }
+  .poll-option input{ margin-right:8px; accent-color:var(--red); }
+  .poll-bar-wrap{ margin-bottom:10px; }
+  .poll-bar-label{ display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; color:var(--paper); }
+  .poll-bar-track{ height:8px; background:#eceff3; border-radius:5px; overflow:hidden; border:1px solid var(--line); }
+  .poll-bar-fill{ height:100%; background:linear-gradient(90deg, var(--saffron), var(--red)); }
+
   .admin-toggle{ text-align:center; margin-top:24px; }
   .admin-toggle span{ font-size:11px; color:#9aa1ab; cursor:pointer; text-decoration:underline; }
   .admin-panel{ display:none; margin-top:10px; }
@@ -392,46 +430,104 @@
     <p class="privacy-note">यह डेटा सीधे एक निजी Google Sheet में जाता है — केवल आयोजक के पास इसकी पहुँच है।</p>
   </div>
 
-  <!-- PAGE 2: UPDATES & CHAT TAB -->
+  <!-- PAGE 2: UPDATES & CHAT TAB (gated — sign or login to unlock) -->
   <div id="updatesTab" class="tab-content">
-    <div style="text-align:center; margin-bottom:14px;">
-      <button id="notifyBtn" class="action-btn" style="width:auto; padding:8px 16px; font-size:12.5px; margin-top:0;">🔔 नोटिफिकेशन चालू करें</button>
-    </div>
 
-    <div class="wall-header">
-      <h2>अभियान की अपडेट</h2>
-    </div>
-    <div id="updatesList">
-      <div class="wall-empty">लोड हो रहा है...</div>
-    </div>
-
-    <div class="wall-header">
-      <h2>हमारा समुदाय</h2>
-      <div class="live-badge"><span class="dot"></span> लाइव</div>
-    </div>
-
-    <div class="live-count">
-      <div class="n" id="memberCount">—</div>
-      <div class="l">सदस्य जुड़ चुके हैं</div>
-    </div>
-
-    <div class="progress-wrap">
-      <div class="progress-label">
-        <span>लक्ष्य की ओर</span>
-        <span><b id="progressCount">0</b> / <span id="progressTarget">500</span></span>
+    <!-- Locked view: shown until signature or login -->
+    <div id="dashboardLocked" class="card locked-box">
+      <div class="icon">🔒</div>
+      <h3>यह हिस्सा सिर्फ़ साथियों के लिए है</h3>
+      <p>लाइव सदस्य संख्या, अभियान की प्रगति, सैलरी कैलकुलेटर और पोल देखने के लिए पहले दस्तख़त करो — या अगर पहले से जुड़े हो, तो लॉगिन करो।</p>
+      <div class="locked-actions">
+        <button class="action-btn" onclick="goToSignFromLock()">✍️ दस्तख़त करने जाओ</button>
+        <button class="action-btn" style="background:var(--chakra);" onclick="goToLoginFromLock()">🔑 लॉगिन करें</button>
       </div>
-      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-      <div class="milestone-text" id="milestoneText"></div>
     </div>
 
-    <div class="card">
-      <label for="wallMessage">अपनी एक बात कहो <span style="color:var(--muted); font-weight:400;">(पूरी तरह गुमनाम रहेगा)</span></label>
-      <textarea id="wallMessage" placeholder="जो दिल में है, वो लिखो..."></textarea>
-      <button class="action-btn" id="wallBtn">बात रखो</button>
-    </div>
+    <!-- Unlocked dashboard content -->
+    <div id="dashboardContent" style="display:none;">
 
-    <div class="wall-list" id="wallList">
-      <div class="wall-empty">लोड हो रहा है...</div>
+      <div style="text-align:center; margin-bottom:14px;">
+        <button id="notifyBtn" class="action-btn" style="width:auto; padding:8px 16px; font-size:12.5px; margin-top:0;">🔔 नोटिफिकेशन चालू करें</button>
+      </div>
+
+      <div class="wall-header">
+        <h2>लाइव कैंपेन डैशबोर्ड</h2>
+        <div class="live-badge"><span class="dot"></span> लाइव</div>
+      </div>
+      <div class="dash-grid">
+        <div class="dash-stat"><div class="num" id="dashTotal">—</div><div class="lbl">कुल साथी जुड़े</div></div>
+        <div class="dash-stat"><div class="num" id="dashToday">—</div><div class="lbl">आज नए जुड़े</div></div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>लक्ष्य की ओर</span>
+          <span><b id="progressCount">0</b> / <span id="progressTarget">500</span></span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="milestone-text" id="milestoneText"></div>
+      </div>
+
+      <div class="today-right">
+        <div class="tag">📚 आज का अधिकार</div>
+        <div class="q" id="todayRightQ">—</div>
+        <div class="a" id="todayRightA">—</div>
+      </div>
+
+      <div class="wall-header"><h2>अभियान की प्रगति</h2></div>
+      <div class="timeline" id="campaignTimeline"></div>
+
+      <div class="wall-header"><h2>सैलरी बढ़ोतरी कैलकुलेटर</h2></div>
+      <div class="card">
+        <label for="calcSalary">अपनी मौजूदा सैलरी डालो (₹)</label>
+        <input type="text" id="calcSalary" inputmode="numeric" placeholder="जैसे — 20500">
+        <div class="calc-result">
+          <div style="text-align:center;"><div class="amt" id="calc10">—</div><div class="clbl">10% बढ़ोतरी पर</div></div>
+          <div style="text-align:center;"><div class="amt" id="calc12">—</div><div class="clbl">12% बढ़ोतरी पर</div></div>
+        </div>
+      </div>
+
+      <div class="wall-header"><h2>आज की पोल</h2></div>
+      <div class="card" id="pollCard">
+        <p style="font-size:13.5px; font-weight:600; margin-bottom:10px;">सबसे बड़ी समस्या क्या है?</p>
+        <div id="pollOptions">
+          <label class="poll-option"><input type="radio" name="pollOpt" value="salary"> सैलरी कम होना</label>
+          <label class="poll-option"><input type="radio" name="pollOpt" value="permanent"> स्थायी नौकरी न होना</label>
+          <label class="poll-option"><input type="radio" name="pollOpt" value="insurance"> स्वास्थ्य बीमा कम होना</label>
+          <label class="poll-option"><input type="radio" name="pollOpt" value="leave"> छुट्टी न मिलना</label>
+        </div>
+        <button class="action-btn" id="pollSubmitBtn">वोट करो</button>
+        <div id="pollResults" style="display:none;"></div>
+      </div>
+
+      <div class="wall-header">
+        <h2>अभियान की अपडेट</h2>
+      </div>
+      <div id="updatesList">
+        <div class="wall-empty">लोड हो रहा है...</div>
+      </div>
+
+      <div class="wall-header">
+        <h2>हमारा समुदाय</h2>
+        <div class="live-badge"><span class="dot"></span> लाइव</div>
+      </div>
+
+      <div class="live-count">
+        <div class="n" id="memberCount">—</div>
+        <div class="l">सदस्य जुड़ चुके हैं</div>
+      </div>
+
+      <div class="card">
+        <label for="wallMessage">अपनी एक बात कहो <span style="color:var(--muted); font-weight:400;">(पूरी तरह गुमनाम रहेगा)</span></label>
+        <textarea id="wallMessage" placeholder="जो दिल में है, वो लिखो..."></textarea>
+        <button class="action-btn" id="wallBtn">बात रखो</button>
+      </div>
+
+      <div class="wall-list" id="wallList">
+        <div class="wall-empty">लोड हो रहा है...</div>
+      </div>
+
     </div>
   </div>
 
@@ -563,6 +659,109 @@
   // Updated Web App URL
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwdFxmwjh5BL4fxrcUlp2Mn1yt5ExdYHxL8UbKusfRl2o6PeKYzA4CMcG4LS6QXaexA/exec';
 
+  // ---- Membership gate for the updates/dashboard tab ----
+  let memberVerified = false;
+
+  function goToSignFromLock(){ switchTab('formTab'); }
+  function goToLoginFromLock(){
+    switchTab('formTab');
+    setTimeout(() => { document.getElementById('loginBox').style.display = 'block'; }, 50);
+  }
+
+  function unlockDashboard(){
+    if(memberVerified) return;
+    memberVerified = true;
+    document.getElementById('dashboardLocked').style.display = 'none';
+    document.getElementById('dashboardContent').style.display = 'block';
+    renderTimeline();
+    renderTodayRight();
+    loadWall(false, true);
+    loadPolls();
+  }
+
+  // ---- Campaign timeline (edit steps/status here as the campaign progresses) ----
+  const timelineSteps = [
+    { status:'done',    text:'वेबसाइट लॉन्च' },
+    { status:'done',    text:'100 साथी जुड़े' },
+    { status:'current', text:'250 साथी जुड़े' },
+    { status:'pending', text:'मीटिंग की योजना' },
+    { status:'pending', text:'लेबर डिपार्टमेंट को सौंपना' },
+    { status:'pending', text:'ज्ञापन / विरोध प्रदर्शन' }
+  ];
+  function renderTimeline(){
+    document.getElementById('campaignTimeline').innerHTML = timelineSteps.map(s => {
+      const icon = s.status === 'done' ? '✓' : (s.status === 'current' ? '●' : '');
+      return `<div class="tl-item tl-${s.status}"><div class="tl-dot">${icon}</div><div class="tl-text">${s.text}</div></div>`;
+    }).join('');
+  }
+
+  // ---- Daily "know your rights" fact — changes automatically once a day ----
+  const dailyRights = [
+    { q:'क्या बिना कारण नौकरी से निकाला जा सकता है?', a:'नहीं। औद्योगिक विवाद अधिनियम के तहत उचित नोटिस और ठोस कारण बताए बिना नौकरी से निकालना गैरकानूनी है।' },
+    { q:'क्या कॉन्ट्रैक्ट वर्कर का PF कटना चाहिए?', a:'हाँ। चाहे कॉन्ट्रैक्ट पर हो या स्थायी, PF कटना और कंपनी का बराबर योगदान देना कानूनन ज़रूरी है।' },
+    { q:'क्या मुझे सैलरी स्लिप माँगने का हक़ है?', a:'हाँ। हर कर्मचारी को अपनी सैलरी स्लिप और अपॉइंटमेंट लेटर पाने का पूरा अधिकार है।' },
+    { q:'क्या ओवरटाइम का अलग भुगतान मिलता है?', a:'हाँ। तय घंटों से ज़्यादा काम करने पर ओवरटाइम का भुगतान कानूनन ज़रूरी है।' },
+    { q:'क्या महिला साथियों को मैटरनिटी लीव मिलती है?', a:'हाँ, मातृत्व लाभ अधिनियम के तहत पेड मैटरनिटी लीव का पूरा हक़ है, चाहे कॉन्ट्रैक्ट पर हों।' },
+    { q:'क्या मैं यूनियन बना सकता हूँ?', a:'हाँ। ट्रेड यूनियन अधिनियम, 1926 के तहत मज़दूरों को संगठित होने का पूरा कानूनी अधिकार है।' },
+    { q:'क्या चोट लगने पर इलाज का खर्च कंपनी को देना होता है?', a:'हाँ, ESI के दायरे में आने वाले कर्मचारियों को मेडिकल इलाज और चोट का बीमा कवर मिलता है।' }
+  ];
+  function renderTodayRight(){
+    const dayIndex = Math.floor(Date.now() / 86400000) % dailyRights.length;
+    const item = dailyRights[dayIndex];
+    document.getElementById('todayRightQ').textContent = item.q;
+    document.getElementById('todayRightA').textContent = item.a;
+  }
+
+  // ---- Salary hike calculator ----
+  document.getElementById('calcSalary').addEventListener('input', function(){
+    const val = parseFloat(this.value.replace(/[^0-9.]/g, ''));
+    const c10 = document.getElementById('calc10');
+    const c12 = document.getElementById('calc12');
+    if(!val || val <= 0){ c10.textContent = '—'; c12.textContent = '—'; return; }
+    c10.textContent = '₹' + Math.round(val * 1.10).toLocaleString('en-IN');
+    c12.textContent = '₹' + Math.round(val * 1.12).toLocaleString('en-IN');
+  });
+
+  // ---- Anonymous poll ----
+  // NOTE: needs backend support — POST { type:'poll', option } to store a vote,
+  // and the GET response should include a `pollResults` object like
+  // { salary: 12, permanent: 30, insurance: 5, leave: 8 } for results to show.
+  document.getElementById('pollSubmitBtn').addEventListener('click', async () => {
+    const selected = document.querySelector('input[name="pollOpt"]:checked');
+    if(!selected){ alert('कृपया एक विकल्प चुनें'); return; }
+    const btn = document.getElementById('pollSubmitBtn');
+    btn.disabled = true; btn.textContent = 'भेजा जा रहा है...';
+    try{
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ type: 'poll', option: selected.value })
+      });
+    }catch(e){}
+    btn.disabled = false; btn.textContent = 'वोट करो';
+    loadPolls();
+  });
+
+  async function loadPolls(){
+    try{
+      const res = await fetch(SCRIPT_URL);
+      const data = await res.json();
+      if(data.pollResults){
+        const labels = { salary:'सैलरी कम होना', permanent:'स्थायी नौकरी न होना', insurance:'स्वास्थ्य बीमा कम होना', leave:'छुट्टी न मिलना' };
+        const total = Object.values(data.pollResults).reduce((a,b) => a + b, 0) || 1;
+        const html = Object.keys(labels).map(key => {
+          const count = data.pollResults[key] || 0;
+          const pct = Math.round((count / total) * 100);
+          return `<div class="poll-bar-wrap"><div class="poll-bar-label"><span>${labels[key]}</span><span>${pct}%</span></div><div class="poll-bar-track"><div class="poll-bar-fill" style="width:${pct}%;"></div></div></div>`;
+        }).join('');
+        document.getElementById('pollResults').innerHTML = html;
+        document.getElementById('pollResults').style.display = 'block';
+        document.getElementById('pollOptions').style.display = 'none';
+        document.getElementById('pollSubmitBtn').style.display = 'none';
+      }
+    }catch(e){}
+  }
+
   // ---- Rotating motivational couplets ----
   const quotePairs = [
     ["अकेले लड़ोगे तो दबा दिए जाओगे,", "एकजुट होकर लड़ोगे तो अपना हक़ छीन लोगे।"],
@@ -616,6 +815,7 @@
         document.getElementById('successCounter').style.display = 'none';
         pickRandomQuote();
         document.getElementById('successBlock').classList.add('show');
+        unlockDashboard();
       } else {
         alert('यह नंबर अभी दर्ज़ नहीं है। कृपया नीचे फ़ॉर्म भरकर दस्तख़त करें।');
       }
@@ -666,6 +866,7 @@
 
       pickRandomQuote();
       document.getElementById('successBlock').classList.add('show');
+      unlockDashboard();
 
       // fetch current count to show "you are the Nth member"
       loadWall(true);
@@ -676,8 +877,9 @@
     }
   });
 
-  // Load Updates & Chat
-  async function loadWall(updateSuccessCounter){
+  // Load Updates & Chat (updateSuccessCounter: fills the success-screen counter,
+  // updateDashboard: fills the gated dashboard's total/today stats)
+  async function loadWall(updateSuccessCounter, updateDashboard){
     try{
       const res = await fetch(SCRIPT_URL);
       const data = await res.json();
@@ -690,6 +892,12 @@
       if(updateSuccessCounter){
         document.getElementById('successCounterNum').textContent = data.count || '—';
         document.getElementById('successCounter').style.display = 'inline-flex';
+      }
+
+      if(updateDashboard){
+        document.getElementById('dashTotal').textContent = data.count || 0;
+        // requires backend to return `todayCount` — see note near the poll code
+        document.getElementById('dashToday').textContent = (data.todayCount !== undefined) ? data.todayCount : '—';
       }
 
       if(data.messages && data.messages.length > 0){
@@ -729,7 +937,7 @@
         body: JSON.stringify({ type: 'message', message: msg })
       });
       wallMessage.value = '';
-      setTimeout(() => loadWall(false), 1000);
+      setTimeout(() => loadWall(false, memberVerified), 1000);
     }catch(e){}
   });
 
@@ -766,7 +974,7 @@
         body: JSON.stringify({ type: 'update', key, update })
       });
       document.getElementById('updateText').value = '';
-      setTimeout(() => loadWall(false), 1000);
+      setTimeout(() => loadWall(false, memberVerified), 1000);
     }catch(e){}
   });
 
@@ -803,8 +1011,6 @@
   document.querySelectorAll('.faq-item').forEach(item => {
     item.querySelector('.faq-q').addEventListener('click', () => item.classList.toggle('open'));
   });
-
-  loadWall(false);
 </script>
 </body>
 </html>
