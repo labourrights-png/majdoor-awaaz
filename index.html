@@ -12,6 +12,7 @@
   OneSignalDeferred.push(async function(OneSignal) {
     await OneSignal.init({
       appId: "c56abe56-5435-4815-9ee8-9f1303ef7dd3",
+      safari_web_id: "web.onesignal.auto.6836a56b-23bd-4172-b38f-daf17d70b8cc",
       notifyButton: { enable: false },
       allowLocalhostAsSecureOrigin: true,
     });
@@ -33,7 +34,7 @@
     min-height:100vh;
     font-family:'Noto Sans Devanagari', sans-serif;
     color:var(--paper);
-    padding:28px 16px 60px;
+    padding:16px 12px 60px;
   }
   .wrap{ max-width:520px; margin:0 auto; }
 
@@ -45,379 +46,156 @@
     font-size:13px;
     color:var(--muted);
     text-transform:uppercase;
-    margin-bottom:10px;
+    margin-bottom:6px;
   }
   h1{
     font-family:'Baloo 2', sans-serif;
     font-weight:800;
-    font-size:32px;
+    font-size:28px;
     text-align:center;
-    line-height:1.3;
-    margin-bottom:8px;
+    line-height:1.2;
+    margin-bottom:14px;
   }
   h1 .red{ color:var(--red); }
-  .lead{
-    text-align:center;
-    color:var(--muted);
-    font-size:14.5px;
-    line-height:1.7;
-    margin-bottom:28px;
+
+  /* Navigation Tabs */
+  .nav-tabs {
+    display: flex;
+    justify-content: space-between;
+    background: #101720;
+    border: 1px solid rgba(141,151,164,0.3);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 20px;
+    position: sticky;
+    top: 10px;
+    z-index: 100;
+  }
+  .tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    padding: 10px 4px;
+    font-size: 13px;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .tab-btn.active {
+    background: var(--red);
+    color: var(--paper);
+  }
+
+  /* Page Sections */
+  .tab-content {
+    display: none;
+  }
+  .tab-content.active {
+    display: block;
   }
 
   .manifesto{
     background:linear-gradient(180deg, rgba(200,57,42,0.08), rgba(200,57,42,0.02));
     border-left:3px solid var(--red);
     border-radius:8px;
-    padding:18px 18px;
-    margin:20px 0 22px;
+    padding:14px 16px;
+    margin:12px 0 18px;
   }
-  .manifesto p{
-    font-size:15px;
-    line-height:1.85;
-    color:var(--paper);
-    margin-bottom:12px;
-  }
+  .manifesto p{ font-size:14px; line-height:1.7; color:var(--paper); margin-bottom:8px; }
   .manifesto p:last-child{ margin-bottom:0; }
   .manifesto b{ color:var(--red); }
-  .manifesto .line{
-    font-family:'Baloo 2', sans-serif;
-    font-weight:700;
-    font-size:16.5px;
-    color:var(--red);
-    text-align:right;
-  }
+  .manifesto .line{ font-family:'Baloo 2', sans-serif; font-weight:700; font-size:15px; color:var(--red); text-align:right; }
+
+  .lead{ text-align:center; color:var(--muted); font-size:13.5px; line-height:1.6; margin-bottom:18px; }
 
   .card{
     background:var(--card);
     border:1px solid rgba(141,151,164,0.25);
     border-radius:14px;
-    padding:22px 20px;
+    padding:18px 16px;
     margin-bottom:16px;
   }
-  label{
-    display:block;
-    font-size:13.5px;
-    font-weight:600;
-    color:var(--muted);
-    margin-bottom:7px;
-    margin-top:16px;
-  }
+  label{ display:block; font-size:13.5px; font-weight:600; color:var(--muted); margin-bottom:6px; margin-top:14px; }
   label:first-of-type{ margin-top:0; }
-  input[type=text], input[type=tel]{
-    width:100%;
-    padding:12px 13px;
-    border-radius:9px;
-    border:1px solid rgba(141,151,164,0.35);
-    background:#181f29;
-    color:var(--paper);
-    font-size:15px;
-    font-family:inherit;
+  input[type=text], input[type=tel], textarea{
+    width:100%; padding:11px 12px; border-radius:8px; border:1px solid rgba(141,151,164,0.35);
+    background:#181f29; color:var(--paper); font-size:14.5px; font-family:inherit;
   }
-  input::placeholder{ color:#5a6472; }
-  .hint{ font-size:11.5px; color:#5a6472; margin-top:5px; }
+  textarea{ resize:vertical; min-height:70px; }
+  input::placeholder, textarea::placeholder{ color:#5a6472; }
+  .hint{ font-size:11px; color:#5a6472; margin-top:4px; }
 
-  .demand{
-    display:flex;
-    align-items:flex-start;
-    gap:10px;
-    padding:11px 0;
-    border-bottom:1px solid rgba(141,151,164,0.12);
-    cursor:pointer;
-  }
+  .demand{ display:flex; align-items:flex-start; gap:8px; padding:9px 0; border-bottom:1px solid rgba(141,151,164,0.12); cursor:pointer; }
   .demand:last-child{ border-bottom:none; }
-  .demand input{ margin-top:3px; width:18px; height:18px; accent-color:var(--red); flex-shrink:0; }
-  .demand span{ font-size:14.5px; line-height:1.5; }
+  .demand input{ margin-top:3px; width:17px; height:17px; accent-color:var(--red); flex-shrink:0; }
+  .demand span{ font-size:13.5px; line-height:1.4; }
 
-  .consent{
-    display:flex;
-    align-items:flex-start;
-    gap:10px;
-    margin-top:18px;
-    font-size:12.5px;
-    color:var(--muted);
-    line-height:1.6;
-  }
-  .consent input{ margin-top:3px; width:16px; height:16px; accent-color:var(--red); flex-shrink:0; }
+  .consent{ display:flex; align-items:flex-start; gap:8px; margin-top:16px; font-size:12px; color:var(--muted); line-height:1.5; }
+  .consent input{ margin-top:3px; width:15px; height:15px; accent-color:var(--red); flex-shrink:0; }
 
-  button{
-    width:100%;
-    margin-top:22px;
-    padding:15px;
-    border:none;
-    border-radius:10px;
-    background:var(--red);
-    color:var(--paper);
-    font-family:'Baloo 2', sans-serif;
-    font-weight:700;
-    font-size:17px;
-    cursor:pointer;
+  .action-btn{
+    width:100%; margin-top:18px; padding:13px; border:none; border-radius:9px;
+    background:var(--red); color:var(--paper); font-family:'Baloo 2', sans-serif;
+    font-weight:700; font-size:16px; cursor:pointer;
   }
-  button:disabled{ opacity:0.5; cursor:not-allowed; }
-  button:active:not(:disabled){ transform:scale(0.99); }
+  .action-btn:disabled{ opacity:0.5; cursor:not-allowed; }
 
-  .count{
-    text-align:center;
-    font-size:13px;
-    color:var(--muted);
-    margin-top:6px;
-  }
-  .count b{ color:var(--paper); font-family:'Teko', sans-serif; font-size:16px; }
-
-  .success{
-    display:none;
-    text-align:center;
-    padding:30px 20px;
-  }
+  .success{ display:none; text-align:center; padding:20px 10px; }
   .success.show{ display:block; }
-  .success .tick{
-    width:56px; height:56px;
-    border-radius:50%;
-    background:var(--red);
-    display:flex; align-items:center; justify-content:center;
-    margin:0 auto 16px;
-    font-size:28px;
-  }
-  .success h2{
-    font-family:'Baloo 2', sans-serif;
-    font-size:22px;
-    margin-bottom:8px;
-  }
-  .success p{ color:var(--muted); font-size:14px; line-height:1.7; }
-  .success-line{
-    margin-top:14px;
-    font-family:'Baloo 2', sans-serif;
-    font-weight:700;
-    font-size:16px;
-    color:var(--red) !important;
-  }
+  .success .tick{ width:50px; height:50px; border-radius:50%; background:var(--red); display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:24px; }
+  .success h2{ font-family:'Baloo 2', sans-serif; font-size:20px; margin-bottom:6px; }
+  .success p{ color:var(--muted); font-size:13.5px; line-height:1.6; }
+  .success-line{ margin-top:10px; font-family:'Baloo 2', sans-serif; font-weight:700; font-size:15px; color:var(--red) !important; }
 
   .form-body.hide{ display:none; }
+  .privacy-note{ font-size:11px; color:#5a6472; text-align:center; margin-top:14px; line-height:1.5; }
 
-  .privacy-note{
-    font-size:11px;
-    color:#5a6472;
-    text-align:center;
-    margin-top:18px;
-    line-height:1.6;
-    padding:0 10px;
-  }
+  .wall-header{ text-align:center; margin:16px 0 12px; }
+  .wall-header h2{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:20px; }
 
-  .wall-header{
-    text-align:center;
-    margin:36px 0 16px;
-  }
-  .wall-header h2{
-    font-family:'Baloo 2', sans-serif;
-    font-weight:800;
-    font-size:24px;
-  }
-  .live-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    margin-top:8px;
-    font-size:11px;
-    color:var(--muted);
-    letter-spacing:0.05em;
-  }
-  .live-badge .dot{
-    width:7px; height:7px;
-    border-radius:50%;
-    background:#e05a4a;
-    animation:pulse 1.6s infinite;
-  }
-  @keyframes pulse{
-    0%{ opacity:1; transform:scale(1); }
-    50%{ opacity:0.4; transform:scale(1.4); }
-    100%{ opacity:1; transform:scale(1); }
-  }
-  .live-count{
-    text-align:center;
-    margin-bottom:18px;
-  }
-  .live-count .n{
-    font-family:'Teko', sans-serif;
-    font-weight:700;
-    font-size:44px;
-    color:var(--red);
-    line-height:1;
-  }
-  .live-count .l{
-    font-size:12.5px;
-    color:var(--muted);
-    letter-spacing:0.04em;
-    margin-top:2px;
-  }
+  .live-badge{ display:inline-flex; align-items:center; gap:5px; margin-top:4px; font-size:11px; color:var(--muted); }
+  .live-badge .dot{ width:6px; height:6px; border-radius:50%; background:#e05a4a; animation:pulse 1.6s infinite; }
+  @keyframes pulse{ 0%{ opacity:1; transform:scale(1); } 50%{ opacity:0.4; transform:scale(1.4); } 100%{ opacity:1; transform:scale(1); } }
+  
+  .live-count{ text-align:center; margin-bottom:14px; }
+  .live-count .n{ font-family:'Teko', sans-serif; font-weight:700; font-size:38px; color:var(--red); line-height:1; }
+  .live-count .l{ font-size:12px; color:var(--muted); }
 
-  textarea{
-    width:100%;
-    padding:12px 13px;
-    border-radius:9px;
-    border:1px solid rgba(141,151,164,0.35);
-    background:#181f29;
-    color:var(--paper);
-    font-size:14.5px;
-    font-family:inherit;
-    resize:vertical;
-    min-height:70px;
-  }
-  textarea::placeholder{ color:#5a6472; }
-
-  #wallBtn{ margin-top:14px; }
+  .progress-wrap{ max-width:400px; margin:0 auto 20px; }
+  .progress-label{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted); margin-bottom:5px; }
+  .progress-track{ width:100%; height:8px; border-radius:5px; background:#181f29; overflow:hidden; border:1px solid rgba(141,151,164,0.25); }
+  .progress-fill{ height:100%; background:linear-gradient(90deg, var(--red), #e05a4a); border-radius:5px; transition:width 0.6s ease; width:0%; }
+  .milestone-text{ text-align:center; font-size:11.5px; color:var(--muted); margin-top:6px; }
 
   .wall-list{ margin-top:8px; }
-  .wall-item{
-    background:#181f29;
-    border-radius:10px;
-    padding:13px 14px;
-    margin-bottom:10px;
-    border-left:2px solid var(--red);
-  }
-  .wall-item .who{
-    font-size:12px;
-    font-weight:600;
-    color:var(--red);
-    margin-bottom:4px;
-  }
-  .wall-item .what{
-    font-size:14px;
-    line-height:1.6;
-    color:var(--paper);
-  }
-  .wall-empty{
-    text-align:center;
-    color:var(--muted);
-    font-size:13px;
-    padding:20px 0;
-  }
+  .wall-item{ background:#181f29; border-radius:9px; padding:11px 12px; margin-bottom:8px; border-left:2px solid var(--red); }
+  .wall-item .who{ font-size:11px; font-weight:600; color:var(--red); margin-bottom:3px; }
+  .wall-item .what{ font-size:13.5px; line-height:1.5; color:var(--paper); }
+  .wall-empty{ text-align:center; color:var(--muted); font-size:12.5px; padding:15px 0; }
 
-  .update-item{
-    background:linear-gradient(180deg, rgba(200,57,42,0.06), transparent);
-    border-left:2px solid var(--red);
-    border-radius:10px;
-    padding:13px 14px;
-    margin-bottom:10px;
-  }
-  .update-item .time{
-    font-size:11px;
-    color:var(--muted);
-    margin-bottom:5px;
-  }
-  .update-item .text{
-    font-size:14.5px;
-    line-height:1.7;
-    color:var(--paper);
-  }
+  .update-item{ background:linear-gradient(180deg, rgba(200,57,42,0.06), transparent); border-left:2px solid var(--red); border-radius:9px; padding:11px 12px; margin-bottom:8px; }
+  .update-item .time{ font-size:10.5px; color:var(--muted); margin-bottom:4px; }
+  .update-item .text{ font-size:13.5px; line-height:1.6; color:var(--paper); }
 
-  .admin-toggle{
-    text-align:center;
-    margin-top:30px;
-  }
-  .admin-toggle span{
-    font-size:11.5px;
-    color:#4a525e;
-    cursor:pointer;
-    text-decoration:underline;
-  }
-  .admin-panel{
-    display:none;
-    margin-top:12px;
-  }
-  .admin-panel.show{ display:block; }
-
-  .suggest-note{
-    font-size:11.5px;
-    color:var(--muted);
-    margin-top:6px;
-    margin-bottom:0;
-  }
-
-  .progress-wrap{
-    max-width:400px;
-    margin:0 auto 30px;
-  }
-  .progress-label{
-    display:flex;
-    justify-content:space-between;
-    font-size:12px;
-    color:var(--muted);
-    margin-bottom:6px;
-  }
-  .progress-label b{ color:var(--paper); }
-  .progress-track{
-    width:100%;
-    height:10px;
-    border-radius:6px;
-    background:#181f29;
-    overflow:hidden;
-    border:1px solid rgba(141,151,164,0.25);
-  }
-  .progress-fill{
-    height:100%;
-    background:linear-gradient(90deg, var(--red), #e05a4a);
-    border-radius:6px;
-    transition:width 0.6s ease;
-    width:0%;
-  }
-  .milestone-text{
-    text-align:center;
-    font-size:12px;
-    color:var(--muted);
-    margin-top:8px;
-  }
-
-  .faq-item{
-    background:#181f29;
-    border-radius:10px;
-    margin-bottom:8px;
-    overflow:hidden;
-  }
-  .faq-q{
-    padding:14px 16px;
-    font-size:14.5px;
-    font-weight:600;
-    color:var(--paper);
-    cursor:pointer;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-  }
-  .faq-q .arrow{
-    color:var(--red);
-    transition:transform 0.2s;
-    font-size:12px;
-  }
+  .faq-item{ background:#181f29; border-radius:9px; margin-bottom:8px; overflow:hidden; }
+  .faq-q{ padding:12px 14px; font-size:13.5px; font-weight:600; color:var(--paper); cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+  .faq-q .arrow{ color:var(--red); transition:transform 0.2s; font-size:11px; }
   .faq-item.open .faq-q .arrow{ transform:rotate(180deg); }
-  .faq-a{
-    max-height:0;
-    overflow:hidden;
-    transition:max-height 0.25s ease;
-    font-size:13.5px;
-    color:var(--muted);
-    line-height:1.75;
-  }
+  .faq-a{ max-height:0; overflow:hidden; transition:max-height 0.25s ease; font-size:13px; color:var(--muted); line-height:1.6; }
   .faq-item.open .faq-a{ max-height:300px; }
-  .faq-a-inner{ padding:0 16px 16px; }
+  .faq-a-inner{ padding:0 14px 12px; }
 
-  .div-breakdown{
-    margin-top:14px;
-    font-size:13px;
-  }
-  .div-breakdown div{
-    display:flex;
-    justify-content:space-between;
-    padding:6px 0;
-    border-bottom:1px solid rgba(141,151,164,0.15);
-    color:var(--paper);
-  }
-
-  .body-text-list p{
-    font-size:14px;
-    line-height:1.8;
-    color:var(--paper);
-    margin-bottom:10px;
-  }
+  .body-text-list p{ font-size:13px; line-height:1.7; color:var(--paper); margin-bottom:8px; }
   .body-text-list p:last-child{ margin-bottom:0; }
+
+  .admin-toggle{ text-align:center; margin-top:24px; }
+  .admin-toggle span{ font-size:11px; color:#4a525e; cursor:pointer; text-decoration:underline; }
+  .admin-panel{ display:none; margin-top:10px; }
+  .admin-panel.show{ display:block; }
 </style>
 </head>
 <body>
@@ -426,168 +204,170 @@
   <div class="eyebrow">मज़दूर संघर्ष अभियान</div>
   <h1>ठेका नहीं, <span class="red">स्थायी नौकरी और हक़</span></h1>
 
-  <div class="manifesto">
-    <p>हम श्रमिक हैं — इस दिल्ली की <b>रीढ़ की हड्डी</b>। हमारे मेहनतकश हाथों से हर घर रोशन है, फिर भी हमें अंधेरे में रखा गया।</p>
-    <p>अप्रैल 2025 से न सरकार ने मज़दूरी बढ़ाई, न कंपनी ने सैलरी। लेकिन परमानेंट स्टाफ़ की तरक्की और कंपनी का मुनाफ़ा — दोनों बढ़ते रहे।</p>
-    <p class="line">यह दोगलापन अब और नहीं चलेगा।</p>
+  <!-- Navigation Bar -->
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('formTab')">✍️ दस्तख़त</button>
+    <button class="tab-btn" onclick="switchTab('updatesTab')">📢 अपडेट/चैट</button>
+    <button class="tab-btn" onclick="switchTab('rightsTab')">⚖️ अपने हक़</button>
+    <button class="tab-btn" onclick="switchTab('suggestTab')">🔒 सुझाव</button>
   </div>
 
-  <p class="lead">अगर तुम भी मानते हो कि ठेका प्रथा खत्म होनी चाहिए और मज़दूरी-सुविधाएं समय पर बढ़नी चाहिए, तो अपना नाम दर्ज करो — यह सूची आगे की मांग रखने के लिए इस्तेमाल होगी।</p>
+  <!-- PAGE 1: FORM TAB -->
+  <div id="formTab" class="tab-content active">
+    <div class="manifesto">
+      <p>हम श्रमिक हैं — इस दिल्ली की <b>रीढ़ की हड्डी</b>। हमारे मेहनतकश हाथों से हर घर रोशन है, फिर भी हमें अंधेरे में रखा गया।</p>
+      <p>अप्रैल 2025 से न सरकार ने मज़दूरी बढ़ाई, न कंपनी ने सैलरी। लेकिन परमानेंट स्टाफ़ की तरक्की और कंपनी का मुनाफ़ा — दोनों बढ़ते रहे।</p>
+      <p class="line">यह दोगलापन अब और नहीं चलेगा।</p>
+    </div>
 
-  <div class="wall-header">
-    <h2>अक्सर पूछे जाने वाले सवाल</h2>
-  </div>
-  <div id="faqList">
-    <div class="faq-item">
-      <div class="faq-q"><span>क्या इससे मेरी नौकरी जाने का ख़तरा है?</span><span class="arrow">▾</span></div>
-      <div class="faq-a"><div class="faq-a-inner">तुम्हारा नाम या फ़ोन नंबर कहीं भी सार्वजनिक नहीं दिखता। सिर्फ़ अभियान चलाने वाला ही यह डेटा देख सकता है, वो भी एक निजी Google Sheet में।</div></div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q"><span>मेरा डेटा कहाँ जाता है, कौन देख सकता है?</span><span class="arrow">▾</span></div>
-      <div class="faq-a"><div class="faq-a-inner">हर एंट्री सीधे एक निजी Google Sheet में सेव होती है। यह पेज पर कहीं भी दिखाई नहीं देती, न ही किसी और विज़िटर को दिखती है।</div></div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q"><span>आगे क्या होगा, यह डेटा किस काम आएगा?</span><span class="arrow">▾</span></div>
-      <div class="faq-a"><div class="faq-a-inner">जैसे-जैसे सदस्य जुड़ेंगे, इकट्ठा हुई मांगों को एक औपचारिक चार्टर में डालकर आगे रखा जाएगा। "अभियान की अपडेट" सेक्शन में समय-समय पर अगला कदम बताया जाएगा।</div></div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q"><span>क्या यह करना कानूनी रूप से सुरक्षित है?</span><span class="arrow">▾</span></div>
-      <div class="faq-a"><div class="faq-a-inner">अपनी बात रखना और साथ मिलकर मांग करना हर कर्मचारी का अधिकार है। फिर भी, सावधानी और गोपनीयता बनाए रखना ही सबसे समझदारी वाला रास्ता है — इसीलिए यह पूरा सिस्टम पहचान छुपाकर बनाया गया है।</div></div>
-    </div>
-  </div>
+    <p class="lead">अगर तुम भी मानते हो कि ठेका प्रथा खत्म होनी चाहिए, तो अपना नाम दर्ज करो — यह सूची आगे की मांग रखने के लिए इस्तेमाल होगी।</p>
 
-  <div class="wall-header">
-    <h2>अपना हक़ जानो</h2>
-  </div>
-  <div id="rightsList">
-    <div class="faq-item">
-      <div class="faq-q"><span>⚖️ न्यूनतम मज़दूरी अधिनियम, 1948</span><span class="arrow">▾</span></div>
-      <div class="faq-a"><div class="faq-a-inner">कंपनी किसी भी हाल में सरकार द्वारा तय न्यूनतम मज़दूरी से कम नहीं दे सकती — चाहे कर्मचारी कॉन्ट्रैक्ट पर हो या स्थायी। यह हर वर्कर का बुनियादी कानूनी हक़ है।</div></div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q"><span>⚖️ कॉन्ट्रैक्ट लेबर एक्ट, 1970</span><span class="arrow">▾</span></div>
-      <div class="faq-a"><div class="faq-a-inner">अगर कॉन्ट्रैक्ट वर्कर वही काम कर रहा है जो स्थायी कर्मचारी करता है, तो बराबर वेतन और सुविधाओं की मांग करना कानूनन जायज़ है।</div></div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q"><span>⚖️ वेतन भुगतान अधिनियम</span><span class="arrow">▾</span></div>
-      <div class="faq-a"><div class="faq-a-inner">तय तारीख़ पर पूरी सैलरी मिलना कानूनी हक़ है। बार-बार देरी करना नियमों का उल्लंघन है।</div></div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q"><span>⚖️ नौकरी से निकालने का नियम</span><span class="arrow">▾</span></div>
-      <div class="faq-a"><div class="faq-a-inner">बिना ठोस कारण और उचित नोटिस के अचानक नौकरी से निकालना गैर-कानूनी माना जाता है।</div></div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q"><span>⚖️ एकजुट होकर आवाज़ उठाने का हक़</span><span class="arrow">▾</span></div>
-      <div class="faq-a"><div class="faq-a-inner">साथ मिलकर अपनी बात रखना, मांग करना — यह संविधान का दिया हुआ अधिकार है। शांतिपूर्ण तरीक़े से यह करना किसी भी कानून का उल्लंघन नहीं है।</div></div>
-    </div>
-  </div>
+    <div class="card">
+      <div class="form-body" id="formBody">
+        <label for="name">नाम *</label>
+        <input type="text" id="name" placeholder="अपना पूरा नाम लिखो">
 
-  <div class="wall-header">
-    <h2>सुरक्षित कैसे रहें</h2>
-  </div>
-  <div class="card">
-    <div class="body-text-list">
-      <p>🔒 अपना नाम और नंबर सिर्फ़ इसी फ़ॉर्म पर दो — ऑफ़िस या ग्रुप में इस अभियान की चर्चा मत करो।</p>
-      <p>🔒 काम की जगह पर इस पेज को मत खोलो, न ही सहकर्मियों से खुलकर इस बारे में बात करो जब तक भरोसा पक्का न हो।</p>
-      <p>🔒 सोच-समझकर, सिर्फ़ उन्हीं साथियों को लिंक भेजो जिन पर भरोसा हो।</p>
-      <p>🔒 कोई भी जल्दबाज़ी में कोई कदम मत उठाओ — यह अभियान धीरे-धीरे, सुरक्षित तरीक़े से आगे बढ़ रहा है।</p>
-    </div>
-  </div>
+        <label for="phone">फ़ोन नंबर (व्हाट्सएप के लिए ज़रूरी) *</label>
+        <input type="tel" id="phone" placeholder="10 अंकों का नंबर" maxlength="10" inputmode="numeric">
+        <div class="hint">इसी नंबर से तुम्हें व्हाट्सएप ग्रुप में जोड़ा जाएगा।</div>
 
-  <div class="card">
-    <div class="form-body" id="formBody">
-      <label for="name">नाम *</label>
-      <input type="text" id="name" placeholder="अपना पूरा नाम लिखो">
+        <label for="division">डिवीज़न *</label>
+        <input type="text" id="division" placeholder="जैसे — Dwarka, Janakpuri, आदि">
 
-      <label for="phone">फ़ोन नंबर (व्हाट्सएप ग्रुप के लिए ज़रूरी) *</label>
-      <input type="tel" id="phone" placeholder="10 अंकों का नंबर" maxlength="10" inputmode="numeric">
-      <div class="hint">इसी नंबर से तुम्हें व्हाट्सएप ग्रुप में जोड़ा जाएगा।</div>
+        <label for="org">कंपनी *</label>
+        <input type="text" id="org" placeholder="जैसे — BSES, Safeguard, आदि">
 
-      <label for="division">डिवीज़न *</label>
-      <input type="text" id="division" placeholder="जैसे — Dwarka, Janakpuri, आदि">
+        <label>तुम किस बात से सहमत हो? (एक या ज़्यादा चुनो)</label>
+        <div id="demands">
+          <label class="demand"><input type="checkbox" value="ठेका प्रथा खत्म हो — सभी को स्थायी नौकरी दी जाए"><span>ठेका प्रथा खत्म हो — सभी को स्थायी नौकरी दी जाए</span></label>
+          <label class="demand"><input type="checkbox" value="हर साल सैलरी में कम से कम 10-12% वेतन वृद्धि हो"><span>हर साल सैलरी में कम से कम 10-12% वेतन वृद्धि हो</span></label>
+          <label class="demand"><input type="checkbox" value="स्वास्थ्य बीमा ₹2 लाख से बढ़ाकर ₹5 लाख किया जाए"><span>स्वास्थ्य बीमा ₹2 लाख से बढ़ाकर ₹5 लाख किया जाए</span></label>
+          <label class="demand"><input type="checkbox" value="बिना ठोस कारण और नोटिस के नौकरी से न निकाला जाए"><span>बिना ठोस कारण और नोटिस के नौकरी से न निकाला जाए</span></label>
+        </div>
 
-      <label for="org">कंपनी *</label>
-      <input type="text" id="org" placeholder="जैसे — BSES, Safeguard, आदि">
+        <div class="consent">
+          <input type="checkbox" id="consent">
+          <span>मैं सहमत हूँ कि मेरा नाम और नंबर इस अभियान के लिए इस्तेमाल हो सकता है।</span>
+        </div>
 
-      <label>तुम किस बात से सहमत हो? (एक या ज़्यादा चुनो)</label>
-      <div id="demands">
-        <label class="demand"><input type="checkbox" value="ठेका प्रथा खत्म हो — सभी को स्थायी (permanent) नौकरी दी जाए"><span>ठेका प्रथा खत्म हो — सभी को स्थायी (permanent) नौकरी दी जाए</span></label>
-        <label class="demand"><input type="checkbox" value="हर साल सैलरी में कम से कम 10-12% वेतन वृद्धि हो"><span>हर साल सैलरी में कम से कम 10-12% वेतन वृद्धि हो</span></label>
-        <label class="demand"><input type="checkbox" value="स्वास्थ्य बीमा ₹2 लाख से बढ़ाकर ₹5 लाख किया जाए"><span>स्वास्थ्य बीमा ₹2 लाख से बढ़ाकर ₹5 लाख किया जाए</span></label>
-        <label class="demand"><input type="checkbox" value="बिना ठोस कारण और नोटिस के नौकरी से न निकाला जाए"><span>बिना ठोस कारण और नोटिस के नौकरी से न निकाला जाए</span></label>
-        <label class="demand"><input type="checkbox" value="हर कर्मचारी को नियुक्ति पत्र और सैलरी स्लिप मिले"><span>हर कर्मचारी को नियुक्ति पत्र और सैलरी स्लिप मिले</span></label>
+        <button class="action-btn" id="submitBtn">दस्तख़त करो</button>
       </div>
 
-      <div class="consent">
-        <input type="checkbox" id="consent">
-        <span>मैं सहमत हूँ कि मेरा नाम और नंबर इस अभियान के व्हाट्सएप ग्रुप के लिए इस्तेमाल हो सकता है।</span>
+      <div class="success" id="successBlock">
+        <div class="tick">✓</div>
+        <h2>दर्ज हो गया</h2>
+        <p>तुम्हारी आवाज़ अब इस अभियान का हिस्सा है। इसे अपने साथियों तक भी पहुँचाओ।</p>
+        <p class="success-line">हम रीढ़ की हड्डी हैं — अब दोगलापन नहीं चलेगा।</p>
       </div>
+    </div>
+    <p class="privacy-note">यह डेटा सीधे एक निजी Google Sheet में जाता है — केवल आयोजक के पास इसकी पहुँच है।</p>
+  </div>
 
-      <button id="submitBtn">दस्तख़त करो</button>
+  <!-- PAGE 2: UPDATES & CHAT TAB -->
+  <div id="updatesTab" class="tab-content">
+    <div style="text-align:center; margin-bottom:14px;">
+      <button id="notifyBtn" class="action-btn" style="width:auto; padding:8px 16px; font-size:12.5px; margin-top:0;">🔔 नोटिफिकेशन चालू करें</button>
     </div>
 
-    <div class="success" id="successBlock">
-      <div class="tick">✓</div>
-      <h2>दर्ज हो गया</h2>
-      <p>तुम्हारी आवाज़ अब इस अभियान का हिस्सा है। इसे अपने साथियों तक भी पहुँचाओ।</p>
-      <p class="success-line">हम रीढ़ की हड्डी हैं — अब दोगलापन नहीं चलेगा।</p>
+    <div class="wall-header">
+      <h2>अभियान की अपडेट</h2>
+    </div>
+    <div id="updatesList">
+      <div class="wall-empty">लोड हो रहा है...</div>
+    </div>
+
+    <div class="wall-header">
+      <h2>हमारा समुदाय</h2>
+      <div class="live-badge"><span class="dot"></span> लाइव</div>
+    </div>
+
+    <div class="live-count">
+      <div class="n" id="memberCount">—</div>
+      <div class="l">सदस्य जुड़ चुके हैं</div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>लक्ष्य की ओर</span>
+        <span><b id="progressCount">0</b> / <span id="progressTarget">500</span></span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="milestone-text" id="milestoneText"></div>
+    </div>
+
+    <div class="card">
+      <label for="wallMessage">अपनी एक बात कहो <span style="color:var(--muted); font-weight:400;">(पूरी तरह गुमनाम रहेगा)</span></label>
+      <textarea id="wallMessage" placeholder="जो दिल में है, वो लिखो..."></textarea>
+      <button class="action-btn" id="wallBtn">बात रखो</button>
+    </div>
+
+    <div class="wall-list" id="wallList">
+      <div class="wall-empty">लोड हो रहा है...</div>
     </div>
   </div>
 
-  <p class="privacy-note">यह डेटा सीधे एक निजी Google Sheet में जाता है — सिर्फ़ अभियान चलाने वाले के पास इसकी पहुँच है।</p>
-
-  <div class="wall-header">
-    <h2>अभियान की अपडेट</h2>
-  </div>
-  <div style="text-align:center; margin-bottom:16px;">
-    <button id="notifyBtn" style="width:auto; padding:10px 20px; font-size:13.5px; margin-top:0; display:inline-block;">🔔 अपडेट का नोटिफिकेशन ऑन करो</button>
-  </div>
-  <div id="updatesList">
-    <div class="wall-empty">लोड हो रहा है...</div>
-  </div>
-
-  <div class="wall-header">
-    <h2>हमारा समुदाय</h2>
-    <div class="live-badge"><span class="dot"></span> लाइव</div>
-  </div>
-
-  <div class="live-count">
-    <div class="n" id="memberCount">—</div>
-    <div class="l">सदस्य जुड़ चुके हैं</div>
-  </div>
-
-  <div class="progress-wrap">
-    <div class="progress-label">
-      <span>लक्ष्य की ओर</span>
-      <span><b id="progressCount">0</b> / <span id="progressTarget">500</span></span>
+  <!-- PAGE 3: RIGHTS & FAQ TAB -->
+  <div id="rightsTab" class="tab-content">
+    <div class="wall-header">
+      <h2>सुरक्षित कैसे रहें</h2>
     </div>
-    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="milestone-text" id="milestoneText"></div>
+    <div class="card">
+      <div class="body-text-list">
+        <p>🔒 अपना नाम और नंबर सिर्फ़ फ़ॉर्म पर दो — ऑफ़िस या ग्रुप में खुले में चर्चा मत करो।</p>
+        <p>🔒 काम की जगह पर इस पेज को न खोलें, जब तक भरोसा पक्का न हो।</p>
+        <p>🔒 सोच-समझकर, सिर्फ़ उन्हीं साथियों को लिंक भेजें जिन पर पूरा भरोसा हो।</p>
+      </div>
+    </div>
+
+    <div class="wall-header">
+      <h2>अपना हक़ जानो</h2>
+    </div>
+    <div>
+      <div class="faq-item">
+        <div class="faq-q"><span>⚖️ न्यूनतम मज़दूरी अधिनियम, 1948</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">कंपनी किसी भी हाल में सरकार द्वारा तय न्यूनतम मज़दूरी से कम नहीं दे सकती — चाहे कर्मचारी कॉन्ट्रैक्ट पर हो या स्थायी।</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>⚖️ कॉन्ट्रैक्ट लेबर एक्ट, 1970</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">अगर कॉन्ट्रैक्ट वर्कर वही काम कर रहा है जो स्थायी कर्मचारी करता है, तो बराबर वेतन और सुविधाओं की मांग करना कानूनन जायज़ है।</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>⚖️ वेतन भुगतान अधिनियम</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">तय तारीख़ पर पूरी सैलरी मिलना कानूनी हक़ है। बार-बार देरी करना नियमों का उल्लंघन है।</div></div>
+      </div>
+    </div>
+
+    <div class="wall-header">
+      <h2>अक्सर पूछे जाने वाले सवाल</h2>
+    </div>
+    <div>
+      <div class="faq-item">
+        <div class="faq-q"><span>क्या इससे मेरी नौकरी जाने का ख़तरा है?</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">तुम्हारा नाम या फ़ोन नंबर कहीं भी सार्वजनिक नहीं दिखता। केवल एडमिन ही इसे देख सकता है।</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>मेरा डेटा कहाँ जाता है?</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">हर एंट्री सीधे एक सुरक्षित Google Sheet में सेव होती है।</div></div>
+      </div>
+    </div>
   </div>
 
-  <div class="card">
-    <label for="wallMessage">अपनी एक बात कहो <span style="color:var(--muted); font-weight:400;">(पूरी तरह गुमनाम रहेगा)</span></label>
-    <textarea id="wallMessage" placeholder="जो दिल में है, वो लिखो..."></textarea>
-
-    <button id="wallBtn">बात रखो</button>
+  <!-- PAGE 4: PRIVATE SUGGESTION TAB -->
+  <div id="suggestTab" class="tab-content">
+    <div class="wall-header">
+      <h2>निजी सुझाव</h2>
+    </div>
+    <div class="card">
+      <p style="font-size:12px; color:var(--muted); margin-bottom:10px;">यह सिर्फ़ अभियान चलाने वाले तक पहुँचेगा — बाकी किसी को नहीं दिखेगा।</p>
+      <label for="suggestName">नाम (वैकल्पिक)</label>
+      <input type="text" id="suggestName" placeholder="चाहो तो नाम छोड़ सकते हो">
+      <label for="suggestText">अपना सुझाव लिखो</label>
+      <textarea id="suggestText" placeholder="कोई सुझाव, शिकायत या जानकारी जो सिर्फ़ आयोजक को बतानी हो..."></textarea>
+      <button class="action-btn" id="suggestBtn">सुझाव भेजो</button>
+    </div>
   </div>
 
-  <div class="wall-list" id="wallList">
-    <div class="wall-empty">लोड हो रहा है...</div>
-  </div>
-
-  <div class="wall-header">
-    <h2>निजी सुझाव</h2>
-  </div>
-  <div class="card">
-    <p class="suggest-note">यह सिर्फ़ अभियान चलाने वाले तक पहुँचेगा — बाकी किसी को नहीं दिखेगा।</p>
-    <label for="suggestName">नाम (वैकल्पिक)</label>
-    <input type="text" id="suggestName" placeholder="चाहो तो नाम छोड़ सकते हो">
-    <label for="suggestText">अपना सुझाव लिखो</label>
-    <textarea id="suggestText" placeholder="कोई सुझाव, शिकायत या जानकारी जो सिर्फ़ आयोजक को बतानी हो..."></textarea>
-    <button id="suggestBtn">सुझाव भेजो</button>
-  </div>
-
+  <!-- Admin Panel Toggle -->
   <div class="admin-toggle">
     <span id="adminToggle">आयोजक लॉगिन</span>
     <div class="admin-panel" id="adminPanel">
@@ -595,298 +375,160 @@
         <label for="adminKey">पासकोड</label>
         <input type="text" id="adminKey" placeholder="secret passcode">
         <label for="updateText">आज की रणनीति / अपडेट</label>
-        <textarea id="updateText" placeholder="आगे की रणनीति यहाँ लिखो... (Meet/Zoom लिंक भी डाल सकते हो)"></textarea>
-        <button id="updateBtn">अपडेट पोस्ट करो</button>
-        <button id="divisionBtn" style="margin-top:10px; background:#181f29; border:1px solid rgba(141,151,164,0.35);">डिवीज़न के अनुसार देखो</button>
-        <div class="div-breakdown" id="divisionResult"></div>
+        <textarea id="updateText" placeholder="आगे की रणनीति यहाँ लिखो..."></textarea>
+        <button class="action-btn" id="updateBtn">अपडेट पोस्ट करो</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  const nameInput = document.getElementById('name');
-  const phoneInput = document.getElementById('phone');
-  const divisionInput = document.getElementById('division');
-  const orgInput = document.getElementById('org');
-  const consentInput = document.getElementById('consent');
-  const submitBtn = document.getElementById('submitBtn');
-  const formBody = document.getElementById('formBody');
-  const successBlock = document.getElementById('successBlock');
+  // Tab Switcher Logic
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    window.scrollTo(0,0);
+  }
 
-  // Google Apps Script Web App URL
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxOHYWK5Kdej96hSUS_KzHsz13HQIrXY3-2Jl7k40jFbrcwwh7nSjRq7tyQe7RIDmKq/exec';
 
+  // Submit Form logic
+  const submitBtn = document.getElementById('submitBtn');
   submitBtn.addEventListener('click', async () => {
-    const name = nameInput.value.trim();
-    const phone = phoneInput.value.trim();
-    const division = divisionInput.value.trim();
-    const org = orgInput.value.trim();
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const division = document.getElementById('division').value.trim();
+    const org = document.getElementById('org').value.trim();
 
-    if(!name){ nameInput.focus(); nameInput.style.borderColor = '#c8392a'; return; }
-    if(!phone){ phoneInput.focus(); phoneInput.style.borderColor = '#c8392a'; return; }
-    
-    // Check Indian 10-digit phone number
-    if(!/^[6-9]\d{9}$/.test(phone)){
-      phoneInput.focus();
-      phoneInput.style.borderColor = '#c8392a';
-      alert('कृपया सही 10 अंकों का फ़ोन नंबर डालो (जो 6, 7, 8 या 9 से शुरू हो)।');
-      return;
-    }
-
-    if(!division){ divisionInput.focus(); divisionInput.style.borderColor = '#c8392a'; return; }
-    if(!org){ orgInput.focus(); orgInput.style.borderColor = '#c8392a'; return; }
-    if(!consentInput.checked){ 
-      alert('कृपया ग्रुप में जुड़ने की सहमति वाले बॉक्स पर टिक करें।');
-      consentInput.focus(); 
-      return; 
-    }
+    if(!name || !phone || !division || !org){ alert('कृपया सभी ज़रूरी फ़ील्ड भरें'); return; }
+    if(!/^[6-9]\d{9}$/.test(phone)){ alert('कृपया सही 10 अंकों का मोबाइल नंबर डालें'); return; }
+    if(!document.getElementById('consent').checked){ alert('कृपया सहमति पर टिक करें'); return; }
 
     const demands = Array.from(document.querySelectorAll('#demands input:checked')).map(i => i.value);
-
-    const entry = {
-      name,
-      phone,
-      division,
-      org,
-      demands
-    };
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'भेजा जा रहा है...';
 
     try{
       await fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
+        method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(entry)
+        body: JSON.stringify({ name, phone, division, org, demands })
       });
-      
-      formBody.classList.add('hide');
-      successBlock.classList.add('show');
+      document.getElementById('formBody').classList.add('hide');
+      document.getElementById('successBlock').classList.add('show');
       setTimeout(loadWall, 1200);
     }catch(e){
+      alert('कुछ गड़बड़ हुई, दोबारा कोशिश करें।');
       submitBtn.disabled = false;
       submitBtn.textContent = 'दस्तख़त करो';
-      alert('कुछ गड़बड़ हुई, दोबारा कोशिश करो।');
     }
   });
 
-  // --- Community Wall ---
-  const wallMessage = document.getElementById('wallMessage');
-  const wallBtn = document.getElementById('wallBtn');
-  const wallList = document.getElementById('wallList');
-  const memberCount = document.getElementById('memberCount');
-  const progressCount = document.getElementById('progressCount');
-  const progressTarget = document.getElementById('progressTarget');
-  const progressFill = document.getElementById('progressFill');
-
+  // Load Updates & Chat
   async function loadWall(){
     try{
-      const res = await fetch(SCRIPT_URL, { method: 'GET' });
+      const res = await fetch(SCRIPT_URL);
       const data = await res.json();
-      memberCount.textContent = data.count || 0;
-
-      const target = parseInt(progressTarget.textContent) || 500;
-      const current = data.count || 0;
-      progressCount.textContent = current;
-      progressFill.style.width = Math.min((current / target) * 100, 100) + '%';
-
-      const milestones = [10, 25, 50, 100, 250, 500];
-      const next = milestones.find(m => m > current);
-      const milestoneText = document.getElementById('milestoneText');
-      if(next){
-        milestoneText.textContent = `अगला पड़ाव: ${next} सदस्य — अभी ${next - current} और चाहिए`;
+      document.getElementById('memberCount').textContent = data.count || 0;
+      document.getElementById('progressCount').textContent = data.count || 0;
+      
+      const target = 500;
+      document.getElementById('progressFill').style.width = Math.min(((data.count||0) / target) * 100, 100) + '%';
+      
+      if(data.messages && data.messages.length > 0){
+        document.getElementById('wallList').innerHTML = data.messages.map(m => `
+          <div class="wall-item">
+            <div class="who">एक साथी</div>
+            <div class="what">${(m.message || '').replace(/</g,'&lt;')}</div>
+          </div>
+        `).join('');
       }else{
-        milestoneText.textContent = 'लक्ष्य पूरा हो चुका है! 🎉';
+        document.getElementById('wallList').innerHTML = '<div class="wall-empty">अभी तक कोई बात नहीं लिखी गई।</div>';
       }
 
-      if(!data.messages || data.messages.length === 0){
-        wallList.innerHTML = '<div class="wall-empty">अभी तक कोई बात नहीं लिखी गई — पहली बात तुम रख सकते हो।</div>';
-        renderUpdates(data.updates);
-        return;
+      if(data.updates && data.updates.length > 0){
+        document.getElementById('updatesList').innerHTML = data.updates.map(u => `
+          <div class="update-item">
+            <div class="time">${u.time}</div>
+            <div class="text">${u.text}</div>
+          </div>
+        `).join('');
+      }else{
+        document.getElementById('updatesList').innerHTML = '<div class="wall-empty">कोई अपडेट नहीं है।</div>';
       }
-      wallList.innerHTML = data.messages.map(m => `
-        <div class="wall-item">
-          <div class="who">एक साथी</div>
-          <div class="what">${(m.message || '').replace(/</g,'&lt;')}</div>
-        </div>
-      `).join('');
-      renderUpdates(data.updates);
-    }catch(e){
-      memberCount.textContent = '—';
-      wallList.innerHTML = '<div class="wall-empty">अभी लोड नहीं हो पाया, दोबारा कोशिश करो।</div>';
-    }
+    }catch(e){}
   }
 
-  wallBtn.addEventListener('click', async () => {
-    const message = wallMessage.value.trim();
-    if(!message){ wallMessage.focus(); return; }
-
-    wallBtn.disabled = true;
-    wallBtn.textContent = 'भेजा जा रहा है...';
+  // Wall Message
+  document.getElementById('wallBtn').addEventListener('click', async () => {
+    const wallMessage = document.getElementById('wallMessage');
+    const msg = wallMessage.value.trim();
+    if(!msg) return;
 
     try{
       await fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
+        method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ type: 'message', message })
+        body: JSON.stringify({ type: 'message', message: msg })
       });
       wallMessage.value = '';
       setTimeout(loadWall, 1000);
-    }catch(e){
-      alert('कुछ गड़बड़ हुई, दोबारा कोशिश करो।');
-    }finally{
-      wallBtn.disabled = false;
-      wallBtn.textContent = 'बात रखो';
-    }
+    }catch(e){}
   });
 
-  // --- Private Suggestions ---
-  const suggestName = document.getElementById('suggestName');
-  const suggestText = document.getElementById('suggestText');
-  const suggestBtn = document.getElementById('suggestBtn');
-
-  suggestBtn.addEventListener('click', async () => {
-    const text = suggestText.value.trim();
-    if(!text){ suggestText.focus(); return; }
-
-    suggestBtn.disabled = true;
-    suggestBtn.textContent = 'भेजा जा रहा है...';
+  // Suggestion
+  document.getElementById('suggestBtn').addEventListener('click', async () => {
+    const txt = document.getElementById('suggestText').value.trim();
+    if(!txt) return;
 
     try{
       await fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
+        method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ type: 'suggestion', name: suggestName.value.trim(), suggestion: text })
+        body: JSON.stringify({ type: 'suggestion', name: document.getElementById('suggestName').value.trim(), suggestion: txt })
       });
-      suggestText.value = '';
-      suggestName.value = '';
-      suggestBtn.textContent = 'भेज दिया ✓';
-      setTimeout(() => { suggestBtn.textContent = 'सुझाव भेजो'; }, 2000);
-    }catch(e){
-      alert('कुछ गड़बड़ हुई, दोबारा कोशिश करो।');
-      suggestBtn.textContent = 'सुझाव भेजो';
-    }finally{
-      suggestBtn.disabled = false;
-    }
+      document.getElementById('suggestText').value = '';
+      alert('सुझाव भेज दिया गया!');
+    }catch(e){}
   });
 
-  // --- Updates ---
-  const updatesList = document.getElementById('updatesList');
-
-  function linkify(text){
-    var escaped = text.replace(/</g,'&lt;');
-    return escaped.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener" style="color:#c8392a; text-decoration:underline;">$1</a>');
-  }
-
-  function renderUpdates(updates){
-    if(!updates || updates.length === 0){
-      updatesList.innerHTML = '<div class="wall-empty">अभी तक कोई अपडेट नहीं है।</div>';
-      return;
-    }
-    updatesList.innerHTML = updates.map(u => `
-      <div class="update-item">
-        <div class="time">${(u.time || '').replace(/</g,'&lt;')}</div>
-        <div class="text">${linkify(u.text || '')}</div>
-      </div>
-    `).join('');
-  }
-
-  // --- Admin Panel ---
-  const adminToggle = document.getElementById('adminToggle');
-  const adminPanel = document.getElementById('adminPanel');
-  const adminKeyInput = document.getElementById('adminKey');
-  const updateText = document.getElementById('updateText');
-  const updateBtn = document.getElementById('updateBtn');
-
-  adminToggle.addEventListener('click', () => {
-    adminPanel.classList.toggle('show');
+  // Admin
+  document.getElementById('adminToggle').addEventListener('click', () => {
+    document.getElementById('adminPanel').classList.toggle('show');
   });
 
-  updateBtn.addEventListener('click', async () => {
-    const key = adminKeyInput.value.trim();
-    const text = updateText.value.trim();
-    if(!key || !text){ alert('पासकोड और मैसेज दोनों भरें!'); return; }
-
-    updateBtn.disabled = true;
-    updateBtn.textContent = 'भेजा जा रहा है...';
+  document.getElementById('updateBtn').addEventListener('click', async () => {
+    const key = document.getElementById('adminKey').value.trim();
+    const update = document.getElementById('updateText').value.trim();
+    if(!key || !update) return;
 
     try{
       await fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
+        method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ type: 'update', key, update: text })
+        body: JSON.stringify({ type: 'update', key, update })
       });
-      updateText.value = '';
+      document.getElementById('updateText').value = '';
       setTimeout(loadWall, 1000);
-    }catch(e){
-      alert('अपडेट भेजने में दिक्कत हुई।');
-    }finally{
-      updateBtn.disabled = false;
-      updateBtn.textContent = 'अपडेट पोस्ट करो';
-    }
+    }catch(e){}
   });
 
-  loadWall();
-  setInterval(loadWall, 15000);
-
-  // --- Push Notification ---
-  const notifyBtn = document.getElementById('notifyBtn');
-  notifyBtn.addEventListener('click', async () => {
-    try{
-      OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.Notifications.requestPermission();
-        if(OneSignal.Notifications.permission){
-          notifyBtn.textContent = '🔔 नोटिफिकेशन चालू है ✓';
-          notifyBtn.disabled = true;
-        }
-      });
-    }catch(e){
-      alert('नोटिफिकेशन ऑन नहीं हो पाया, ब्राउज़र सेटिंग चेक करो।');
-    }
-  });
-
-  // --- FAQ Accordion ---
-  document.querySelectorAll('.faq-item').forEach(item => {
-    item.querySelector('.faq-q').addEventListener('click', () => {
-      item.classList.toggle('open');
+  // Notifications
+  document.getElementById('notifyBtn').addEventListener('click', () => {
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.Notifications.requestPermission();
     });
   });
 
-  // --- Division Breakdown (Admin) ---
-  const divisionBtn = document.getElementById('divisionBtn');
-  const divisionResult = document.getElementById('divisionResult');
-
-  divisionBtn.addEventListener('click', async () => {
-    const key = adminKeyInput.value.trim();
-    if(!key){ adminKeyInput.focus(); alert('कृपया पासकोड डालें'); return; }
-
-    divisionBtn.disabled = true;
-    divisionBtn.textContent = 'लोड हो रहा है...';
-
-    try{
-      const res = await fetch(SCRIPT_URL + '?key=' + encodeURIComponent(key));
-      const data = await res.json();
-      if(!data.divisions || Object.keys(data.divisions).length === 0){
-        divisionResult.innerHTML = '<div style="color:var(--muted); margin-top:8px;">अभी कोई डेटा नहीं, या पासकोड ग़लत है।</div>';
-      }else{
-        divisionResult.innerHTML = Object.entries(data.divisions)
-          .sort((a,b) => b[1] - a[1])
-          .map(([div, n]) => `<div><span>${div.replace(/</g,'&lt;')}</span><b>${n}</b></div>`).join('');
-      }
-    }catch(e){
-      divisionResult.innerHTML = '<div style="color:var(--muted); margin-top:8px;">लोड नहीं हो पाया।</div>';
-    }finally{
-      divisionBtn.disabled = false;
-      divisionBtn.textContent = 'डिवीज़न के अनुसार देखो';
-    }
+  // Accordion
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q').addEventListener('click', () => item.classList.toggle('open'));
   });
-</script>
 
+  loadWall();
+</script>
 </body>
 </html>
