@@ -206,14 +206,29 @@
 
   <!-- Navigation Bar -->
   <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('formTab')">✍️ दस्तख़त</button>
-    <button class="tab-btn" onclick="switchTab('updatesTab')">📢 अपडेट/चैट</button>
-    <button class="tab-btn" onclick="switchTab('rightsTab')">⚖️ अपने हक़</button>
-    <button class="tab-btn" onclick="switchTab('suggestTab')">🔒 सुझाव</button>
+    <button class="tab-btn active" onclick="switchTab('formTab', event)">✍️ दस्तख़त</button>
+    <button class="tab-btn" onclick="switchTab('updatesTab', event)">📢 अपडेट/चैट</button>
+    <button class="tab-btn" onclick="switchTab('rightsTab', event)">⚖️ अपने हक़</button>
+    <button class="tab-btn" onclick="switchTab('suggestTab', event)">🔒 सुझाव</button>
   </div>
 
   <!-- PAGE 1: FORM TAB -->
   <div id="formTab" class="tab-content active">
+    
+    <!-- Quick Mobile Login Bar -->
+    <div style="background:#181f29; padding:10px 14px; border-radius:10px; text-align:center; margin-bottom:12px; border:1px solid rgba(141,151,164,0.25); display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-size:12.5px; color:var(--muted);">पहले से दस्तख़त कर चुके हैं?</span>
+      <button onclick="toggleLoginModal()" style="background:var(--red); border:none; color:var(--paper); padding:5px 12px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;">लॉगिन करें 🔑</button>
+    </div>
+
+    <!-- Login Modal Box -->
+    <div id="loginBox" class="card" style="display:none; border:1px solid var(--red);">
+      <label for="loginPhoneInput">अपना 10 अंकों का मोबाइल नंबर डालें</label>
+      <input type="tel" id="loginPhoneInput" placeholder="9876543210" maxlength="10" inputmode="numeric">
+      <button class="action-btn" id="doLoginBtn" style="margin-top:12px;">लॉगिन करें</button>
+      <button onclick="toggleLoginModal()" style="width:100%; background:transparent; border:none; color:var(--muted); margin-top:8px; font-size:12px; cursor:pointer;">रद्द करें</button>
+    </div>
+
     <div class="manifesto">
       <p>हम श्रमिक हैं — इस दिल्ली की <b>रीढ़ की हड्डी</b>। हमारे मेहनतकश हाथों से हर घर रोशन है, फिर भी हमें अंधेरे में रखा गया।</p>
       <p>अप्रैल 2025 से न सरकार ने मज़दूरी बढ़ाई, न कंपनी ने सैलरी। लेकिन परमानेंट स्टाफ़ की तरक्की और कंपनी का मुनाफ़ा — दोनों बढ़ते रहे।</p>
@@ -253,10 +268,11 @@
         <button class="action-btn" id="submitBtn">दस्तख़त करो</button>
       </div>
 
+      <!-- Success & Profile Card Block -->
       <div class="success" id="successBlock">
         <div class="tick">✓</div>
-        <h2>दर्ज हो गया</h2>
-        <p>तुम्हारी आवाज़ अब इस अभियान का हिस्सा है। इसे अपने साथियों तक भी पहुँचाओ।</p>
+        <h2 id="userWelcomeTitle">दर्ज हो गया</h2>
+        <p id="userInfoDetails">तुम्हारी आवाज़ अब इस अभियान का हिस्सा है। इसे अपने साथियों तक भी पहुँचाओ।</p>
         <p class="success-line">हम रीढ़ की हड्डी हैं — अब दोगलापन नहीं चलेगा।</p>
       </div>
     </div>
@@ -384,17 +400,59 @@
 
 <script>
   // Tab Switcher Logic
-  function switchTab(tabId) {
+  function switchTab(tabId, evt) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
-    event.currentTarget.classList.add('active');
+    if(evt && evt.currentTarget) {
+      evt.currentTarget.classList.add('active');
+    }
     window.scrollTo(0,0);
   }
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxOHYWK5Kdej96hSUS_KzHsz13HQIrXY3-2Jl7k40jFbrcwwh7nSjRq7tyQe7RIDmKq/exec';
 
-  // Submit Form logic
+  // Toggle Mobile Login Box
+  function toggleLoginModal(){
+    const box = document.getElementById('loginBox');
+    box.style.display = box.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // Handle Mobile Login
+  document.getElementById('doLoginBtn').addEventListener('click', async () => {
+    const phone = document.getElementById('loginPhoneInput').value.trim();
+    if(!/^[6-9]\d{9}$/.test(phone)){ alert('कृपया सही 10 अंकों का मोबाइल नंबर डालें'); return; }
+
+    const loginBtn = document.getElementById('doLoginBtn');
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'चेक हो रहा है...';
+
+    try{
+      const res = await fetch(`${SCRIPT_URL}?loginPhone=${phone}`);
+      const data = await res.json();
+      
+      if(data.status === 'found'){
+        document.getElementById('formBody').classList.add('hide');
+        document.getElementById('loginBox').style.display = 'none';
+        
+        document.getElementById('userWelcomeTitle').textContent = `स्वागत है, ${data.user.name}!`;
+        document.getElementById('userInfoDetails').innerHTML = `
+          <b>आपकी एंट्री पहले से दर्ज़ है।</b><br>
+          कंपनी: ${data.user.org} | डिवीज़न: ${data.user.division}
+        `;
+        document.getElementById('successBlock').classList.add('show');
+      } else {
+        alert('यह नंबर अभी दर्ज़ नहीं है। कृपया नीचे फ़ॉर्म भरकर दस्तख़त करें।');
+      }
+    }catch(e){
+      alert('लॉगिन करने में समस्या आई, कृपया दोबारा प्रयास करें।');
+    }finally{
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'लॉगिन करें';
+    }
+  });
+
+  // Submit Form logic (Preventing Double Entry)
   const submitBtn = document.getElementById('submitBtn');
   submitBtn.addEventListener('click', async () => {
     const name = document.getElementById('name').value.trim();
@@ -412,12 +470,24 @@
     submitBtn.textContent = 'भेजा जा रहा है...';
 
     try{
-      await fetch(SCRIPT_URL, {
-        method: 'POST', mode: 'no-cors',
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ name, phone, division, org, demands })
+        body: JSON.stringify({ type: 'signature', name, phone, division, org, demands })
       });
+      
+      const result = await response.json();
+
+      if(result.status === 'duplicate'){
+        alert(result.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'दस्तख़त करो';
+        return;
+      }
+
       document.getElementById('formBody').classList.add('hide');
+      document.getElementById('userWelcomeTitle').textContent = 'दर्ज हो गया';
+      document.getElementById('userInfoDetails').textContent = 'तुम्हारी आवाज़ अब इस अभियान का हिस्सा है। इसे अपने साथियों तक भी पहुँचाओ।';
       document.getElementById('successBlock').classList.add('show');
       setTimeout(loadWall, 1200);
     }catch(e){
@@ -470,7 +540,7 @@
 
     try{
       await fetch(SCRIPT_URL, {
-        method: 'POST', mode: 'no-cors',
+        method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({ type: 'message', message: msg })
       });
@@ -486,7 +556,7 @@
 
     try{
       await fetch(SCRIPT_URL, {
-        method: 'POST', mode: 'no-cors',
+        method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({ type: 'suggestion', name: document.getElementById('suggestName').value.trim(), suggestion: txt })
       });
@@ -495,7 +565,7 @@
     }catch(e){}
   });
 
-  // Admin
+  // Admin Toggle
   document.getElementById('adminToggle').addEventListener('click', () => {
     document.getElementById('adminPanel').classList.toggle('show');
   });
@@ -507,7 +577,7 @@
 
     try{
       await fetch(SCRIPT_URL, {
-        method: 'POST', mode: 'no-cors',
+        method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({ type: 'update', key, update })
       });
