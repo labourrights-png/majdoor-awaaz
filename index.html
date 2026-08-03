@@ -20,23 +20,52 @@
 </script>
 <style>
   :root{
-    --sky-top:#26313e;
-    --sky-mid:#141b24;
-    --sky-bot:#080b0f;
-    --red:#c8392a;
-    --paper:#ece4d2;
-    --muted:#8d97a4;
-    --card:#101720;
+    /* Light theme, Indian flag accents */
+    --saffron:#FF9933;
+    --white:#ffffff;
+    --green:#138808;
+    --chakra:#0a3161;
+    --red:#c1121f;
+    --paper:#1a1a1a;      /* main text on light bg */
+    --muted:#6b7280;
+    --card:#ffffff;
+    --bg:#f3f4f6;
+    --line:#e5e7eb;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
+  html, body{ height:100%; }
   body{
-    background:linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 40%, var(--sky-bot) 100%);
+    position:relative;
+    background:var(--bg);
     min-height:100vh;
     font-family:'Noto Sans Devanagari', sans-serif;
     color:var(--paper);
     padding:16px 12px 60px;
+    overflow-x:hidden;
   }
-  .wrap{ max-width:520px; margin:0 auto; }
+
+  /* Faint Indian flag background, fixed behind everything */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    opacity:0.08;
+    background:linear-gradient(180deg, var(--saffron) 0%, var(--saffron) 33.33%, var(--white) 33.33%, var(--white) 66.66%, var(--green) 66.66%, var(--green) 100%);
+  }
+  body::after{
+    content:"";
+    position:fixed;
+    top:50%; left:50%;
+    width:260px; height:260px;
+    transform:translate(-50%,-50%);
+    border:4px solid var(--chakra);
+    border-radius:50%;
+    opacity:0.05;
+    z-index:-1;
+  }
+
+  .wrap{ max-width:520px; margin:0 auto; position:relative; z-index:1; }
 
   .eyebrow{
     text-align:center;
@@ -44,7 +73,7 @@
     font-weight:600;
     letter-spacing:0.3em;
     font-size:13px;
-    color:var(--muted);
+    color:var(--saffron);
     text-transform:uppercase;
     margin-bottom:6px;
   }
@@ -55,6 +84,7 @@
     text-align:center;
     line-height:1.2;
     margin-bottom:14px;
+    color:var(--paper);
   }
   h1 .red{ color:var(--red); }
 
@@ -62,14 +92,15 @@
   .nav-tabs {
     display: flex;
     justify-content: space-between;
-    background: #101720;
-    border: 1px solid rgba(141,151,164,0.3);
+    background: #ffffff;
+    border: 1px solid var(--line);
     border-radius: 12px;
     padding: 4px;
     margin-bottom: 20px;
     position: sticky;
     top: 10px;
     z-index: 100;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
   }
   .tab-btn {
     flex: 1;
@@ -87,19 +118,15 @@
   }
   .tab-btn.active {
     background: var(--red);
-    color: var(--paper);
+    color: #ffffff;
   }
 
   /* Page Sections */
-  .tab-content {
-    display: none;
-  }
-  .tab-content.active {
-    display: block;
-  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
 
   .manifesto{
-    background:linear-gradient(180deg, rgba(200,57,42,0.08), rgba(200,57,42,0.02));
+    background:linear-gradient(180deg, rgba(193,18,31,0.06), rgba(193,18,31,0.02));
     border-left:3px solid var(--red);
     border-radius:8px;
     padding:14px 16px;
@@ -114,22 +141,24 @@
 
   .card{
     background:var(--card);
-    border:1px solid rgba(141,151,164,0.25);
+    border:1px solid var(--line);
     border-radius:14px;
     padding:18px 16px;
     margin-bottom:16px;
+    box-shadow:0 4px 18px rgba(0,0,0,0.05);
   }
   label{ display:block; font-size:13.5px; font-weight:600; color:var(--muted); margin-bottom:6px; margin-top:14px; }
   label:first-of-type{ margin-top:0; }
   input[type=text], input[type=tel], textarea{
-    width:100%; padding:11px 12px; border-radius:8px; border:1px solid rgba(141,151,164,0.35);
-    background:#181f29; color:var(--paper); font-size:14.5px; font-family:inherit;
+    width:100%; padding:11px 12px; border-radius:8px; border:1px solid var(--line);
+    background:#fafafa; color:var(--paper); font-size:14.5px; font-family:inherit;
   }
+  input:focus, textarea:focus{ outline:none; border-color:var(--red); background:#fff; }
   textarea{ resize:vertical; min-height:70px; }
-  input::placeholder, textarea::placeholder{ color:#5a6472; }
-  .hint{ font-size:11px; color:#5a6472; margin-top:4px; }
+  input::placeholder, textarea::placeholder{ color:#9aa1ab; }
+  .hint{ font-size:11px; color:#9aa1ab; margin-top:4px; }
 
-  .demand{ display:flex; align-items:flex-start; gap:8px; padding:9px 0; border-bottom:1px solid rgba(141,151,164,0.12); cursor:pointer; }
+  .demand{ display:flex; align-items:flex-start; gap:8px; padding:9px 0; border-bottom:1px solid var(--line); cursor:pointer; }
   .demand:last-child{ border-bottom:none; }
   .demand input{ margin-top:3px; width:17px; height:17px; accent-color:var(--red); flex-shrink:0; }
   .demand span{ font-size:13.5px; line-height:1.4; }
@@ -139,49 +168,90 @@
 
   .action-btn{
     width:100%; margin-top:18px; padding:13px; border:none; border-radius:9px;
-    background:var(--red); color:var(--paper); font-family:'Baloo 2', sans-serif;
+    background:var(--red); color:#ffffff; font-family:'Baloo 2', sans-serif;
     font-weight:700; font-size:16px; cursor:pointer;
+    box-shadow:0 4px 14px rgba(193,18,31,0.25);
   }
   .action-btn:disabled{ opacity:0.5; cursor:not-allowed; }
 
-  .success{ display:none; text-align:center; padding:20px 10px; }
-  .success.show{ display:block; }
-  .success .tick{ width:50px; height:50px; border-radius:50%; background:var(--red); display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:24px; }
-  .success h2{ font-family:'Baloo 2', sans-serif; font-size:20px; margin-bottom:6px; }
+  /* ---- Success / celebration screen ---- */
+  .success{ display:none; text-align:center; padding:22px 10px 10px; }
+  .success.show{ display:block; animation:fadeUp 0.4s ease; }
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(8px);} to{ opacity:1; transform:translateY(0);} }
+
+  .success .tick{
+    width:56px; height:56px; border-radius:50%;
+    background:linear-gradient(135deg, var(--saffron), var(--red));
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto 14px; font-size:26px; color:#fff;
+    box-shadow:0 6px 18px rgba(193,18,31,0.3);
+  }
+  .success h2{ font-family:'Baloo 2', sans-serif; font-size:21px; margin-bottom:6px; color:var(--paper); }
   .success p{ color:var(--muted); font-size:13.5px; line-height:1.6; }
-  .success-line{ margin-top:10px; font-family:'Baloo 2', sans-serif; font-weight:700; font-size:15px; color:var(--red) !important; }
+
+  .success-counter{
+    margin:16px auto 4px; display:inline-flex; flex-direction:column; align-items:center;
+    background:#fdf3f0; border:1px solid rgba(193,18,31,0.15); border-radius:12px;
+    padding:10px 22px;
+  }
+  .success-counter .num{ font-family:'Teko', sans-serif; font-weight:700; font-size:34px; color:var(--red); line-height:1; }
+  .success-counter .lbl{ font-size:11.5px; color:var(--muted); margin-top:2px; }
+
+  .quote-box{
+    margin-top:16px; padding:14px 10px; border-top:1px dashed var(--line); border-bottom:1px dashed var(--line);
+  }
+  .quote-box p{ transition:opacity 0.25s ease; }
+  #quoteLine1{ font-size:14px; color:#444; font-weight:600; margin-bottom:6px; }
+  #quoteLine2{ font-size:14px; color:var(--red); font-weight:800; }
+
+  .notify-cta{
+    margin-top:18px; padding:16px 14px; background:#fff8ec; border:1px solid rgba(255,153,51,0.35);
+    border-radius:12px;
+  }
+  .notify-cta .reason{ font-size:12.5px; color:#8a5a10; line-height:1.6; margin-bottom:10px; }
+  .notify-cta .action-btn{
+    width:auto; padding:10px 22px; font-size:14px; margin-top:0;
+    background:var(--chakra); box-shadow:0 4px 14px rgba(10,49,97,0.25);
+  }
+  .notify-cta .status-note{ font-size:11px; color:#9aa1ab; margin-top:8px; }
+
+  .share-cta{ margin-top:14px; }
+  .share-cta .action-btn{
+    width:auto; padding:10px 22px; font-size:14px; margin-top:0;
+    background:#25D366; box-shadow:0 4px 14px rgba(37,211,102,0.3);
+  }
 
   .form-body.hide{ display:none; }
-  .privacy-note{ font-size:11px; color:#5a6472; text-align:center; margin-top:14px; line-height:1.5; }
+  .privacy-note{ font-size:11px; color:#9aa1ab; text-align:center; margin-top:14px; line-height:1.5; }
 
   .wall-header{ text-align:center; margin:16px 0 12px; }
-  .wall-header h2{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:20px; }
+  .wall-header h2{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:20px; color:var(--paper); }
 
   .live-badge{ display:inline-flex; align-items:center; gap:5px; margin-top:4px; font-size:11px; color:var(--muted); }
-  .live-badge .dot{ width:6px; height:6px; border-radius:50%; background:#e05a4a; animation:pulse 1.6s infinite; }
+  .live-badge .dot{ width:6px; height:6px; border-radius:50%; background:var(--green); animation:pulse 1.6s infinite; }
   @keyframes pulse{ 0%{ opacity:1; transform:scale(1); } 50%{ opacity:0.4; transform:scale(1.4); } 100%{ opacity:1; transform:scale(1); } }
-  
+
   .live-count{ text-align:center; margin-bottom:14px; }
   .live-count .n{ font-family:'Teko', sans-serif; font-weight:700; font-size:38px; color:var(--red); line-height:1; }
   .live-count .l{ font-size:12px; color:var(--muted); }
 
   .progress-wrap{ max-width:400px; margin:0 auto 20px; }
   .progress-label{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted); margin-bottom:5px; }
-  .progress-track{ width:100%; height:8px; border-radius:5px; background:#181f29; overflow:hidden; border:1px solid rgba(141,151,164,0.25); }
-  .progress-fill{ height:100%; background:linear-gradient(90deg, var(--red), #e05a4a); border-radius:5px; transition:width 0.6s ease; width:0%; }
+  .progress-track{ width:100%; height:8px; border-radius:5px; background:#eceff3; overflow:hidden; border:1px solid var(--line); }
+  .progress-fill{ height:100%; background:linear-gradient(90deg, var(--saffron), var(--red)); border-radius:5px; transition:width 0.6s ease; width:0%; }
   .milestone-text{ text-align:center; font-size:11.5px; color:var(--muted); margin-top:6px; }
 
   .wall-list{ margin-top:8px; }
-  .wall-item{ background:#181f29; border-radius:9px; padding:11px 12px; margin-bottom:8px; border-left:2px solid var(--red); }
+  .wall-item{ background:#ffffff; border:1px solid var(--line); border-radius:9px; padding:11px 12px; margin-bottom:8px; border-left:3px solid var(--green); }
   .wall-item .who{ font-size:11px; font-weight:600; color:var(--red); margin-bottom:3px; }
   .wall-item .what{ font-size:13.5px; line-height:1.5; color:var(--paper); }
   .wall-empty{ text-align:center; color:var(--muted); font-size:12.5px; padding:15px 0; }
 
-  .update-item{ background:linear-gradient(180deg, rgba(200,57,42,0.06), transparent); border-left:2px solid var(--red); border-radius:9px; padding:11px 12px; margin-bottom:8px; }
+  .update-item{ background:linear-gradient(180deg, rgba(255,153,51,0.08), transparent); border-left:3px solid var(--saffron); border-radius:9px; padding:11px 12px; margin-bottom:8px; }
   .update-item .time{ font-size:10.5px; color:var(--muted); margin-bottom:4px; }
   .update-item .text{ font-size:13.5px; line-height:1.6; color:var(--paper); }
 
-  .faq-item{ background:#181f29; border-radius:9px; margin-bottom:8px; overflow:hidden; }
+  .faq-item{ background:#ffffff; border:1px solid var(--line); border-radius:9px; margin-bottom:8px; overflow:hidden; }
   .faq-q{ padding:12px 14px; font-size:13.5px; font-weight:600; color:var(--paper); cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
   .faq-q .arrow{ color:var(--red); transition:transform 0.2s; font-size:11px; }
   .faq-item.open .faq-q .arrow{ transform:rotate(180deg); }
@@ -192,8 +262,20 @@
   .body-text-list p{ font-size:13px; line-height:1.7; color:var(--paper); margin-bottom:8px; }
   .body-text-list p:last-child{ margin-bottom:0; }
 
+  .benefits-card{
+    background:linear-gradient(180deg, rgba(19,136,8,0.06), rgba(19,136,8,0.02));
+    border:1px solid rgba(19,136,8,0.25); border-left:3px solid var(--green);
+    border-radius:12px; padding:16px; margin-bottom:16px;
+  }
+  .benefits-card h3{ font-family:'Baloo 2', sans-serif; font-size:16px; color:var(--green); margin-bottom:10px; }
+  .benefit-item{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+  .benefit-item:last-child{ margin-bottom:0; }
+  .benefit-item .ico{ font-size:16px; flex-shrink:0; margin-top:1px; }
+  .benefit-item .txt{ font-size:13px; line-height:1.6; color:var(--paper); }
+  .benefit-item .txt b{ color:var(--green); }
+
   .admin-toggle{ text-align:center; margin-top:24px; }
-  .admin-toggle span{ font-size:11px; color:#4a525e; cursor:pointer; text-decoration:underline; }
+  .admin-toggle span{ font-size:11px; color:#9aa1ab; cursor:pointer; text-decoration:underline; }
   .admin-panel{ display:none; margin-top:10px; }
   .admin-panel.show{ display:block; }
 </style>
@@ -214,11 +296,11 @@
 
   <!-- PAGE 1: FORM TAB -->
   <div id="formTab" class="tab-content active">
-    
+
     <!-- Quick Mobile Login Bar -->
-    <div style="background:#181f29; padding:10px 14px; border-radius:10px; text-align:center; margin-bottom:12px; border:1px solid rgba(141,151,164,0.25); display:flex; justify-content:space-between; align-items:center;">
+    <div style="background:#ffffff; padding:10px 14px; border-radius:10px; text-align:center; margin-bottom:12px; border:1px solid var(--line); display:flex; justify-content:space-between; align-items:center;">
       <span style="font-size:12.5px; color:var(--muted);">पहले से दस्तख़त कर चुके हैं?</span>
-      <button onclick="toggleLoginModal()" style="background:var(--red); border:none; color:var(--paper); padding:5px 12px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;">लॉगिन करें 🔑</button>
+      <button onclick="toggleLoginModal()" style="background:var(--red); border:none; color:#fff; padding:5px 12px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;">लॉगिन करें 🔑</button>
     </div>
 
     <!-- Login Modal Box -->
@@ -233,6 +315,15 @@
       <p>हम श्रमिक हैं — इस दिल्ली की <b>रीढ़ की हड्डी</b>। हमारे मेहनतकश हाथों से हर घर रोशन है, फिर भी हमें अंधेरे में रखा गया।</p>
       <p>अप्रैल 2025 से न सरकार ने मज़दूरी बढ़ाई, न कंपनी ने सैलरी। लेकिन परमानेंट स्टाफ़ की तरक्की और कंपनी का मुनाफ़ा — दोनों बढ़ते रहे।</p>
       <p class="line">यह दोगलापन अब और नहीं चलेगा।</p>
+    </div>
+
+    <div class="benefits-card">
+      <h3>🤝 जुड़ने से क्या फ़ायदा?</h3>
+      <div class="benefit-item"><span class="ico">💪</span><span class="txt"><b>अकेले नहीं, साथ में ताक़त</b> — अकेली आवाज़ अनसुनी रह जाती है, सैकड़ों साथियों की आवाज़ को अनदेखा करना मुश्किल है।</span></div>
+      <div class="benefit-item"><span class="ico">📖</span><span class="txt"><b>सही जानकारी, ग़लत डर नहीं</b> — अपने कानूनी हक़ पता होने पर कोई तुम्हें ग़लत बात बोलकर डरा नहीं सकता।</span></div>
+      <div class="benefit-item"><span class="ico">🔔</span><span class="txt"><b>समय पर सही अपडेट</b> — अगला कदम, मीटिंग या फ़ैसला — तुम्हें सबसे पहले पता चलेगा, अफ़वाह से नहीं।</span></div>
+      <div class="benefit-item"><span class="ico">🕶️</span><span class="txt"><b>पहचान छुपाकर अपनी बात</b> — गुमनाम मैसेज वॉल पर बिना डर के अपनी बात रख सकते हो।</span></div>
+      <div class="benefit-item"><span class="ico">📋</span><span class="txt"><b>एक मज़बूत रिकॉर्ड बनता है</b> — जब बहुत से साथी एक जैसी माँग पर दस्तख़त करते हैं, तो यह साबित करता है कि यह सिर्फ़ एक-दो लोगों की नहीं, पूरे वर्कफ़ोर्स की माँग है।</span></div>
     </div>
 
     <p class="lead">अगर तुम भी मानते हो कि ठेका प्रथा खत्म होनी चाहिए, तो अपना नाम दर्ज करो — यह सूची आगे की मांग रखने के लिए इस्तेमाल होगी।</p>
@@ -268,12 +359,34 @@
         <button class="action-btn" id="submitBtn">दस्तख़त करो</button>
       </div>
 
-      <!-- Success & Profile Card Block -->
+      <!-- Success & Celebration Block -->
       <div class="success" id="successBlock">
         <div class="tick">✓</div>
         <h2 id="userWelcomeTitle">दर्ज हो गया</h2>
         <p id="userInfoDetails">तुम्हारी आवाज़ अब इस अभियान का हिस्सा है। इसे अपने साथियों तक भी पहुँचाओ।</p>
-        <p class="success-line">हम रीढ़ की हड्डी हैं — अब दोगलापन नहीं चलेगा।</p>
+
+        <!-- Live member counter, filled after submit -->
+        <div class="success-counter" id="successCounter" style="display:none;">
+          <div class="num" id="successCounterNum">—</div>
+          <div class="lbl">साथियों में तुम शामिल हुए</div>
+        </div>
+
+        <!-- Rotating motivational couplet -->
+        <div class="quote-box">
+          <p id="quoteLine1">---</p>
+          <p id="quoteLine2">---</p>
+        </div>
+
+        <!-- Notification CTA, right after signing, with reason -->
+        <div class="notify-cta">
+          <div class="reason">🔔 नोटिफिकेशन चालू करो — ताकि जब भी अभियान की कोई ज़रूरी अपडेट, मीटिंग या अगला कदम तय हो, तुम सबसे पहले जान सको। जुड़ना काफ़ी नहीं, जुड़े रहना ज़रूरी है — कोई ज़रूरी बात छूटनी नहीं चाहिए।</div>
+          <button class="action-btn" id="notifyBtnSuccess">🔔 नोटिफिकेशन चालू करें</button>
+          <div class="status-note" id="notifyStatusNote"></div>
+        </div>
+
+        <div class="share-cta">
+          <button class="action-btn" id="shareBtnSuccess">📲 साथियों को व्हाट्सएप पर बताओ</button>
+        </div>
       </div>
     </div>
     <p class="privacy-note">यह डेटा सीधे एक निजी Google Sheet में जाता है — केवल आयोजक के पास इसकी पहुँच है।</p>
@@ -325,13 +438,14 @@
   <!-- PAGE 3: RIGHTS & FAQ TAB -->
   <div id="rightsTab" class="tab-content">
     <div class="wall-header">
-      <h2>सुरक्षित कैसे रहें</h2>
+      <h2>साथियों तक बात पहुँचाओ</h2>
     </div>
     <div class="card">
       <div class="body-text-list">
-        <p>🔒 अपना नाम और नंबर सिर्फ़ फ़ॉर्म पर दो — ऑफ़िस या ग्रुप में खुले में चर्चा मत करो।</p>
-        <p>🔒 काम की जगह पर इस पेज को न खोलें, जब तक भरोसा पक्का न हो।</p>
-        <p>🔒 सोच-समझकर, सिर्फ़ उन्हीं साथियों को लिंक भेजें जिन पर पूरा भरोसा हो।</p>
+        <p>🤝 अपने भरोसेमंद साथियों को इस अभियान के बारे में बताओ — जितने ज़्यादा साथी जुड़ेंगे, हमारी आवाज़ उतनी ही मज़बूत होगी।</p>
+        <p>📲 ये लिंक अपने साथियों के साथ शेयर करो — मिलकर ही हक़ मिलता है, अकेले नहीं।</p>
+        <p>💬 समझदारी से बात करो, सही जगह और सही समय पर — ताकि हर साथी सहज होकर जुड़ सके।</p>
+        <p>🔒 तुम्हारा नाम और नंबर सिर्फ़ इस फ़ॉर्म तक सीमित रहता है, सुरक्षित रहता है।</p>
       </div>
     </div>
 
@@ -351,6 +465,34 @@
         <div class="faq-q"><span>⚖️ वेतन भुगतान अधिनियम</span><span class="arrow">▾</span></div>
         <div class="faq-a"><div class="faq-a-inner">तय तारीख़ पर पूरी सैलरी मिलना कानूनी हक़ है। बार-बार देरी करना नियमों का उल्लंघन है।</div></div>
       </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>⚖️ औद्योगिक विवाद अधिनियम, 1947</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">बिना उचित नोटिस और मुआवज़े के किसी को नौकरी से नहीं निकाला जा सकता — छँटनी (retrenchment) के भी तय नियम हैं।</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>⚖️ भविष्य निधि (PF) अधिनियम</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">कॉन्ट्रैक्ट वर्कर हो या स्थायी, दोनों का PF कटना और कंपनी का बराबर योगदान देना कानूनन ज़रूरी है।</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>⚖️ कर्मचारी राज्य बीमा (ESI) अधिनियम</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">तय सैलरी सीमा के अंदर आने वाले कर्मचारियों को मेडिकल इलाज और चोट लगने पर बीमा कवर पाने का हक़ है।</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>⚖️ बोनस भुगतान अधिनियम, 1965</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">अगर कंपनी इस अधिनियम के दायरे में आती है, तो साल में एक बार बोनस पाना कर्मचारी का हक़ है।</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>⚖️ मातृत्व लाभ अधिनियम</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">महिला साथियों को पेड मैटरनिटी लीव पाने का पूरा कानूनी हक़ है, चाहे वो कॉन्ट्रैक्ट पर हों।</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>⚖️ ट्रेड यूनियन अधिनियम, 1926</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">मज़दूरों को एकजुट होकर संगठन (यूनियन) बनाने और अपनी बात रखने का पूरा कानूनी हक़ है।</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>⚖️ सुरक्षित काम की जगह का हक़</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Occupational Safety, Health and Working Conditions Code के तहत सुरक्षित माहौल और ज़रूरी सुरक्षा उपकरण पाना कर्मचारी का हक़ है।</div></div>
+      </div>
     </div>
 
     <div class="wall-header">
@@ -364,6 +506,14 @@
       <div class="faq-item">
         <div class="faq-q"><span>मेरा डेटा कहाँ जाता है?</span><span class="arrow">▾</span></div>
         <div class="faq-a"><div class="faq-a-inner">हर एंट्री सीधे एक सुरक्षित Google Sheet में सेव होती है।</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>अगर मैं शांतिपूर्ण विरोध में शामिल होऊं तो क्या कंपनी कुछ कर सकती है?</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">शांतिपूर्ण तरीक़े से इकट्ठा होना और अपनी बात रखना एक कानूनी हक़ है। सिर्फ़ इसके लिए किसी को दंडित करना नियमों के ख़िलाफ़ है।</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>क्या मैं यूनियन बना सकता हूँ?</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">हाँ। Trade Unions Act, 1926 के तहत मज़दूरों को संगठित होने और यूनियन बनाने का पूरा कानूनी अधिकार है।</div></div>
       </div>
     </div>
   </div>
@@ -413,6 +563,28 @@
   // Updated Web App URL
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwdFxmwjh5BL4fxrcUlp2Mn1yt5ExdYHxL8UbKusfRl2o6PeKYzA4CMcG4LS6QXaexA/exec';
 
+  // ---- Rotating motivational couplets ----
+  const quotePairs = [
+    ["अकेले लड़ोगे तो दबा दिए जाओगे,", "एकजुट होकर लड़ोगे तो अपना हक़ छीन लोगे।"],
+    ["चुप रहोगे तो हक़ नहीं मिलेगा,", "आवाज़ उठाओगे तो बदलाव ज़रूर आएगा।"],
+    ["एक हाथ से ताली नहीं बजती,", "एक होकर ही मज़दूर की जीत बनती है।"],
+    ["डर के जीना कोई ज़िंदगी नहीं,", "हक़ के लिए खड़े होना ही असली मज़बूती है।"],
+    ["बूँद-बूँद से सागर बनता है,", "साथी-साथी से संघर्ष जीता जाता है।"],
+    ["आज चुप रहे तो कल पछताओगे,", "आज एकजुट हुए तो कल हक़ पाओगे।"]
+  ];
+
+  function pickRandomQuote(){
+    const pair = quotePairs[Math.floor(Math.random() * quotePairs.length)];
+    const l1 = document.getElementById('quoteLine1');
+    const l2 = document.getElementById('quoteLine2');
+    l1.style.opacity = 0; l2.style.opacity = 0;
+    setTimeout(() => {
+      l1.textContent = pair[0];
+      l2.textContent = pair[1];
+      l1.style.opacity = 1; l2.style.opacity = 1;
+    }, 200);
+  }
+
   // Toggle Mobile Login Box
   function toggleLoginModal(){
     const box = document.getElementById('loginBox');
@@ -431,16 +603,18 @@
     try{
       const res = await fetch(`${SCRIPT_URL}?loginPhone=${phone}`);
       const data = await res.json();
-      
+
       if(data.status === 'found'){
         document.getElementById('formBody').classList.add('hide');
         document.getElementById('loginBox').style.display = 'none';
-        
+
         document.getElementById('userWelcomeTitle').textContent = `स्वागत है, ${data.user.name}!`;
         document.getElementById('userInfoDetails').innerHTML = `
           <b>आपकी एंट्री पहले से दर्ज़ है।</b><br>
           कंपनी: ${data.user.org} | डिवीज़न: ${data.user.division}
         `;
+        document.getElementById('successCounter').style.display = 'none';
+        pickRandomQuote();
         document.getElementById('successBlock').classList.add('show');
       } else {
         alert('यह नंबर अभी दर्ज़ नहीं है। कृपया नीचे फ़ॉर्म भरकर दस्तख़त करें।');
@@ -476,7 +650,7 @@
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({ type: 'signature', name, phone, division, org, demands })
       });
-      
+
       const result = await response.json();
 
       if(result.status === 'duplicate'){
@@ -487,10 +661,14 @@
       }
 
       document.getElementById('formBody').classList.add('hide');
-      document.getElementById('userWelcomeTitle').textContent = 'दर्ज हो गया';
-      document.getElementById('userInfoDetails').textContent = 'तुम्हारी आवाज़ अब इस अभियान का हिस्सा है। इसे अपने साथियों तक भी पहुँचाओ।';
+      document.getElementById('userWelcomeTitle').textContent = `शुक्रिया, ${name}!`;
+      document.getElementById('userInfoDetails').textContent = 'तुम्हारी आवाज़ अब इस अभियान का हिस्सा है। तुम अकेले नहीं हो — इसे अपने साथियों तक भी पहुँचाओ।';
+
+      pickRandomQuote();
       document.getElementById('successBlock').classList.add('show');
-      setTimeout(loadWall, 1200);
+
+      // fetch current count to show "you are the Nth member"
+      loadWall(true);
     }catch(e){
       alert('कुछ गड़बड़ हुई, दोबारा कोशिश करें।');
       submitBtn.disabled = false;
@@ -499,16 +677,21 @@
   });
 
   // Load Updates & Chat
-  async function loadWall(){
+  async function loadWall(updateSuccessCounter){
     try{
       const res = await fetch(SCRIPT_URL);
       const data = await res.json();
       document.getElementById('memberCount').textContent = data.count || 0;
       document.getElementById('progressCount').textContent = data.count || 0;
-      
+
       const target = 500;
       document.getElementById('progressFill').style.width = Math.min(((data.count||0) / target) * 100, 100) + '%';
-      
+
+      if(updateSuccessCounter){
+        document.getElementById('successCounterNum').textContent = data.count || '—';
+        document.getElementById('successCounter').style.display = 'inline-flex';
+      }
+
       if(data.messages && data.messages.length > 0){
         document.getElementById('wallList').innerHTML = data.messages.map(m => `
           <div class="wall-item">
@@ -546,7 +729,7 @@
         body: JSON.stringify({ type: 'message', message: msg })
       });
       wallMessage.value = '';
-      setTimeout(loadWall, 1000);
+      setTimeout(() => loadWall(false), 1000);
     }catch(e){}
   });
 
@@ -583,15 +766,37 @@
         body: JSON.stringify({ type: 'update', key, update })
       });
       document.getElementById('updateText').value = '';
-      setTimeout(loadWall, 1000);
+      setTimeout(() => loadWall(false), 1000);
     }catch(e){}
   });
 
-  // Notifications
-  document.getElementById('notifyBtn').addEventListener('click', () => {
+  // ---- Notifications ----
+  function requestNotificationPermission(statusNoteEl){
     OneSignalDeferred.push(async function(OneSignal) {
       await OneSignal.Notifications.requestPermission();
+      try{
+        const enabled = OneSignal.Notifications.permission;
+        if(statusNoteEl){
+          statusNoteEl.textContent = enabled ? '✓ नोटिफिकेशन चालू है — अब कोई अपडेट नहीं छूटेगी।' : '';
+        }
+      }catch(e){}
     });
+  }
+
+  // Notify button on the updates tab (existing behaviour)
+  document.getElementById('notifyBtn').addEventListener('click', () => {
+    requestNotificationPermission(null);
+  });
+
+  // Notify button on the success/celebration screen (new — right after signing)
+  document.getElementById('notifyBtnSuccess').addEventListener('click', () => {
+    requestNotificationPermission(document.getElementById('notifyStatusNote'));
+  });
+
+  // Share button on success screen — opens WhatsApp share sheet with campaign link
+  document.getElementById('shareBtnSuccess').addEventListener('click', () => {
+    const text = encodeURIComponent('मैंने "मज़दूर संघर्ष अभियान" पर हस्ताक्षर कर दिए — ठेका नहीं, स्थायी नौकरी और हक़! तुम भी जुड़ो: ' + window.location.href);
+    window.open(`https://wa.me/?text=${text}`, '_blank');
   });
 
   // Accordion
@@ -599,7 +804,7 @@
     item.querySelector('.faq-q').addEventListener('click', () => item.classList.toggle('open'));
   });
 
-  loadWall();
+  loadWall(false);
 </script>
 </body>
 </html>
