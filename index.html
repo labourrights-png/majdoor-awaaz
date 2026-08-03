@@ -6,6 +6,17 @@
 <title>अपनी आवाज़ दर्ज करो</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Teko:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "c56abe56-5435-4815-9ee8-9f1303ef7dd3",
+      notifyButton: { enable: false },
+      allowLocalhostAsSecureOrigin: true,
+    });
+  });
+</script>
 <style>
   :root{
     --sky-top:#26313e;
@@ -528,6 +539,9 @@
   <div class="wall-header">
     <h2>अभियान की अपडेट</h2>
   </div>
+  <div style="text-align:center; margin-bottom:16px;">
+    <button id="notifyBtn" style="width:auto; padding:10px 20px; font-size:13.5px; margin-top:0; display:inline-block;">🔔 अपडेट का नोटिफिकेशन ऑन करो</button>
+  </div>
   <div id="updatesList">
     <div class="wall-empty">लोड हो रहा है...</div>
   </div>
@@ -600,31 +614,33 @@
   const formBody = document.getElementById('formBody');
   const successBlock = document.getElementById('successBlock');
 
-  // Apna Google Apps Script Web App URL yahan hai
+  // Google Apps Script Web App URL
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxOHYWK5Kdej96hSUS_KzHsz13HQIrXY3-2Jl7k40jFbrcwwh7nSjRq7tyQe7RIDmKq/exec';
 
   submitBtn.addEventListener('click', async () => {
     const name = nameInput.value.trim();
     const phone = phoneInput.value.trim();
     const division = divisionInput.value.trim();
+    const org = orgInput.value.trim();
+
     if(!name){ nameInput.focus(); nameInput.style.borderColor = '#c8392a'; return; }
     if(!phone){ phoneInput.focus(); phoneInput.style.borderColor = '#c8392a'; return; }
-    if(!/^[6-9]\d{9}$/.test(phone)){
-      phoneInput.focus();
-      phoneInput.style.borderColor = '#c8392a';
-      alert('सही 10 अंकों का मोबाइल नंबर डालो (जो 6, 7, 8 या 9 से शुरू हो)।');
-      return;
-    }
+    
+    // Check Indian 10-digit phone number
     if(!/^[6-9]\d{9}$/.test(phone)){
       phoneInput.focus();
       phoneInput.style.borderColor = '#c8392a';
       alert('कृपया सही 10 अंकों का फ़ोन नंबर डालो (जो 6, 7, 8 या 9 से शुरू हो)।');
       return;
     }
+
     if(!division){ divisionInput.focus(); divisionInput.style.borderColor = '#c8392a'; return; }
-    const org = orgInput.value.trim();
     if(!org){ orgInput.focus(); orgInput.style.borderColor = '#c8392a'; return; }
-    if(!consentInput.checked){ consentInput.focus(); return; }
+    if(!consentInput.checked){ 
+      alert('कृपया ग्रुप में जुड़ने की सहमति वाले बॉक्स पर टिक करें।');
+      consentInput.focus(); 
+      return; 
+    }
 
     const demands = Array.from(document.querySelectorAll('#demands input:checked')).map(i => i.value);
 
@@ -632,7 +648,7 @@
       name,
       phone,
       division,
-      org: orgInput.value.trim(),
+      org,
       demands
     };
 
@@ -646,9 +662,10 @@
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(entry)
       });
+      
       formBody.classList.add('hide');
       successBlock.classList.add('show');
-      loadWall();
+      setTimeout(loadWall, 1200);
     }catch(e){
       submitBtn.disabled = false;
       submitBtn.textContent = 'दस्तख़त करो';
@@ -718,7 +735,7 @@
         body: JSON.stringify({ type: 'message', message })
       });
       wallMessage.value = '';
-      setTimeout(loadWall, 800);
+      setTimeout(loadWall, 1000);
     }catch(e){
       alert('कुछ गड़बड़ हुई, दोबारा कोशिश करो।');
     }finally{
@@ -727,7 +744,7 @@
     }
   });
 
-  // --- Private Suggestions (organizer-only visibility) ---
+  // --- Private Suggestions ---
   const suggestName = document.getElementById('suggestName');
   const suggestText = document.getElementById('suggestText');
   const suggestBtn = document.getElementById('suggestBtn');
@@ -758,7 +775,7 @@
     }
   });
 
-  // --- Updates (read for everyone) ---
+  // --- Updates ---
   const updatesList = document.getElementById('updatesList');
 
   function linkify(text){
@@ -779,7 +796,7 @@
     `).join('');
   }
 
-  // --- Admin panel (organizer only) ---
+  // --- Admin Panel ---
   const adminToggle = document.getElementById('adminToggle');
   const adminPanel = document.getElementById('adminPanel');
   const adminKeyInput = document.getElementById('adminKey');
@@ -793,19 +810,20 @@
   updateBtn.addEventListener('click', async () => {
     const key = adminKeyInput.value.trim();
     const text = updateText.value.trim();
-    if(!key || !text){ return; }
+    if(!key || !text){ alert('पासकोड और मैसेज दोनों भरें!'); return; }
 
     updateBtn.disabled = true;
     updateBtn.textContent = 'भेजा जा रहा है...';
 
     try{
-      const res = await fetch(SCRIPT_URL, {
+      await fetch(SCRIPT_URL, {
         method: 'POST',
+        mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({ type: 'update', key, update: text })
       });
       updateText.value = '';
-      setTimeout(loadWall, 800);
+      setTimeout(loadWall, 1000);
     }catch(e){
       alert('अपडेट भेजने में दिक्कत हुई।');
     }finally{
@@ -817,20 +835,36 @@
   loadWall();
   setInterval(loadWall, 15000);
 
-  // --- FAQ accordion ---
+  // --- Push Notification ---
+  const notifyBtn = document.getElementById('notifyBtn');
+  notifyBtn.addEventListener('click', async () => {
+    try{
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.Notifications.requestPermission();
+        if(OneSignal.Notifications.permission){
+          notifyBtn.textContent = '🔔 नोटिफिकेशन चालू है ✓';
+          notifyBtn.disabled = true;
+        }
+      });
+    }catch(e){
+      alert('नोटिफिकेशन ऑन नहीं हो पाया, ब्राउज़र सेटिंग चेक करो।');
+    }
+  });
+
+  // --- FAQ Accordion ---
   document.querySelectorAll('.faq-item').forEach(item => {
     item.querySelector('.faq-q').addEventListener('click', () => {
       item.classList.toggle('open');
     });
   });
 
-  // --- Division breakdown (admin-only) ---
+  // --- Division Breakdown (Admin) ---
   const divisionBtn = document.getElementById('divisionBtn');
   const divisionResult = document.getElementById('divisionResult');
 
   divisionBtn.addEventListener('click', async () => {
     const key = adminKeyInput.value.trim();
-    if(!key){ adminKeyInput.focus(); return; }
+    if(!key){ adminKeyInput.focus(); alert('कृपया पासकोड डालें'); return; }
 
     divisionBtn.disabled = true;
     divisionBtn.textContent = 'लोड हो रहा है...';
@@ -839,14 +873,14 @@
       const res = await fetch(SCRIPT_URL + '?key=' + encodeURIComponent(key));
       const data = await res.json();
       if(!data.divisions || Object.keys(data.divisions).length === 0){
-        divisionResult.innerHTML = '<div style="color:var(--muted);">अभी कोई डेटा नहीं, या पासकोड ग़लत है।</div>';
+        divisionResult.innerHTML = '<div style="color:var(--muted); margin-top:8px;">अभी कोई डेटा नहीं, या पासकोड ग़लत है।</div>';
       }else{
         divisionResult.innerHTML = Object.entries(data.divisions)
           .sort((a,b) => b[1] - a[1])
           .map(([div, n]) => `<div><span>${div.replace(/</g,'&lt;')}</span><b>${n}</b></div>`).join('');
       }
     }catch(e){
-      divisionResult.innerHTML = '<div style="color:var(--muted);">लोड नहीं हो पाया।</div>';
+      divisionResult.innerHTML = '<div style="color:var(--muted); margin-top:8px;">लोड नहीं हो पाया।</div>';
     }finally{
       divisionBtn.disabled = false;
       divisionBtn.textContent = 'डिवीज़न के अनुसार देखो';
