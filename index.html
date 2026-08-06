@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>अपनी आवाज़ दर्ज करो</title>
+<title>मज़दूर संघर्ष अभियान</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Teko:wght@500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
@@ -20,143 +20,65 @@
 </script>
 <style>
   :root{
-    /* Light theme, Indian flag accents */
-    --saffron:#FF9933;
-    --white:#ffffff;
-    --green:#138808;
-    --chakra:#0a3161;
-    --red:#c1121f;
-    --paper:#1a1a1a;      /* main text on light bg */
-    --muted:#6b7280;
-    --card:#ffffff;
-    --bg:#f3f4f6;
-    --line:#e5e7eb;
+    --saffron:#FF9933; --white:#ffffff; --green:#138808; --chakra:#0a3161;
+    --red:#c1121f; --paper:#1a1a1a; --muted:#6b7280; --card:#ffffff; --bg:#f3f4f6; --line:#e5e7eb;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html, body{ height:100%; }
   body{
-    position:relative;
-    background:var(--bg);
-    min-height:100vh;
-    font-family:'Noto Sans Devanagari', sans-serif;
-    color:var(--paper);
-    padding:16px 12px 60px;
-    overflow-x:hidden;
+    position:relative; background:var(--bg); min-height:100vh;
+    font-family:'Noto Sans Devanagari', sans-serif; color:var(--paper);
+    padding:16px 12px 60px; overflow-x:hidden;
   }
-
-  /* Faint Indian flag background, fixed behind everything */
   body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    z-index:-2;
-    opacity:0.08;
-    background:linear-gradient(180deg, var(--saffron) 0%, var(--saffron) 33.33%, var(--white) 33.33%, var(--white) 66.66%, var(--green) 66.66%, var(--green) 100%);
+    content:""; position:fixed; inset:0; z-index:-2; opacity:0.08;
+    background:linear-gradient(180deg, var(--saffron) 0 33.33%, var(--white) 33.33% 66.66%, var(--green) 66.66% 100%);
   }
   body::after{
-    content:"";
-    position:fixed;
-    top:50%; left:50%;
-    width:260px; height:260px;
-    transform:translate(-50%,-50%);
-    border:4px solid var(--chakra);
-    border-radius:50%;
-    opacity:0.05;
-    z-index:-1;
+    content:""; position:fixed; top:50%; left:50%; width:260px; height:260px;
+    transform:translate(-50%,-50%); border:4px solid var(--chakra); border-radius:50%; opacity:0.05; z-index:-1;
   }
+  .wrap{ max-width:540px; margin:0 auto; position:relative; z-index:1; }
 
-  .wrap{ max-width:520px; margin:0 auto; position:relative; z-index:1; }
-
-  .eyebrow{
-    text-align:center;
-    font-family:'Teko', sans-serif;
-    font-weight:600;
-    letter-spacing:0.3em;
-    font-size:13px;
-    color:var(--saffron);
-    text-transform:uppercase;
-    margin-bottom:6px;
-  }
-  h1{
-    font-family:'Baloo 2', sans-serif;
-    font-weight:800;
-    font-size:28px;
-    text-align:center;
-    line-height:1.2;
-    margin-bottom:14px;
-    color:var(--paper);
-  }
+  .eyebrow{ text-align:center; font-family:'Teko', sans-serif; font-weight:600; letter-spacing:0.3em; font-size:13px; color:var(--saffron); text-transform:uppercase; margin-bottom:6px; }
+  h1{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:26px; text-align:center; line-height:1.2; margin-bottom:14px; }
   h1 .red{ color:var(--red); }
 
-  /* Navigation Tabs */
-  .nav-tabs {
-    display: flex;
-    justify-content: space-between;
-    background: #ffffff;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 4px;
-    margin-bottom: 20px;
-    position: sticky;
-    top: 10px;
-    z-index: 100;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  .nav-tabs{
+    display:flex; flex-wrap:wrap; gap:4px; background:#ffffff; border:1px solid var(--line);
+    border-radius:12px; padding:5px; margin-bottom:18px; position:sticky; top:8px; z-index:100;
+    box-shadow:0 4px 14px rgba(0,0,0,0.06);
   }
-  .tab-btn {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: var(--muted);
-    padding: 10px 4px;
-    font-size: 13px;
-    font-family: 'Baloo 2', sans-serif;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: all 0.2s;
-    text-align: center;
+  .tab-btn{
+    flex:1 1 22%; min-width:96px; background:transparent; border:none; color:var(--muted);
+    padding:8px 4px; font-size:11.5px; font-family:'Baloo 2', sans-serif; font-weight:600;
+    cursor:pointer; border-radius:8px; text-align:center; white-space:nowrap;
   }
-  .tab-btn.active {
-    background: var(--red);
-    color: #ffffff;
-  }
+  .tab-btn.active{ background:var(--red); color:#fff; }
+  .tab-btn.locked{ color:#c3c8d0; }
 
-  /* Page Sections */
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
+  .tab-content{ display:none; }
+  .tab-content.active{ display:block; animation:fadeUp 0.3s ease; }
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
 
-  .manifesto{
-    background:linear-gradient(180deg, rgba(193,18,31,0.06), rgba(193,18,31,0.02));
-    border-left:3px solid var(--red);
-    border-radius:8px;
-    padding:14px 16px;
-    margin:12px 0 18px;
-  }
-  .manifesto p{ font-size:14px; line-height:1.7; color:var(--paper); margin-bottom:8px; }
+  .manifesto{ background:linear-gradient(180deg, rgba(193,18,31,0.06), rgba(193,18,31,0.02)); border-left:3px solid var(--red); border-radius:8px; padding:14px 16px; margin:10px 0 16px; }
+  .manifesto p{ font-size:14px; line-height:1.7; margin-bottom:8px; }
   .manifesto p:last-child{ margin-bottom:0; }
   .manifesto b{ color:var(--red); }
   .manifesto .line{ font-family:'Baloo 2', sans-serif; font-weight:700; font-size:15px; color:var(--red); text-align:right; }
 
-  .lead{ text-align:center; color:var(--muted); font-size:13.5px; line-height:1.6; margin-bottom:18px; }
-
-  .card{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:14px;
-    padding:18px 16px;
-    margin-bottom:16px;
-    box-shadow:0 4px 18px rgba(0,0,0,0.05);
-  }
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 16px; margin-bottom:16px; box-shadow:0 4px 18px rgba(0,0,0,0.05); }
   label{ display:block; font-size:13.5px; font-weight:600; color:var(--muted); margin-bottom:6px; margin-top:14px; }
   label:first-of-type{ margin-top:0; }
-  input[type=text], input[type=tel], textarea{
+  input[type=text], input[type=tel], input[type=number], textarea, select{
     width:100%; padding:11px 12px; border-radius:8px; border:1px solid var(--line);
     background:#fafafa; color:var(--paper); font-size:14.5px; font-family:inherit;
   }
-  input:focus, textarea:focus{ outline:none; border-color:var(--red); background:#fff; }
+  input:focus, textarea:focus, select:focus{ outline:none; border-color:var(--red); background:#fff; }
   textarea{ resize:vertical; min-height:70px; }
   input::placeholder, textarea::placeholder{ color:#9aa1ab; }
   .hint{ font-size:11px; color:#9aa1ab; margin-top:4px; }
+  .row2{ display:flex; gap:10px; } .row2 > div{ flex:1; }
 
   .demand{ display:flex; align-items:flex-start; gap:8px; padding:9px 0; border-bottom:1px solid var(--line); cursor:pointer; }
   .demand:last-child{ border-bottom:none; }
@@ -166,130 +88,102 @@
   .consent{ display:flex; align-items:flex-start; gap:8px; margin-top:16px; font-size:12px; color:var(--muted); line-height:1.5; }
   .consent input{ margin-top:3px; width:15px; height:15px; accent-color:var(--red); flex-shrink:0; }
 
-  .action-btn{
-    width:100%; margin-top:18px; padding:13px; border:none; border-radius:9px;
-    background:var(--red); color:#ffffff; font-family:'Baloo 2', sans-serif;
-    font-weight:700; font-size:16px; cursor:pointer;
-    box-shadow:0 4px 14px rgba(193,18,31,0.25);
-  }
+  .action-btn{ width:100%; margin-top:18px; padding:13px; border:none; border-radius:9px; background:var(--red); color:#fff; font-family:'Baloo 2', sans-serif; font-weight:700; font-size:16px; cursor:pointer; box-shadow:0 4px 14px rgba(193,18,31,0.25); }
+  .action-btn.secondary{ background:var(--chakra); box-shadow:0 4px 14px rgba(10,49,97,0.25); }
+  .action-btn.small{ width:auto; padding:9px 16px; font-size:13px; margin-top:10px; }
+  .action-btn.whatsapp{ background:#25D366; box-shadow:0 4px 14px rgba(37,211,102,0.3); }
   .action-btn:disabled{ opacity:0.5; cursor:not-allowed; }
 
-  /* ---- Success / celebration screen ---- */
   .success{ display:none; text-align:center; padding:22px 10px 10px; }
   .success.show{ display:block; animation:fadeUp 0.4s ease; }
-  @keyframes fadeUp{ from{ opacity:0; transform:translateY(8px);} to{ opacity:1; transform:translateY(0);} }
-
-  .success .tick{
-    width:56px; height:56px; border-radius:50%;
-    background:linear-gradient(135deg, var(--saffron), var(--red));
-    display:flex; align-items:center; justify-content:center;
-    margin:0 auto 14px; font-size:26px; color:#fff;
-    box-shadow:0 6px 18px rgba(193,18,31,0.3);
-  }
-  .success h2{ font-family:'Baloo 2', sans-serif; font-size:21px; margin-bottom:6px; color:var(--paper); }
+  .success .tick{ width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg, var(--saffron), var(--red)); display:flex; align-items:center; justify-content:center; margin:0 auto 14px; font-size:26px; color:#fff; box-shadow:0 6px 18px rgba(193,18,31,0.3); }
+  .success h2{ font-family:'Baloo 2', sans-serif; font-size:20px; margin-bottom:6px; }
   .success p{ color:var(--muted); font-size:13.5px; line-height:1.6; }
-
-  .success-counter{
-    margin:16px auto 4px; display:inline-flex; flex-direction:column; align-items:center;
-    background:#fdf3f0; border:1px solid rgba(193,18,31,0.15); border-radius:12px;
-    padding:10px 22px;
-  }
-  .success-counter .num{ font-family:'Teko', sans-serif; font-weight:700; font-size:34px; color:var(--red); line-height:1; }
-  .success-counter .lbl{ font-size:11.5px; color:var(--muted); margin-top:2px; }
-
-  .quote-box{
-    margin-top:16px; padding:14px 10px; border-top:1px dashed var(--line); border-bottom:1px dashed var(--line);
-  }
-  .quote-box p{ transition:opacity 0.25s ease; }
-  #quoteLine1{ font-size:14px; color:#444; font-weight:600; margin-bottom:6px; }
-  #quoteLine2{ font-size:14px; color:var(--red); font-weight:800; }
-
-  .notify-cta{
-    margin-top:18px; padding:16px 14px; background:#fff8ec; border:1px solid rgba(255,153,51,0.35);
-    border-radius:12px;
-  }
-  .notify-cta .reason{ font-size:12.5px; color:#8a5a10; line-height:1.6; margin-bottom:10px; }
-  .notify-cta .action-btn{
-    width:auto; padding:10px 22px; font-size:14px; margin-top:0;
-    background:var(--chakra); box-shadow:0 4px 14px rgba(10,49,97,0.25);
-  }
-  .notify-cta .status-note{ font-size:11px; color:#9aa1ab; margin-top:8px; }
-
-  .share-cta{ margin-top:14px; }
-  .share-cta .action-btn{
-    width:auto; padding:10px 22px; font-size:14px; margin-top:0;
-    background:#25D366; box-shadow:0 4px 14px rgba(37,211,102,0.3);
-  }
+  .id-badge{ margin:16px auto 4px; display:inline-flex; flex-direction:column; align-items:center; background:#fdf3f0; border:1px solid rgba(193,18,31,0.15); border-radius:12px; padding:10px 26px; }
+  .id-badge .num{ font-family:'Teko', sans-serif; font-weight:700; font-size:26px; color:var(--red); letter-spacing:1px; }
+  .id-badge .lbl{ font-size:11px; color:var(--muted); margin-top:2px; }
+  .id-quote{ margin-top:14px; padding:12px 10px; border-top:1px dashed var(--line); border-bottom:1px dashed var(--line); }
+  #idQuoteLine1{ font-size:13.5px; color:#444; font-weight:600; margin-bottom:5px; }
+  #idQuoteLine2{ font-size:13.5px; color:var(--red); font-weight:800; }
 
   .form-body.hide{ display:none; }
   .privacy-note{ font-size:11px; color:#9aa1ab; text-align:center; margin-top:14px; line-height:1.5; }
 
-  .wall-header{ text-align:center; margin:16px 0 12px; }
-  .wall-header h2{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:20px; color:var(--paper); }
-
-  .live-badge{ display:inline-flex; align-items:center; gap:5px; margin-top:4px; font-size:11px; color:var(--muted); }
+  .wall-header{ text-align:center; margin:4px 0 12px; }
+  .wall-header h2{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:18px; }
+  .section-title{ font-family:'Baloo 2', sans-serif; font-weight:700; font-size:16px; margin:22px 0 10px; display:flex; align-items:center; gap:8px; }
+  .section-title:first-child{ margin-top:0; }
+  .live-badge{ display:inline-flex; align-items:center; gap:5px; font-size:11px; color:var(--muted); }
   .live-badge .dot{ width:6px; height:6px; border-radius:50%; background:var(--green); animation:pulse 1.6s infinite; }
-  @keyframes pulse{ 0%{ opacity:1; transform:scale(1); } 50%{ opacity:0.4; transform:scale(1.4); } 100%{ opacity:1; transform:scale(1); } }
+  @keyframes pulse{ 0%{opacity:1; transform:scale(1);} 50%{opacity:0.4; transform:scale(1.4);} 100%{opacity:1; transform:scale(1);} }
 
-  .live-count{ text-align:center; margin-bottom:14px; }
-  .live-count .n{ font-family:'Teko', sans-serif; font-weight:700; font-size:38px; color:var(--red); line-height:1; }
-  .live-count .l{ font-size:12px; color:var(--muted); }
-
-  .progress-wrap{ max-width:400px; margin:0 auto 20px; }
+  .progress-wrap{ max-width:420px; margin:0 auto 20px; }
   .progress-label{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted); margin-bottom:5px; }
   .progress-track{ width:100%; height:8px; border-radius:5px; background:#eceff3; overflow:hidden; border:1px solid var(--line); }
   .progress-fill{ height:100%; background:linear-gradient(90deg, var(--saffron), var(--red)); border-radius:5px; transition:width 0.6s ease; width:0%; }
   .milestone-text{ text-align:center; font-size:11.5px; color:var(--muted); margin-top:6px; }
 
   .wall-list{ margin-top:8px; }
-  .wall-item{ background:#ffffff; border:1px solid var(--line); border-radius:9px; padding:11px 12px; margin-bottom:8px; border-left:3px solid var(--green); }
+  .wall-item{ background:#fff; border:1px solid var(--line); border-radius:9px; padding:11px 12px; margin-bottom:8px; border-left:3px solid var(--green); }
   .wall-item .who{ font-size:11px; font-weight:600; color:var(--red); margin-bottom:3px; }
-  .wall-item .what{ font-size:13.5px; line-height:1.5; color:var(--paper); }
+  .wall-item .what{ font-size:13.5px; line-height:1.5; }
   .wall-empty{ text-align:center; color:var(--muted); font-size:12.5px; padding:15px 0; }
 
   .update-item{ background:linear-gradient(180deg, rgba(255,153,51,0.08), transparent); border-left:3px solid var(--saffron); border-radius:9px; padding:11px 12px; margin-bottom:8px; }
-  .update-item .time{ font-size:10.5px; color:var(--muted); margin-bottom:4px; }
-  .update-item .text{ font-size:13.5px; line-height:1.6; color:var(--paper); }
+  .update-item .time{ font-size:10.5px; color:var(--muted); margin-bottom:4px; display:flex; gap:6px; align-items:center; }
+  .update-item .text{ font-size:13.5px; line-height:1.6; }
+  .tagchip{ display:inline-block; font-size:9.5px; font-weight:700; padding:2px 7px; border-radius:99px; }
+  .tagchip.breaking{ background:#fdeaea; color:var(--red); }
+  .tagchip.meeting{ background:#eaf3ff; color:var(--chakra); }
 
-  .faq-item{ background:#ffffff; border:1px solid var(--line); border-radius:9px; margin-bottom:8px; overflow:hidden; }
-  .faq-q{ padding:12px 14px; font-size:13.5px; font-weight:600; color:var(--paper); cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
-  .faq-q .arrow{ color:var(--red); transition:transform 0.2s; font-size:11px; }
+  .faq-item{ background:#fff; border:1px solid var(--line); border-radius:9px; margin-bottom:8px; overflow:hidden; }
+  .faq-q{ padding:12px 14px; font-size:13.5px; font-weight:600; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .faq-q .arrow{ color:var(--red); transition:transform 0.2s; font-size:11px; flex-shrink:0; }
   .faq-item.open .faq-q .arrow{ transform:rotate(180deg); }
   .faq-a{ max-height:0; overflow:hidden; transition:max-height 0.25s ease; font-size:13px; color:var(--muted); line-height:1.6; }
-  .faq-item.open .faq-a{ max-height:300px; }
-  .faq-a-inner{ padding:0 14px 12px; }
+  .faq-item.open .faq-a{ max-height:400px; }
+  .faq-a-inner{ padding:0 14px 14px; }
 
-  .body-text-list p{ font-size:13px; line-height:1.7; color:var(--paper); margin-bottom:8px; }
+  .body-text-list p{ font-size:13px; line-height:1.7; margin-bottom:8px; }
   .body-text-list p:last-child{ margin-bottom:0; }
 
-  .benefits-card{
-    background:linear-gradient(180deg, rgba(19,136,8,0.06), rgba(19,136,8,0.02));
-    border:1px solid rgba(19,136,8,0.25); border-left:3px solid var(--green);
-    border-radius:12px; padding:16px; margin-bottom:16px;
-  }
-  .benefits-card h3{ font-family:'Baloo 2', sans-serif; font-size:16px; color:var(--green); margin-bottom:10px; }
-  .benefit-item{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+  .benefits-card{ background:linear-gradient(180deg, rgba(19,136,8,0.06), rgba(19,136,8,0.02)); border:1px solid rgba(19,136,8,0.25); border-left:3px solid var(--green); border-radius:12px; padding:16px; margin-bottom:16px; }
+  .benefits-card h3{ font-family:'Baloo 2', sans-serif; font-size:16px; color:var(--green); margin-bottom:4px; }
+  .benefits-card .bsub{ font-size:11.5px; color:var(--muted); margin-bottom:12px; line-height:1.5; }
+  .benefit-item{ background:#fff; border:1px solid rgba(19,136,8,0.18); border-radius:9px; margin-bottom:8px; overflow:hidden; }
   .benefit-item:last-child{ margin-bottom:0; }
-  .benefit-item .ico{ font-size:16px; flex-shrink:0; margin-top:1px; }
-  .benefit-item .txt{ font-size:13px; line-height:1.6; color:var(--paper); }
-  .benefit-item .txt b{ color:var(--green); }
+  .benefit-q{ display:flex; align-items:flex-start; gap:10px; padding:11px 12px; cursor:pointer; }
+  .benefit-q .ico{ font-size:17px; flex-shrink:0; margin-top:1px; }
+  .benefit-q .txt{ font-size:13px; line-height:1.5; flex:1; }
+  .benefit-q .txt b{ color:var(--green); }
+  .benefit-q .arrow{ color:var(--green); font-size:11px; transition:transform 0.2s; flex-shrink:0; margin-top:2px; }
+  .benefit-item.open .benefit-q .arrow{ transform:rotate(180deg); }
+  .benefit-a{ max-height:0; overflow:hidden; transition:max-height 0.25s ease; }
+  .benefit-item.open .benefit-a{ max-height:340px; }
+  .benefit-a-inner{ padding:0 12px 13px 39px; font-size:12px; color:var(--muted); line-height:1.65; }
 
-  /* ---- Gated dashboard ---- */
   .locked-box{ text-align:center; padding:34px 18px; }
   .locked-box .icon{ font-size:38px; margin-bottom:10px; }
-  .locked-box h3{ font-family:'Baloo 2', sans-serif; font-size:18px; margin-bottom:8px; color:var(--paper); }
+  .locked-box h3{ font-family:'Baloo 2', sans-serif; font-size:18px; margin-bottom:8px; }
   .locked-box p{ color:var(--muted); font-size:13px; line-height:1.6; margin-bottom:18px; }
   .locked-actions{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
   .locked-actions .action-btn{ width:auto; padding:11px 18px; font-size:13.5px; margin-top:0; }
 
   .dash-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
-  .dash-stat{ background:#ffffff; border:1px solid var(--line); border-radius:12px; padding:14px; text-align:center; }
-  .dash-stat .num{ font-family:'Teko', sans-serif; font-weight:700; font-size:30px; color:var(--red); line-height:1; }
-  .dash-stat .lbl{ font-size:11px; color:var(--muted); margin-top:4px; }
+  .dash-stat{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px; text-align:center; }
+  .dash-stat .num{ font-family:'Teko', sans-serif; font-weight:700; font-size:28px; color:var(--red); line-height:1; }
+  .dash-stat .lbl{ font-size:10.5px; color:var(--muted); margin-top:4px; }
 
-  .today-right{ background:#ffffff; border:1px solid var(--line); border-left:3px solid var(--chakra); border-radius:12px; padding:14px 16px; margin-bottom:16px; }
+  .breakdown-card{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:12px; }
+  .breakdown-card h4{ font-family:'Baloo 2', sans-serif; font-size:13.5px; margin-bottom:10px; }
+  .bd-row{ display:flex; justify-content:space-between; align-items:center; font-size:12.5px; padding:6px 0; border-bottom:1px dashed var(--line); }
+  .bd-row:last-child{ border-bottom:none; }
+  .bd-row .cnt{ font-weight:700; color:var(--chakra); }
+  .bd-empty{ font-size:12px; color:var(--muted); text-align:center; padding:8px 0; }
+
+  .today-right{ background:#fff; border:1px solid var(--line); border-left:3px solid var(--chakra); border-radius:12px; padding:14px 16px; margin-bottom:16px; }
   .today-right .tag{ font-size:11px; color:var(--chakra); font-weight:700; margin-bottom:6px; letter-spacing:0.5px; }
-  .today-right .q{ font-size:14px; font-weight:700; margin-bottom:6px; color:var(--paper); }
+  .today-right .q{ font-size:14px; font-weight:700; margin-bottom:6px; }
   .today-right .a{ font-size:13px; color:var(--muted); line-height:1.6; }
 
   .timeline{ margin:6px 0 20px; }
@@ -298,24 +192,48 @@
   .tl-done .tl-dot{ background:var(--green); color:#fff; }
   .tl-current .tl-dot{ background:var(--saffron); color:#fff; }
   .tl-pending .tl-dot{ background:#e5e7eb; color:#9aa1ab; }
-  .tl-text{ font-size:13px; padding-top:2px; color:var(--paper); }
+  .tl-text{ font-size:13px; padding-top:2px; }
   .tl-pending .tl-text{ color:var(--muted); }
 
-  .calc-result{ display:flex; justify-content:space-around; margin-top:14px; }
-  .calc-result .amt{ font-family:'Teko', sans-serif; font-weight:700; font-size:24px; color:var(--green); }
-  .calc-result .clbl{ font-size:11px; color:var(--muted); margin-top:2px; }
-
-  .poll-option{ display:block; padding:10px 12px; border:1px solid var(--line); border-radius:8px; margin-bottom:8px; cursor:pointer; font-size:13.5px; }
-  .poll-option input{ margin-right:8px; accent-color:var(--red); }
   .poll-bar-wrap{ margin-bottom:10px; }
-  .poll-bar-label{ display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; color:var(--paper); }
+  .poll-bar-label{ display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; }
   .poll-bar-track{ height:8px; background:#eceff3; border-radius:5px; overflow:hidden; border:1px solid var(--line); }
-  .poll-bar-fill{ height:100%; background:linear-gradient(90deg, var(--saffron), var(--red)); }
+  .poll-bar-fill{ height:100%; background:linear-gradient(90deg, var(--saffron), var(--red)); transition:width 0.5s ease; }
+  .poll-option{ display:flex; align-items:center; gap:8px; padding:10px 12px; border:1px solid var(--line); border-radius:8px; margin-bottom:8px; cursor:pointer; font-size:13px; }
+  .poll-option input{ accent-color:var(--red); flex-shrink:0; }
+  .poll-voted-note{ font-size:11px; color:var(--green); margin-top:6px; display:none; }
+  .poll-voted-note.show{ display:block; }
 
-  .admin-toggle{ text-align:center; margin-top:24px; }
-  .admin-toggle span{ font-size:11px; color:#9aa1ab; cursor:pointer; text-decoration:underline; }
-  .admin-panel{ display:none; margin-top:10px; }
-  .admin-panel.show{ display:block; }
+  .subtab-switch{ display:flex; gap:6px; margin-bottom:14px; }
+  .subtab-btn{ flex:1; background:#fff; border:1px solid var(--line); border-radius:8px; padding:9px 4px; font-size:12px; font-family:'Baloo 2', sans-serif; font-weight:600; color:var(--muted); cursor:pointer; }
+  .subtab-btn.active{ background:var(--chakra); color:#fff; border-color:var(--chakra); }
+  .subtab-panel{ display:none; }
+  .subtab-panel.active{ display:block; }
+  .private-note{ font-size:11px; color:#8a5a10; background:#fff8ec; border:1px solid rgba(255,153,51,0.35); border-radius:8px; padding:9px 11px; margin-bottom:12px; line-height:1.6; }
+
+  .field-error{ display:none; color:var(--red); font-size:11px; margin-top:5px; font-weight:600; }
+  .input-error{ border-color:var(--red) !important; background:#fff5f5 !important; }
+
+  .profile-mini-card{ background:#f7f8fa; border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-top:14px; text-align:left; }
+  .profile-mini-card .pmc-row{ display:flex; justify-content:space-between; font-size:12.5px; padding:5px 0; border-bottom:1px dashed var(--line); }
+  .profile-mini-card .pmc-row:last-child{ border-bottom:none; }
+  .profile-mini-card .pmc-row .k{ color:var(--muted); }
+  .profile-mini-card .pmc-row .v{ font-weight:600; }
+  .logout-link{ font-size:11px; color:var(--muted); text-decoration:underline; cursor:pointer; display:inline-block; margin-top:12px; }
+
+  .wall-cooldown{ font-size:11px; color:var(--muted); margin-top:6px; text-align:center; display:none; }
+  .wall-cooldown.show{ display:block; }
+
+  .toast{ position:fixed; left:50%; bottom:20px; transform:translateX(-50%) translateY(20px); background:var(--paper); color:#fff; padding:11px 18px; border-radius:9px; font-size:13px; opacity:0; pointer-events:none; transition:all 0.25s ease; z-index:999; box-shadow:0 6px 20px rgba(0,0,0,0.25); text-align:center; max-width:90%; }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .closing-push{ margin-top:20px; text-align:center; padding:18px 14px; border-radius:12px; background:linear-gradient(135deg, rgba(10,49,97,0.05), rgba(193,18,31,0.05)); border:1px solid var(--line); }
+  .closing-push .cline{ font-family:'Baloo 2', sans-serif; font-weight:700; font-size:15.5px; line-height:1.5; }
+  .closing-push .cline .hl{ color:var(--red); }
+  .closing-push .csub{ font-size:12px; color:var(--muted); margin-top:6px; }
+
+  .icon-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  .icon-row .action-btn{ flex:1; min-width:150px; width:auto; margin-top:0; font-size:13px; padding:11px; }
 </style>
 </head>
 <body>
@@ -324,30 +242,16 @@
   <div class="eyebrow">मज़दूर संघर्ष अभियान</div>
   <h1>ठेका नहीं, <span class="red">स्थायी नौकरी और हक़</span></h1>
 
-  <!-- Navigation Bar -->
-  <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('formTab', event)">✍️ दस्तख़त</button>
-    <button class="tab-btn" onclick="switchTab('updatesTab', event)">📢 अपडेट/चैट</button>
-    <button class="tab-btn" onclick="switchTab('rightsTab', event)">⚖️ अपने हक़</button>
-    <button class="tab-btn" onclick="switchTab('suggestTab', event)">🔒 सुझाव</button>
+  <div class="nav-tabs" id="navTabs">
+    <button class="tab-btn active" data-tab="homeTab" onclick="switchTab('homeTab')">🏠 होम</button>
+    <button class="tab-btn" data-tab="profileTab" onclick="switchTab('profileTab')">👤 प्रोफ़ाइल</button>
+    <button class="tab-btn locked" data-tab="dashboardTab" onclick="switchTab('dashboardTab')">📢 डैशबोर्ड</button>
+    <button class="tab-btn locked" data-tab="rightsTab" onclick="switchTab('rightsTab')">⚖️ हक़</button>
+    <button class="tab-btn locked" data-tab="suggestTab" onclick="switchTab('suggestTab')">💡 सुझाव</button>
   </div>
 
-  <!-- PAGE 1: FORM TAB -->
-  <div id="formTab" class="tab-content active">
-
-    <!-- Quick Mobile Login Bar -->
-    <div style="background:#ffffff; padding:10px 14px; border-radius:10px; text-align:center; margin-bottom:12px; border:1px solid var(--line); display:flex; justify-content:space-between; align-items:center;">
-      <span style="font-size:12.5px; color:var(--muted);">पहले से दस्तख़त कर चुके हैं?</span>
-      <button onclick="toggleLoginModal()" style="background:var(--red); border:none; color:#fff; padding:5px 12px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;">लॉगिन करें 🔑</button>
-    </div>
-
-    <!-- Login Modal Box -->
-    <div id="loginBox" class="card" style="display:none; border:1px solid var(--red);">
-      <label for="loginPhoneInput">अपना 10 अंकों का मोबाइल नंबर डालें</label>
-      <input type="tel" id="loginPhoneInput" placeholder="9876543210" maxlength="10" inputmode="numeric">
-      <button class="action-btn" id="doLoginBtn" style="margin-top:12px;">लॉगिन करें</button>
-      <button onclick="toggleLoginModal()" style="width:100%; background:transparent; border:none; color:var(--muted); margin-top:8px; font-size:12px; cursor:pointer;">रद्द करें</button>
-    </div>
+  <!-- ============== 🏠 HOME ============== -->
+  <div id="homeTab" class="tab-content active">
 
     <div class="manifesto">
       <p>हम श्रमिक हैं — इस दिल्ली की <b>रीढ़ की हड्डी</b>। हमारे मेहनतकश हाथों से हर घर रोशन है, फिर भी हमें अंधेरे में रखा गया।</p>
@@ -355,31 +259,131 @@
       <p class="line">यह दोगलापन अब और नहीं चलेगा।</p>
     </div>
 
-    <div class="benefits-card">
-      <h3>🤝 जुड़ने से क्या फ़ायदा?</h3>
-      <div class="benefit-item"><span class="ico">💪</span><span class="txt"><b>अकेले नहीं, साथ में ताक़त</b> — अकेली आवाज़ अनसुनी रह जाती है, सैकड़ों साथियों की आवाज़ को अनदेखा करना मुश्किल है।</span></div>
-      <div class="benefit-item"><span class="ico">📖</span><span class="txt"><b>सही जानकारी, ग़लत डर नहीं</b> — अपने कानूनी हक़ पता होने पर कोई तुम्हें ग़लत बात बोलकर डरा नहीं सकता।</span></div>
-      <div class="benefit-item"><span class="ico">🔔</span><span class="txt"><b>समय पर सही अपडेट</b> — अगला कदम, मीटिंग या फ़ैसला — तुम्हें सबसे पहले पता चलेगा, अफ़वाह से नहीं।</span></div>
-      <div class="benefit-item"><span class="ico">🕶️</span><span class="txt"><b>पहचान छुपाकर अपनी बात</b> — गुमनाम मैसेज वॉल पर बिना डर के अपनी बात रख सकते हो।</span></div>
-      <div class="benefit-item"><span class="ico">📋</span><span class="txt"><b>एक मज़बूत रिकॉर्ड बनता है</b> — जब बहुत से साथी एक जैसी माँग पर दस्तख़त करते हैं, तो यह साबित करता है कि यह सिर्फ़ एक-दो लोगों की नहीं, पूरे वर्कफ़ोर्स की माँग है।</span></div>
+    <div class="dash-grid">
+      <div class="dash-stat"><div class="num" id="homeLiveCount">—</div><div class="lbl">जुड़े हुए साथी (लाइव)</div></div>
+      <div class="dash-stat"><div class="num" id="homeDivCount">—</div><div class="lbl">डिवीज़न शामिल</div></div>
     </div>
 
-    <p class="lead">अगर तुम भी मानते हो कि ठेका प्रथा खत्म होनी चाहिए, तो अपना नाम दर्ज करो — यह सूची आगे की मांग रखने के लिए इस्तेमाल होगी।</p>
+    <button class="action-btn" onclick="switchTab('profileTab')">✍️ अभी जुड़ो — Join Now</button>
+
+    <div class="section-title" style="margin-top:24px;">📢 ताज़ा अपडेट</div>
+    <div id="homeAnnouncement"><div class="bd-empty">लोड हो रहा है...</div></div>
+
+    <div class="section-title">📊 अभियान की प्रगति</div>
+    <div class="progress-wrap" style="margin:0 0 6px;">
+      <div class="progress-label"><span>अगला पड़ाव: <span id="homeMilestoneTarget">500</span> दस्तख़त</span><span id="homeProgressLabel">—/500</span></div>
+      <div class="progress-track"><div class="progress-fill" id="homeProgressFill" style="width:0%;"></div></div>
+      <div class="milestone-text">पड़ाव पूरा होते ही मैनेजमेंट को माँग-पत्र सौंपा जाएगा</div>
+    </div>
+
+    <div class="benefits-card" style="margin-top:20px;">
+      <h3>🤝 जुड़ने से क्या फ़ायदा?</h3>
+      <div class="bsub">हर पॉइंट पर टैप करो, पूरी और ईमानदार बात लिखी है — कोई झूठा वादा नहीं।</div>
+
+      <div class="benefit-item" onclick="toggleBenefit(this)">
+        <div class="benefit-q"><span class="ico">💪</span><span class="txt"><b>साथ में ताक़त</b></span><span class="arrow">▾</span></div>
+        <div class="benefit-a"><div class="benefit-a-inner">अकेली आवाज़ अनसुनी रह जाती है। जब बहुत से साथी एक साथ आवाज़ उठाते हैं, तो मैनेजमेंट के लिए उसे अनदेखा करना मुश्किल हो जाता है। इसका मतलब यह नहीं कि मांग तुरंत मान ली जाएगी — लेकिन बातचीत की मेज़ तक पहुंचने की संभावना ज़्यादा बढ़ जाती है।</div></div>
+      </div>
+      <div class="benefit-item" onclick="toggleBenefit(this)">
+        <div class="benefit-q"><span class="ico">📖</span><span class="txt"><b>सही जानकारी, ग़लत डर नहीं</b></span><span class="arrow">▾</span></div>
+        <div class="benefit-a"><div class="benefit-a-inner">अपने हक़ पता होने पर कोई ग़लत बात बोलकर डरा नहीं सकता। यह सामान्य जागरूकता है, कानूनी सलाह नहीं — सटीक अधिकार के लिए यूनियन या वकील से बात करो।</div></div>
+      </div>
+      <div class="benefit-item" onclick="toggleBenefit(this)">
+        <div class="benefit-q"><span class="ico">🔔</span><span class="txt"><b>समय पर सही अपडेट</b></span><span class="arrow">▾</span></div>
+        <div class="benefit-a"><div class="benefit-a-inner">अगला कदम या फ़ैसला सबसे पहले पता चलेगा — अफ़वाह से नहीं, सीधे यहीं से।</div></div>
+      </div>
+      <div class="benefit-item" onclick="toggleBenefit(this)">
+        <div class="benefit-q"><span class="ico">🕶️</span><span class="txt"><b>पहचान छुपाकर अपनी बात</b></span><span class="arrow">▾</span></div>
+        <div class="benefit-a"><div class="benefit-a-inner">गुमनाम मैसेज वॉल पर बिना नाम के लिख सकते हो। ईमानदारी से बता दें — कोई भी ऑनलाइन प्लेटफ़ॉर्म 100% गुमनामी की गारंटी नहीं दे सकता, इसलिए संवेदनशील जानकारी सोच-समझकर लिखो।</div></div>
+      </div>
+      <div class="benefit-item" onclick="toggleBenefit(this)">
+        <div class="benefit-q"><span class="ico">📋</span><span class="txt"><b>एक साझा रिकॉर्ड बनता है</b></span><span class="arrow">▾</span></div>
+        <div class="benefit-a"><div class="benefit-a-inner">जब कई साथी एक जैसी माँग दर्ज करते हैं, तो यह दिखाता है कि यह अकेले-दुकेले की नहीं, पूरे वर्कफ़ोर्स की माँग है। हालांकि अंतिम फ़ैसला हमेशा मैनेजमेंट और कानूनी प्रक्रिया पर निर्भर करता है — यह गारंटीड जीत नहीं, एक ज़रूरी शुरुआती कदम है।</div></div>
+      </div>
+    </div>
+
+    <div class="section-title">📱 अभियान फैलाओ</div>
+    <div class="card">
+      <div class="icon-row">
+        <button class="action-btn whatsapp small" onclick="joinWhatsappGroup()">💬 व्हाट्सएप ग्रुप जॉइन करो</button>
+        <button class="action-btn secondary small" onclick="shareCampaign()">📤 अभियान शेयर करो</button>
+        <button class="action-btn small" style="background:var(--paper);" onclick="copyInviteLink()">🔗 इनवाइट लिंक कॉपी करो</button>
+      </div>
+      <div class="hint" style="margin-top:12px;">व्हाट्सएप ग्रुप लिंक अभी डेमो लिंक है — असली ग्रुप बनने के बाद उसका लिंक यहाँ लगाना होगा।</div>
+    </div>
+
+    <div class="section-title">🔔 नोटिफिकेशन</div>
+    <div class="card">
+      <div class="hint" style="margin-bottom:10px;">Breaking Update और Meeting Reminder सबसे पहले पाने के लिए नोटिफिकेशन ऑन करो।</div>
+      <button class="action-btn secondary small" onclick="askNotification()">🔔 नोटिफिकेशन ऑन करो</button>
+    </div>
+
+    <div class="closing-push">
+      <div class="cline">जब तक तुम <span class="hl">चुप</span> हो, हालात नहीं बदलेंगे।</div>
+      <div class="cline">जिस दिन तुम <span class="hl">बोलोगे</span>, बदलाव शुरू होगा।</div>
+      <div class="csub">फ़ैसला तुम्हारा है — प्रोफ़ाइल भरके आज ही जुड़ो।</div>
+    </div>
+  </div>
+
+  <!-- ============== 👤 PROFILE / REGISTER ============== -->
+  <div id="profileTab" class="tab-content">
+
+    <div style="background:#fff; padding:10px 14px; border-radius:10px; text-align:center; margin-bottom:16px; border:1px solid var(--line); display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-size:12.5px; color:var(--muted);">पहले से रजिस्टर कर चुके हैं?</span>
+      <button onclick="toggleLoginModal()" style="background:var(--red); border:none; color:#fff; padding:5px 12px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;">लॉगिन करें 🔑</button>
+    </div>
+
+    <div id="loginBox" class="card" style="display:none; border:1px solid var(--red);">
+      <label for="loginPhoneInput">अपना 10 अंकों का मोबाइल नंबर डालें</label>
+      <input type="tel" id="loginPhoneInput" placeholder="9876543210" maxlength="10" inputmode="numeric">
+      <button class="action-btn" id="doLoginBtn" onclick="doLogin()" style="margin-top:12px;">लॉगिन करें</button>
+      <button onclick="toggleLoginModal()" style="width:100%; background:transparent; border:none; color:var(--muted); margin-top:8px; font-size:12px; cursor:pointer;">रद्द करें</button>
+    </div>
+
+    <div class="wall-header"><h2 id="profileFormTitle">प्रोफ़ाइल बनाओ</h2></div>
 
     <div class="card">
       <div class="form-body" id="formBody">
         <label for="name">नाम *</label>
         <input type="text" id="name" placeholder="अपना पूरा नाम लिखो">
+        <div class="field-error" id="err-name">यह जानकारी ज़रूरी है</div>
 
-        <label for="phone">फ़ोन नंबर (व्हाट्सएप के लिए ज़रूरी) *</label>
+        <label for="phone">मोबाइल नंबर (व्हाट्सएप के लिए ज़रूरी) *</label>
         <input type="tel" id="phone" placeholder="10 अंकों का नंबर" maxlength="10" inputmode="numeric">
-        <div class="hint">इसी नंबर से तुम्हें व्हाट्सएप ग्रुप में जोड़ा जाएगा।</div>
+        <div class="field-error" id="err-phone">सही 10 अंकों का मोबाइल नंबर डालो</div>
+        <div class="hint">इसी नंबर से तुम्हें व्हाट्सएप ग्रुप में जोड़ा जाएगा। यही नंबर बाद में लॉगिन के लिए इस्तेमाल होगा।</div>
+
+        <label for="category">कर्मचारी श्रेणी (Employee Category) *</label>
+        <select id="category">
+          <option value="">चुनो</option>
+          <option value="TO">TO</option>
+          <option value="LM">LM</option>
+          <option value="ALM">ALM</option>
+          <option value="अन्य">अन्य</option>
+        </select>
+        <div class="field-error" id="err-category">यह जानकारी ज़रूरी है</div>
+
+        <label for="vendor">वेंडर (Vendor) *</label>
+        <input type="text" id="vendor" placeholder="जैसे — Safeguard, XYZ, आदि">
+        <div class="field-error" id="err-vendor">यह जानकारी ज़रूरी है</div>
 
         <label for="division">डिवीज़न *</label>
         <input type="text" id="division" placeholder="जैसे — Dwarka, Janakpuri, आदि">
+        <div class="field-error" id="err-division">यह जानकारी ज़रूरी है</div>
 
-        <label for="org">कंपनी *</label>
-        <input type="text" id="org" placeholder="जैसे — BSES, Safeguard, आदि">
+        <div class="row2">
+          <div>
+            <label for="joinYear">जॉइनिंग ईयर</label>
+            <input type="number" id="joinYear" placeholder="जैसे — 2019" min="1990" max="2026">
+          </div>
+          <div>
+            <label for="experience">अनुभव (साल में)</label>
+            <input type="number" id="experience" placeholder="जैसे — 6" min="0" max="50">
+          </div>
+        </div>
+
+        <label for="salary">मासिक सैलरी (₹) — यह देना ज़रूरी नहीं है</label>
+        <input type="number" id="salary" placeholder="जैसे — 15000">
 
         <label>तुम किस बात से सहमत हो? (एक या ज़्यादा चुनो)</label>
         <div id="demands">
@@ -393,80 +397,70 @@
           <input type="checkbox" id="consent">
           <span>मैं सहमत हूँ कि मेरा नाम और नंबर इस अभियान के लिए इस्तेमाल हो सकता है।</span>
         </div>
+        <div class="field-error" id="err-consent">आगे बढ़ने के लिए सहमति वाला बॉक्स चेक करो</div>
 
-        <button class="action-btn" id="submitBtn">दस्तख़त करो</button>
+        <button class="action-btn" id="submitBtn" onclick="submitProfile()">Save / Update Profile</button>
+        <div class="privacy-note">तुम्हारा नंबर सिर्फ़ इसी अभियान के लिए इस्तेमाल होगा, किसी और को नहीं दिया जाएगा।</div>
       </div>
 
-      <!-- Success & Celebration Block -->
       <div class="success" id="successBlock">
         <div class="tick">✓</div>
-        <h2 id="userWelcomeTitle">दर्ज हो गया</h2>
-        <p id="userInfoDetails">तुम्हारी आवाज़ अब इस अभियान का हिस्सा है। इसे अपने साथियों तक भी पहुँचाओ।</p>
+        <h2 id="successTitle">बधाई हो, तुम्हारी प्रोफ़ाइल दर्ज हो गई!</h2>
+        <p id="successSub">अब तुम इस मुहिम का हिस्सा हो। तुम्हें व्हाट्सएप ग्रुप में जल्द जोड़ा जाएगा।</p>
+        <div class="id-badge"><div class="num" id="memberIdShow">—</div><div class="lbl">तुम्हारी मेंबर ID — इसे संभालकर रखो</div></div>
 
-        <!-- Live member counter, filled after submit -->
-        <div class="success-counter" id="successCounter" style="display:none;">
-          <div class="num" id="successCounterNum">—</div>
-          <div class="lbl">साथियों में तुम शामिल हुए</div>
+        <div class="profile-mini-card">
+          <div class="pmc-row"><span class="k">नाम</span><span class="v" id="pmcName">—</span></div>
+          <div class="pmc-row"><span class="k">मोबाइल</span><span class="v" id="pmcPhone">—</span></div>
+          <div class="pmc-row"><span class="k">श्रेणी</span><span class="v" id="pmcCategory">—</span></div>
+          <div class="pmc-row"><span class="k">डिवीज़न</span><span class="v" id="pmcDivision">—</span></div>
         </div>
 
-        <!-- Rotating motivational couplet -->
-        <div class="quote-box">
-          <p id="quoteLine1">---</p>
-          <p id="quoteLine2">---</p>
+        <div class="id-quote">
+          <p id="idQuoteLine1">---</p>
+          <p id="idQuoteLine2">---</p>
         </div>
-
-        <!-- Notification CTA, right after signing, with reason -->
-        <div class="notify-cta">
-          <div class="reason">🔔 नोटिफिकेशन चालू करो — ताकि जब भी अभियान की कोई ज़रूरी अपडेट, मीटिंग या अगला कदम तय हो, तुम सबसे पहले जान सको। जुड़ना काफ़ी नहीं, जुड़े रहना ज़रूरी है — कोई ज़रूरी बात छूटनी नहीं चाहिए।</div>
-          <button class="action-btn" id="notifyBtnSuccess">🔔 नोटिफिकेशन चालू करें</button>
-          <div class="status-note" id="notifyStatusNote"></div>
+        <div class="icon-row" style="margin-top:16px;">
+          <button class="action-btn whatsapp small" onclick="shareCampaign()">📲 साथियों को भेजो</button>
+          <button class="action-btn secondary small" onclick="showEditForm()">✏️ Edit Profile</button>
         </div>
-
-        <div class="share-cta">
-          <button class="action-btn" id="shareBtnSuccess">📲 साथियों को व्हाट्सएप पर बताओ</button>
-        </div>
+        <span class="logout-link" onclick="logoutLocal()">यह मेरा नंबर नहीं? यहाँ क्लिक करो</span>
       </div>
     </div>
-    <p class="privacy-note">यह डेटा सीधे एक निजी Google Sheet में जाता है — केवल आयोजक के पास इसकी पहुँच है।</p>
   </div>
 
-  <!-- PAGE 2: UPDATES & CHAT TAB (gated — sign or login to unlock) -->
-  <div id="updatesTab" class="tab-content">
-
-    <!-- Locked view: shown until signature or login -->
-    <div id="dashboardLocked" class="card locked-box">
+  <!-- ============== 📢 DASHBOARD (members only) ============== -->
+  <div id="dashboardTab" class="tab-content">
+    <div class="locked-box" id="dashboardLocked">
       <div class="icon">🔒</div>
-      <h3>यह हिस्सा सिर्फ़ साथियों के लिए है</h3>
-      <p>लाइव सदस्य संख्या, अभियान की प्रगति, सैलरी कैलकुलेटर और पोल देखने के लिए पहले दस्तख़त करो — या अगर पहले से जुड़े हो, तो लॉगिन करो।</p>
-      <div class="locked-actions">
-        <button class="action-btn" onclick="goToSignFromLock()">✍️ दस्तख़त करने जाओ</button>
-        <button class="action-btn" style="background:var(--chakra);" onclick="goToLoginFromLock()">🔑 लॉगिन करें</button>
-      </div>
+      <h3>यह टैब सिर्फ़ सदस्यों के लिए है</h3>
+      <p>अभियान की पूरी जानकारी, आँकड़े और पोल देखने के लिए पहले प्रोफ़ाइल बनाओ।</p>
+      <div class="locked-actions"><button class="action-btn" onclick="switchTab('profileTab')">👤 प्रोफ़ाइल बनाओ</button></div>
     </div>
 
-    <!-- Unlocked dashboard content -->
     <div id="dashboardContent" style="display:none;">
-
-      <div style="text-align:center; margin-bottom:14px;">
-        <button id="notifyBtn" class="action-btn" style="width:auto; padding:8px 16px; font-size:12.5px; margin-top:0;">🔔 नोटिफिकेशन चालू करें</button>
-      </div>
-
-      <div class="wall-header">
-        <h2>लाइव कैंपेन डैशबोर्ड</h2>
-        <div class="live-badge"><span class="dot"></span> लाइव</div>
-      </div>
       <div class="dash-grid">
-        <div class="dash-stat"><div class="num" id="dashTotal">—</div><div class="lbl">कुल साथी जुड़े</div></div>
+        <div class="dash-stat"><div class="num" id="dashTotal">—</div><div class="lbl">कुल साथी</div></div>
         <div class="dash-stat"><div class="num" id="dashToday">—</div><div class="lbl">आज नए जुड़े</div></div>
       </div>
 
+      <div class="breakdown-card">
+        <h4>श्रेणी-वार सदस्य (Category-wise)</h4>
+        <div id="catBreakdown"><div class="bd-empty">लोड हो रहा है...</div></div>
+      </div>
+      <div class="breakdown-card">
+        <h4>वेंडर-वार सदस्य (Vendor-wise)</h4>
+        <div id="vendorBreakdown"><div class="bd-empty">लोड हो रहा है...</div></div>
+      </div>
+      <div class="breakdown-card">
+        <h4>डिवीज़न-वार सदस्य (Division-wise)</h4>
+        <div id="divBreakdown"><div class="bd-empty">लोड हो रहा है...</div></div>
+      </div>
+
       <div class="progress-wrap">
-        <div class="progress-label">
-          <span>लक्ष्य की ओर</span>
-          <span><b id="progressCount">0</b> / <span id="progressTarget">500</span></span>
-        </div>
-        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-        <div class="milestone-text" id="milestoneText"></div>
+        <div class="progress-label"><span>अगला पड़ाव: <span id="dashMilestoneTarget">500</span> दस्तख़त</span><span id="dashProgressLabel">—/500</span></div>
+        <div class="progress-track"><div class="progress-fill" id="dashProgressFill" style="width:0%;"></div></div>
+        <div class="milestone-text">पड़ाव पूरा होते ही मैनेजमेंट को माँग-पत्र सौंपा जाएगा</div>
       </div>
 
       <div class="today-right">
@@ -475,542 +469,592 @@
         <div class="a" id="todayRightA">—</div>
       </div>
 
-      <div class="wall-header"><h2>अभियान की प्रगति</h2></div>
+      <div class="section-title">📌 Timeline</div>
       <div class="timeline" id="campaignTimeline"></div>
 
-      <div class="wall-header"><h2>सैलरी बढ़ोतरी कैलकुलेटर</h2></div>
-      <div class="card">
-        <label for="calcSalary">अपनी मौजूदा सैलरी डालो (₹)</label>
-        <input type="text" id="calcSalary" inputmode="numeric" placeholder="जैसे — 20500">
-        <div class="calc-result">
-          <div style="text-align:center;"><div class="amt" id="calc10">—</div><div class="clbl">10% बढ़ोतरी पर</div></div>
-          <div style="text-align:center;"><div class="amt" id="calc12">—</div><div class="clbl">12% बढ़ोतरी पर</div></div>
-        </div>
-      </div>
+      <div class="section-title">📢 Today's Update <span class="live-badge"><span class="dot"></span> लाइव</span></div>
+      <div id="dashAnnouncements"><div class="bd-empty">लोड हो रहा है...</div></div>
 
-      <div class="wall-header"><h2>आज की पोल</h2></div>
+      <div class="section-title">📊 Poll — अगला कदम क्या हो?</div>
       <div class="card" id="pollCard">
-        <p style="font-size:13.5px; font-weight:600; margin-bottom:10px;">सबसे बड़ी समस्या क्या है?</p>
-        <div id="pollOptions">
-          <label class="poll-option"><input type="radio" name="pollOpt" value="salary"> सैलरी कम होना</label>
-          <label class="poll-option"><input type="radio" name="pollOpt" value="permanent"> स्थायी नौकरी न होना</label>
-          <label class="poll-option"><input type="radio" name="pollOpt" value="insurance"> स्वास्थ्य बीमा कम होना</label>
-          <label class="poll-option"><input type="radio" name="pollOpt" value="leave"> छुट्टी न मिलना</label>
-        </div>
-        <button class="action-btn" id="pollSubmitBtn">वोट करो</button>
-        <div id="pollResults" style="display:none;"></div>
+        <div id="pollOptionsWrap"></div>
+        <div class="poll-voted-note" id="pollVotedNote">✓ तुम्हारा वोट दर्ज हो गया — नतीजे नीचे हैं</div>
+        <div id="pollResults" style="display:none; margin-top:14px;"></div>
       </div>
 
-      <div class="wall-header">
-        <h2>अभियान की अपडेट</h2>
-      </div>
-      <div id="updatesList">
-        <div class="wall-empty">लोड हो रहा है...</div>
-      </div>
-
-      <div class="wall-header">
-        <h2>हमारा समुदाय</h2>
-        <div class="live-badge"><span class="dot"></span> लाइव</div>
-      </div>
-
-      <div class="live-count">
-        <div class="n" id="memberCount">—</div>
-        <div class="l">सदस्य जुड़ चुके हैं</div>
-      </div>
-
+      <div class="section-title">🕶️ Anonymous Wall</div>
       <div class="card">
-        <label for="wallMessage">अपनी एक बात कहो <span style="color:var(--muted); font-weight:400;">(पूरी तरह गुमनाम रहेगा)</span></label>
-        <textarea id="wallMessage" placeholder="जो दिल में है, वो लिखो..."></textarea>
-        <button class="action-btn" id="wallBtn">बात रखो</button>
+        <label for="wallMsg">अपनी बात यहाँ लिखो (सबको दिखेगी, नाम नहीं)</label>
+        <textarea id="wallMsg" placeholder="जैसे — हमारी शिफ्ट का समय बहुत ज़्यादा है..."></textarea>
+        <button class="action-btn" id="wallPostBtn" onclick="postWallMsg()">भेजो</button>
+        <div class="wall-cooldown" id="wallCooldown"></div>
       </div>
-
-      <div class="wall-list" id="wallList">
-        <div class="wall-empty">लोड हो रहा है...</div>
-      </div>
-
+      <div class="wall-list" id="wallList"><div class="bd-empty">लोड हो रहा है...</div></div>
     </div>
   </div>
 
-  <!-- PAGE 3: RIGHTS & FAQ TAB -->
+  <!-- ============== ⚖️ RIGHTS & RESOURCES ============== -->
   <div id="rightsTab" class="tab-content">
-    <div class="wall-header">
-      <h2>साथियों तक बात पहुँचाओ</h2>
-    </div>
-    <div class="card">
-      <div class="body-text-list">
-        <p>🤝 अपने भरोसेमंद साथियों को इस अभियान के बारे में बताओ — जितने ज़्यादा साथी जुड़ेंगे, हमारी आवाज़ उतनी ही मज़बूत होगी।</p>
-        <p>📲 ये लिंक अपने साथियों के साथ शेयर करो — मिलकर ही हक़ मिलता है, अकेले नहीं।</p>
-        <p>💬 समझदारी से बात करो, सही जगह और सही समय पर — ताकि हर साथी सहज होकर जुड़ सके।</p>
-        <p>🔒 तुम्हारा नाम और नंबर सिर्फ़ इस फ़ॉर्म तक सीमित रहता है, सुरक्षित रहता है।</p>
-      </div>
+    <div class="locked-box" id="rightsLocked">
+      <div class="icon">🔒</div>
+      <h3>यह टैब सिर्फ़ सदस्यों के लिए है</h3>
+      <p>अपने कानूनी हक़ जानने के लिए पहले प्रोफ़ाइल बनाओ।</p>
+      <div class="locked-actions"><button class="action-btn" onclick="switchTab('profileTab')">👤 प्रोफ़ाइल बनाओ</button></div>
     </div>
 
-    <div class="wall-header">
-      <h2>अपना हक़ जानो</h2>
-    </div>
-    <div>
-      <div class="faq-item">
-        <div class="faq-q"><span>⚖️ न्यूनतम मज़दूरी अधिनियम, 1948</span><span class="arrow">▾</span></div>
-        <div class="faq-a"><div class="faq-a-inner">कंपनी किसी भी हाल में सरकार द्वारा तय न्यूनतम मज़दूरी से कम नहीं दे सकती — चाहे कर्मचारी कॉन्ट्रैक्ट पर हो या स्थायी।</div></div>
+    <div id="rightsContent" style="display:none;">
+      <div class="wall-header"><h2>अपने हक़ जानो</h2></div>
+      <div class="body-text-list card">
+        <p>यहाँ दी गई जानकारी सिर्फ़ सामान्य जागरूकता के लिए है, कानूनी सलाह नहीं। अपने सही और पूरे कानूनी हक़ के लिए हमेशा किसी लेबर यूनियन या वकील से सलाह लो।</p>
       </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>⚖️ कॉन्ट्रैक्ट लेबर एक्ट, 1970</span><span class="arrow">▾</span></div>
-        <div class="faq-a"><div class="faq-a-inner">अगर कॉन्ट्रैक्ट वर्कर वही काम कर रहा है जो स्थायी कर्मचारी करता है, तो बराबर वेतन और सुविधाओं की मांग करना कानूनन जायज़ है।</div></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>⚖️ वेतन भुगतान अधिनियम</span><span class="arrow">▾</span></div>
-        <div class="faq-a"><div class="faq-a-inner">तय तारीख़ पर पूरी सैलरी मिलना कानूनी हक़ है। बार-बार देरी करना नियमों का उल्लंघन है।</div></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>⚖️ औद्योगिक विवाद अधिनियम, 1947</span><span class="arrow">▾</span></div>
-        <div class="faq-a"><div class="faq-a-inner">बिना उचित नोटिस और मुआवज़े के किसी को नौकरी से नहीं निकाला जा सकता — छँटनी (retrenchment) के भी तय नियम हैं।</div></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>⚖️ भविष्य निधि (PF) अधिनियम</span><span class="arrow">▾</span></div>
-        <div class="faq-a"><div class="faq-a-inner">कॉन्ट्रैक्ट वर्कर हो या स्थायी, दोनों का PF कटना और कंपनी का बराबर योगदान देना कानूनन ज़रूरी है।</div></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>⚖️ कर्मचारी राज्य बीमा (ESI) अधिनियम</span><span class="arrow">▾</span></div>
-        <div class="faq-a"><div class="faq-a-inner">तय सैलरी सीमा के अंदर आने वाले कर्मचारियों को मेडिकल इलाज और चोट लगने पर बीमा कवर पाने का हक़ है।</div></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>⚖️ बोनस भुगतान अधिनियम, 1965</span><span class="arrow">▾</span></div>
-        <div class="faq-a"><div class="faq-a-inner">अगर कंपनी इस अधिनियम के दायरे में आती है, तो साल में एक बार बोनस पाना कर्मचारी का हक़ है।</div></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>⚖️ मातृत्व लाभ अधिनियम</span><span class="arrow">▾</span></div>
-        <div class="faq-a"><div class="faq-a-inner">महिला साथियों को पेड मैटरनिटी लीव पाने का पूरा कानूनी हक़ है, चाहे वो कॉन्ट्रैक्ट पर हों।</div></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>⚖️ ट्रेड यूनियन अधिनियम, 1926</span><span class="arrow">▾</span></div>
-        <div class="faq-a"><div class="faq-a-inner">मज़दूरों को एकजुट होकर संगठन (यूनियन) बनाने और अपनी बात रखने का पूरा कानूनी हक़ है।</div></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>⚖️ सुरक्षित काम की जगह का हक़</span><span class="arrow">▾</span></div>
-        <div class="faq-a"><div class="faq-a-inner">Occupational Safety, Health and Working Conditions Code के तहत सुरक्षित माहौल और ज़रूरी सुरक्षा उपकरण पाना कर्मचारी का हक़ है।</div></div>
-      </div>
-    </div>
 
-    <div class="wall-header">
-      <h2>अक्सर पूछे जाने वाले सवाल</h2>
-    </div>
-    <div>
-      <div class="faq-item">
-        <div class="faq-q"><span>क्या इससे मेरी नौकरी जाने का ख़तरा है?</span><span class="arrow">▾</span></div>
-        <div class="faq-a"><div class="faq-a-inner">तुम्हारा नाम या फ़ोन नंबर कहीं भी सार्वजनिक नहीं दिखता। केवल एडमिन ही इसे देख सकता है।</div></div>
+      <div class="section-title">❓ FAQ</div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><span>क्या बिना कारण बताए नौकरी से निकाला जा सकता है?</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">आमतौर पर नहीं — किसी भी कर्मचारी को नौकरी से निकालने से पहले उचित कारण और नोटिस देना ज़रूरी होता है। अपने मामले की सही स्थिति जानने के लिए यूनियन या वकील से बात करो।</div></div>
       </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>मेरा डेटा कहाँ जाता है?</span><span class="arrow">▾</span></div>
-        <div class="faq-a"><div class="faq-a-inner">हर एंट्री सीधे एक सुरक्षित Google Sheet में सेव होती है।</div></div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><span>अगर हक़ नहीं मिल रहा तो क्या करें?</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">अकेले शिकायत करने से पहले साथियों और यूनियन से बात करो, सबूत (सैलरी स्लिप, मैसेज) संभालकर रखो, और लेबर डिपार्टमेंट या वकील की मदद लो।</div></div>
       </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>अगर मैं शांतिपूर्ण विरोध में शामिल होऊं तो क्या कंपनी कुछ कर सकती है?</span><span class="arrow">▾</span></div>
-        <div class="faq-a"><div class="faq-a-inner">शांतिपूर्ण तरीक़े से इकट्ठा होना और अपनी बात रखना एक कानूनी हक़ है। सिर्फ़ इसके लिए किसी को दंडित करना नियमों के ख़िलाफ़ है।</div></div>
+
+      <div class="section-title">💰 Salary Rights</div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><span>क्या ठेका मज़दूर को न्यूनतम मज़दूरी मिलनी चाहिए?</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">हाँ, ठेके पर काम करने वाले मज़दूर को भी राज्य सरकार द्वारा तय न्यूनतम मज़दूरी से कम भुगतान नहीं किया जा सकता, चाहे वह किसी भी ठेकेदार के ज़रिए काम कर रहा हो।</div></div>
       </div>
-      <div class="faq-item">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><span>ओवरटाइम का पैसा मिलना चाहिए?</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">तय घंटों से ज़्यादा काम कराने पर आमतौर पर अतिरिक्त भुगतान (ओवरटाइम) मिलना चाहिए। अपनी सैलरी स्लिप में यह चेक करते रहो, और गड़बड़ी होने पर यूनियन को बताओ।</div></div>
+      </div>
+
+      <div class="section-title">🏥 PF / ESI</div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><span>PF और ESI किसे मिलता है?</span><span class="arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">तय शर्तें पूरी करने वाले कर्मचारियों को PF (भविष्य निधि) और ESI (स्वास्थ्य बीमा) का लाभ मिलना चाहिए, चाहे वे ठेके पर ही क्यों न हों। अपनी सैलरी स्लिप में यह कटौती चेक करते रहो।</div></div>
+      </div>
+
+      <div class="section-title">🤝 यूनियन बनाने का हक़</div>
+      <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-q"><span>क्या मैं यूनियन बना सकता हूँ?</span><span class="arrow">▾</span></div>
-        <div class="faq-a"><div class="faq-a-inner">हाँ। Trade Unions Act, 1926 के तहत मज़दूरों को संगठित होने और यूनियन बनाने का पूरा कानूनी अधिकार है।</div></div>
+        <div class="faq-a"><div class="faq-a-inner">हाँ। ट्रेड यूनियन अधिनियम, 1926 के तहत मज़दूरों को संगठित होने और यूनियन बनाने का कानूनी अधिकार है।</div></div>
       </div>
     </div>
   </div>
 
-  <!-- PAGE 4: PRIVATE SUGGESTION TAB -->
+  <!-- ============== 💡 SUGGESTIONS / PROBLEMS (private) ============== -->
   <div id="suggestTab" class="tab-content">
-    <div class="wall-header">
-      <h2>निजी सुझाव</h2>
+    <div class="locked-box" id="suggestLocked">
+      <div class="icon">🔒</div>
+      <h3>यह टैब सिर्फ़ सदस्यों के लिए है</h3>
+      <p>सुझाव, शिकायत या समस्या दर्ज करने के लिए पहले प्रोफ़ाइल बनाओ।</p>
+      <div class="locked-actions"><button class="action-btn" onclick="switchTab('profileTab')">👤 प्रोफ़ाइल बनाओ</button></div>
     </div>
-    <div class="card">
-      <p style="font-size:12px; color:var(--muted); margin-bottom:10px;">यह सिर्फ़ अभियान चलाने वाले तक पहुँचेगा — बाकी किसी को नहीं दिखेगा।</p>
-      <label for="suggestName">नाम (वैकल्पिक)</label>
-      <input type="text" id="suggestName" placeholder="चाहो तो नाम छोड़ सकते हो">
-      <label for="suggestText">अपना सुझाव लिखो</label>
-      <textarea id="suggestText" placeholder="कोई सुझाव, शिकायत या जानकारी जो सिर्फ़ आयोजक को बतानी हो..."></textarea>
-      <button class="action-btn" id="suggestBtn">सुझाव भेजो</button>
-    </div>
-  </div>
 
-  <!-- Admin Panel Toggle -->
-  <div class="admin-toggle">
-    <span id="adminToggle">आयोजक लॉगिन</span>
-    <div class="admin-panel" id="adminPanel">
-      <div class="card">
-        <label for="adminKey">पासकोड</label>
-        <input type="text" id="adminKey" placeholder="secret passcode">
-        <label for="updateText">आज की रणनीति / अपडेट</label>
-        <textarea id="updateText" placeholder="आगे की रणनीति यहाँ लिखो..."></textarea>
-        <button class="action-btn" id="updateBtn">अपडेट पोस्ट करो</button>
+    <div id="suggestContent" style="display:none;">
+      <div class="private-note">🔒 यहाँ जो भी लिखोगे, सिर्फ़ आयोजक देखेंगे — यह कहीं पब्लिक नहीं दिखता, अपनी बात खुलकर लिखो।</div>
+
+      <div class="subtab-switch">
+        <button class="subtab-btn active" data-sub="privSug" onclick="switchSubtab('privSug')">सुझाव</button>
+        <button class="subtab-btn" data-sub="privComp" onclick="switchSubtab('privComp')">शिकायत</button>
+        <button class="subtab-btn" data-sub="privIssue" onclick="switchSubtab('privIssue')">समस्या रिपोर्ट</button>
+      </div>
+
+      <div class="subtab-panel active" id="privSug">
+        <div class="card">
+          <label for="sugMsg">मुहिम को बेहतर बनाने के लिए क्या सुझाव है?</label>
+          <textarea id="sugMsg" placeholder="अपना सुझाव यहाँ लिखो..."></textarea>
+          <button class="action-btn" onclick="postPrivate('sugMsg','सुझाव')">भेजो (सिर्फ़ आयोजक को)</button>
+        </div>
+      </div>
+      <div class="subtab-panel" id="privComp">
+        <div class="card">
+          <label for="compMsg">किस बात की शिकायत है?</label>
+          <textarea id="compMsg" placeholder="जैसे — सुपरवाइज़र का बर्ताव ठीक नहीं है..."></textarea>
+          <button class="action-btn" onclick="postPrivate('compMsg','शिकायत')">भेजो (सिर्फ़ आयोजक को)</button>
+        </div>
+      </div>
+      <div class="subtab-panel" id="privIssue">
+        <div class="card">
+          <label for="issueMsg">काम पर कौन सी समस्या आ रही है?</label>
+          <textarea id="issueMsg" placeholder="जैसे — सुरक्षा उपकरण नहीं मिलते..."></textarea>
+          <button class="action-btn" onclick="postPrivate('issueMsg','समस्या')">भेजो (सिर्फ़ आयोजक को)</button>
+        </div>
       </div>
     </div>
   </div>
+
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-  // Tab Switcher Logic
-  function switchTab(tabId, evt) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    if(evt && evt.currentTarget) {
-      evt.currentTarget.classList.add('active');
-    }
-    window.scrollTo(0,0);
-  }
-
-  // Updated Web App URL
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwdFxmwjh5BL4fxrcUlp2Mn1yt5ExdYHxL8UbKusfRl2o6PeKYzA4CMcG4LS6QXaexA/exec';
-
-  // ---- Membership gate for the updates/dashboard tab ----
-  let memberVerified = false;
-
-  function goToSignFromLock(){ switchTab('formTab'); }
-  function goToLoginFromLock(){
-    switchTab('formTab');
-    setTimeout(() => { document.getElementById('loginBox').style.display = 'block'; }, 50);
-  }
-
-  function unlockDashboard(){
-    if(memberVerified) return;
-    memberVerified = true;
-    document.getElementById('dashboardLocked').style.display = 'none';
-    document.getElementById('dashboardContent').style.display = 'block';
-    renderTimeline();
-    renderTodayRight();
-    loadWall(false, true);
-    loadPolls();
-  }
-
-  // ---- Campaign timeline (edit steps/status here as the campaign progresses) ----
-  const timelineSteps = [
-    { status:'done',    text:'वेबसाइट लॉन्च' },
-    { status:'done',    text:'100 साथी जुड़े' },
-    { status:'current', text:'250 साथी जुड़े' },
-    { status:'pending', text:'मीटिंग की योजना' },
-    { status:'pending', text:'लेबर डिपार्टमेंट को सौंपना' },
-    { status:'pending', text:'ज्ञापन / विरोध प्रदर्शन' }
+  let hasProfile = false;
+  let pollVoted = false;
+  const POLL_QUESTION_OPTIONS = ['मैनेजमेंट को माँग-पत्र सौंपना', 'लेबर डिपार्टमेंट में शिकायत', 'शांतिपूर्ण प्रदर्शन'];
+  const MILESTONE_STEPS = [
+    { target: 0,   label: 'मुहिम शुरू — साथियों से जुड़ना शुरू' },
+    { target: 100, label: '100 साथी जुड़े' },
+    { target: 250, label: '250 साथी जुड़े' },
+    { target: 500, label: '500 साथी — माँग-पत्र मैनेजमेंट को सौंपा जाएगा' },
+    { target: 1000, label: '1000 साथी — अगली रणनीति तय होगी' }
   ];
-  function renderTimeline(){
-    document.getElementById('campaignTimeline').innerHTML = timelineSteps.map(s => {
-      const icon = s.status === 'done' ? '✓' : (s.status === 'current' ? '●' : '');
-      return `<div class="tl-item tl-${s.status}"><div class="tl-dot">${icon}</div><div class="tl-text">${s.text}</div></div>`;
-    }).join('');
-  }
 
-  // ---- Daily "know your rights" fact — changes automatically once a day ----
-  const dailyRights = [
-    { q:'क्या बिना कारण नौकरी से निकाला जा सकता है?', a:'नहीं। औद्योगिक विवाद अधिनियम के तहत उचित नोटिस और ठोस कारण बताए बिना नौकरी से निकालना गैरकानूनी है।' },
-    { q:'क्या कॉन्ट्रैक्ट वर्कर का PF कटना चाहिए?', a:'हाँ। चाहे कॉन्ट्रैक्ट पर हो या स्थायी, PF कटना और कंपनी का बराबर योगदान देना कानूनन ज़रूरी है।' },
-    { q:'क्या मुझे सैलरी स्लिप माँगने का हक़ है?', a:'हाँ। हर कर्मचारी को अपनी सैलरी स्लिप और अपॉइंटमेंट लेटर पाने का पूरा अधिकार है।' },
-    { q:'क्या ओवरटाइम का अलग भुगतान मिलता है?', a:'हाँ। तय घंटों से ज़्यादा काम करने पर ओवरटाइम का भुगतान कानूनन ज़रूरी है।' },
-    { q:'क्या महिला साथियों को मैटरनिटी लीव मिलती है?', a:'हाँ, मातृत्व लाभ अधिनियम के तहत पेड मैटरनिटी लीव का पूरा हक़ है, चाहे कॉन्ट्रैक्ट पर हों।' },
-    { q:'क्या मैं यूनियन बना सकता हूँ?', a:'हाँ। ट्रेड यूनियन अधिनियम, 1926 के तहत मज़दूरों को संगठित होने का पूरा कानूनी अधिकार है।' },
-    { q:'क्या चोट लगने पर इलाज का खर्च कंपनी को देना होता है?', a:'हाँ, ESI के दायरे में आने वाले कर्मचारियों को मेडिकल इलाज और चोट का बीमा कवर मिलता है।' }
-  ];
-  function renderTodayRight(){
-    const dayIndex = Math.floor(Date.now() / 86400000) % dailyRights.length;
-    const item = dailyRights[dayIndex];
-    document.getElementById('todayRightQ').textContent = item.q;
-    document.getElementById('todayRightA').textContent = item.a;
-  }
-
-  // ---- Salary hike calculator ----
-  document.getElementById('calcSalary').addEventListener('input', function(){
-    const val = parseFloat(this.value.replace(/[^0-9.]/g, ''));
-    const c10 = document.getElementById('calc10');
-    const c12 = document.getElementById('calc12');
-    if(!val || val <= 0){ c10.textContent = '—'; c12.textContent = '—'; return; }
-    c10.textContent = '₹' + Math.round(val * 1.10).toLocaleString('en-IN');
-    c12.textContent = '₹' + Math.round(val * 1.12).toLocaleString('en-IN');
-  });
-
-  // ---- Anonymous poll ----
-  // NOTE: needs backend support — POST { type:'poll', option } to store a vote,
-  // and the GET response should include a `pollResults` object like
-  // { salary: 12, permanent: 30, insurance: 5, leave: 8 } for results to show.
-  document.getElementById('pollSubmitBtn').addEventListener('click', async () => {
-    const selected = document.querySelector('input[name="pollOpt"]:checked');
-    if(!selected){ alert('कृपया एक विकल्प चुनें'); return; }
-    const btn = document.getElementById('pollSubmitBtn');
-    btn.disabled = true; btn.textContent = 'भेजा जा रहा है...';
-    try{
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ type: 'poll', option: selected.value })
-      });
-    }catch(e){}
-    btn.disabled = false; btn.textContent = 'वोट करो';
-    loadPolls();
-  });
-
-  async function loadPolls(){
-    try{
-      const res = await fetch(SCRIPT_URL);
-      const data = await res.json();
-      if(data.pollResults){
-        const labels = { salary:'सैलरी कम होना', permanent:'स्थायी नौकरी न होना', insurance:'स्वास्थ्य बीमा कम होना', leave:'छुट्टी न मिलना' };
-        const total = Object.values(data.pollResults).reduce((a,b) => a + b, 0) || 1;
-        const html = Object.keys(labels).map(key => {
-          const count = data.pollResults[key] || 0;
-          const pct = Math.round((count / total) * 100);
-          return `<div class="poll-bar-wrap"><div class="poll-bar-label"><span>${labels[key]}</span><span>${pct}%</span></div><div class="poll-bar-track"><div class="poll-bar-fill" style="width:${pct}%;"></div></div></div>`;
-        }).join('');
-        document.getElementById('pollResults').innerHTML = html;
-        document.getElementById('pollResults').style.display = 'block';
-        document.getElementById('pollOptions').style.display = 'none';
-        document.getElementById('pollSubmitBtn').style.display = 'none';
-      }
-    }catch(e){}
-  }
-
-  // ---- Rotating motivational couplets ----
-  const quotePairs = [
+  // ---- Random motivational line, different every time a profile is saved ----
+  const idQuotePairs = [
     ["अकेले लड़ोगे तो दबा दिए जाओगे,", "एकजुट होकर लड़ोगे तो अपना हक़ छीन लोगे।"],
     ["चुप रहोगे तो हक़ नहीं मिलेगा,", "आवाज़ उठाओगे तो बदलाव ज़रूर आएगा।"],
     ["एक हाथ से ताली नहीं बजती,", "एक होकर ही मज़दूर की जीत बनती है।"],
     ["डर के जीना कोई ज़िंदगी नहीं,", "हक़ के लिए खड़े होना ही असली मज़बूती है।"],
     ["बूँद-बूँद से सागर बनता है,", "साथी-साथी से संघर्ष जीता जाता है।"],
-    ["आज चुप रहे तो कल पछताओगे,", "आज एकजुट हुए तो कल हक़ पाओगे।"]
+    ["आज चुप रहे तो कल पछताओगे,", "आज एकजुट हुए तो कल हक़ पाओगे।"],
+    ["तुम्हारा नाम अब इस सूची में है,", "तुम्हारी आवाज़ अब अकेली नहीं है।"]
   ];
-
-  function pickRandomQuote(){
-    const pair = quotePairs[Math.floor(Math.random() * quotePairs.length)];
-    const l1 = document.getElementById('quoteLine1');
-    const l2 = document.getElementById('quoteLine2');
-    l1.style.opacity = 0; l2.style.opacity = 0;
-    setTimeout(() => {
-      l1.textContent = pair[0];
-      l2.textContent = pair[1];
-      l1.style.opacity = 1; l2.style.opacity = 1;
-    }, 200);
+  function showRandomIdQuote(){
+    const pair = idQuotePairs[Math.floor(Math.random() * idQuotePairs.length)];
+    document.getElementById('idQuoteLine1').textContent = pair[0];
+    document.getElementById('idQuoteLine2').textContent = pair[1];
   }
 
-  // Toggle Mobile Login Box
+  // ---- Daily "know your rights" fact for the dashboard ----
+  const dailyRights = [
+    { q:'क्या बिना कारण नौकरी से निकाला जा सकता है?', a:'नहीं। उचित नोटिस और ठोस कारण बताए बिना नौकरी से निकालना आमतौर पर गैरकानूनी है।' },
+    { q:'क्या कॉन्ट्रैक्ट वर्कर का PF कटना चाहिए?', a:'हाँ। तय शर्तें पूरी करने वाले हर कर्मचारी का PF कटना और कंपनी का बराबर योगदान देना ज़रूरी है।' },
+    { q:'क्या मुझे सैलरी स्लिप माँगने का हक़ है?', a:'हाँ। हर कर्मचारी को अपनी सैलरी स्लिप और अपॉइंटमेंट लेटर पाने का अधिकार है।' },
+    { q:'क्या ओवरटाइम का अलग भुगतान मिलता है?', a:'हाँ। तय घंटों से ज़्यादा काम करने पर आमतौर पर ओवरटाइम भुगतान मिलना चाहिए।' },
+    { q:'क्या मैं यूनियन बना सकता हूँ?', a:'हाँ। ट्रेड यूनियन अधिनियम, 1926 के तहत मज़दूरों को संगठित होने का अधिकार है।' }
+  ];
+  function renderTodayRight(){
+    const idx = Math.floor(Date.now() / 86400000) % dailyRights.length;
+    document.getElementById('todayRightQ').textContent = dailyRights[idx].q;
+    document.getElementById('todayRightA').textContent = dailyRights[idx].a;
+  }
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(()=> t.classList.remove('show'), 2200);
+  }
+
+  function switchTab(tabId){
+    const lockedTabs = ['dashboardTab','rightsTab','suggestTab'];
+    if(!hasProfile && lockedTabs.includes(tabId)){
+      showToast('पहले प्रोफ़ाइल बनाओ या लॉगिन करो, फिर यह टैब खुलेगा 🔒');
+      return;
+    }
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    const btn = document.querySelector('.tab-btn[data-tab="' + tabId + '"]');
+    if(btn) btn.classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function switchSubtab(id){
+    document.querySelectorAll('.subtab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelector('.subtab-btn[data-sub="'+id+'"]').classList.add('active');
+  }
+
+  function toggleFaq(el){ el.classList.toggle('open'); }
+  function toggleBenefit(el){ el.classList.toggle('open'); }
+
   function toggleLoginModal(){
     const box = document.getElementById('loginBox');
-    box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
   }
 
-  // Handle Mobile Login
-  document.getElementById('doLoginBtn').addEventListener('click', async () => {
+  // ==================== LOCAL STORAGE (remember login on this device) ====================
+  const STORAGE_KEY = 'msa_phone';
+
+  function saveLoginLocally(phone){
+    try{ localStorage.setItem(STORAGE_KEY, phone); }catch(e){}
+  }
+  function logoutLocal(){
+    try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+    location.reload();
+  }
+  async function autoLoginFromStorage(){
+    let savedPhone = null;
+    try{ savedPhone = localStorage.getItem(STORAGE_KEY); }catch(e){}
+    if(!savedPhone) return;
+    try{
+      const res = await fetch(`${SCRIPT_URL}?loginPhone=${savedPhone}`);
+      const data = await res.json();
+      if(data.status === 'found'){
+        renderProfileCard(data.user, false);
+        unlockMemberTabs();
+      }
+    }catch(e){}
+  }
+
+  // ==================== FIELD VALIDATION ====================
+  function clearFieldErrors(){
+    ['name','phone','category','vendor','division'].forEach(id => {
+      document.getElementById(id).classList.remove('input-error');
+      const err = document.getElementById('err-'+id);
+      if(err) err.style.display = 'none';
+    });
+    document.getElementById('err-consent').style.display = 'none';
+  }
+  function markFieldError(id){
+    const field = document.getElementById(id);
+    field.classList.add('input-error');
+    const err = document.getElementById('err-'+id);
+    if(err) err.style.display = 'block';
+  }
+
+  // ==================== LOGIN ====================
+  async function doLogin(){
     const phone = document.getElementById('loginPhoneInput').value.trim();
-    if(!/^[6-9]\d{9}$/.test(phone)){ alert('कृपया सही 10 अंकों का मोबाइल नंबर डालें'); return; }
-
-    const loginBtn = document.getElementById('doLoginBtn');
-    loginBtn.disabled = true;
-    loginBtn.textContent = 'चेक हो रहा है...';
-
+    if(!/^\d{10}$/.test(phone)){ showToast('सही 10 अंकों का नंबर डालो'); return; }
+    const btn = document.getElementById('doLoginBtn');
+    btn.disabled = true; btn.textContent = 'चेक हो रहा है...';
     try{
       const res = await fetch(`${SCRIPT_URL}?loginPhone=${phone}`);
       const data = await res.json();
-
       if(data.status === 'found'){
-        document.getElementById('formBody').classList.add('hide');
-        document.getElementById('loginBox').style.display = 'none';
-
-        document.getElementById('userWelcomeTitle').textContent = `स्वागत है, ${data.user.name}!`;
-        document.getElementById('userInfoDetails').innerHTML = `
-          <b>आपकी एंट्री पहले से दर्ज़ है।</b><br>
-          कंपनी: ${data.user.org} | डिवीज़न: ${data.user.division}
-        `;
-        document.getElementById('successCounter').style.display = 'none';
-        pickRandomQuote();
-        document.getElementById('successBlock').classList.add('show');
-        unlockDashboard();
+        toggleLoginModal();
+        showToast('स्वागत है, ' + (data.user.name || 'साथी') + '!');
+        renderProfileCard(data.user, false);
+        unlockMemberTabs();
+        saveLoginLocally(phone);
       } else {
-        alert('यह नंबर अभी दर्ज़ नहीं है। कृपया नीचे फ़ॉर्म भरकर दस्तख़त करें।');
+        showToast('यह नंबर अभी रजिस्टर नहीं है — नीचे नया प्रोफ़ाइल बनाओ');
       }
     }catch(e){
-      alert('लॉगिन करने में समस्या आई, कृपया दोबारा प्रयास करें।');
+      showToast('कुछ गड़बड़ हुई, दोबारा कोशिश करो');
     }finally{
-      loginBtn.disabled = false;
-      loginBtn.textContent = 'लॉगिन करें';
+      btn.disabled = false; btn.textContent = 'लॉगिन करें';
     }
-  });
+  }
 
-  // Submit Form logic (Preventing Double Entry)
-  const submitBtn = document.getElementById('submitBtn');
-  submitBtn.addEventListener('click', async () => {
+  function fillFormForEdit(u){
+    document.getElementById('name').value = u.name || '';
+    document.getElementById('phone').value = u.phone || '';
+    document.getElementById('category').value = u.category || '';
+    document.getElementById('vendor').value = u.vendor || '';
+    document.getElementById('division').value = u.division || '';
+    document.getElementById('joinYear').value = u.joinYear || '';
+    document.getElementById('experience').value = u.experience || '';
+    document.getElementById('salary').value = u.salary || '';
+    document.getElementById('profileFormTitle').textContent = 'प्रोफ़ाइल अपडेट करो';
+  }
+
+  // Show the form again (pre-filled) to edit an existing profile
+  function showEditForm(){
+    const u = {
+      name: document.getElementById('pmcName').textContent,
+      phone: document.getElementById('pmcPhone').textContent,
+      category: document.getElementById('pmcCategory').textContent,
+      division: document.getElementById('pmcDivision').textContent
+    };
+    fillFormForEdit(u);
+    document.getElementById('successBlock').classList.remove('show');
+    document.getElementById('formBody').classList.remove('hide');
+    clearFieldErrors();
+  }
+
+  // Render the persistent "My ID Card" view for a logged-in / registered member
+  function renderProfileCard(u, isNew){
+    document.getElementById('successTitle').textContent = isNew ? 'बधाई हो, तुम्हारी प्रोफ़ाइल दर्ज हो गई!' : 'स्वागत है, ' + (u.name || 'साथी') + '!';
+    document.getElementById('successSub').textContent = isNew ? 'अब तुम इस मुहिम का हिस्सा हो। तुम्हें व्हाट्सएप ग्रुप में जल्द जोड़ा जाएगा।' : 'तुम्हारी प्रोफ़ाइल पहले से दर्ज है — यह रहा तुम्हारा पहचान पत्र।';
+    document.getElementById('memberIdShow').textContent = u.memberId || '—';
+    document.getElementById('pmcName').textContent = u.name || '—';
+    document.getElementById('pmcPhone').textContent = u.phone || '—';
+    document.getElementById('pmcCategory').textContent = u.category || '—';
+    document.getElementById('pmcDivision').textContent = u.division || '—';
+    showRandomIdQuote();
+    document.getElementById('formBody').classList.add('hide');
+    document.getElementById('successBlock').classList.add('show');
+  }
+
+  function unlockMemberTabs(){
+    hasProfile = true;
+    document.querySelectorAll('.tab-btn.locked').forEach(b => b.classList.remove('locked'));
+    document.getElementById('dashboardLocked').style.display = 'none';
+    document.getElementById('dashboardContent').style.display = 'block';
+    document.getElementById('rightsLocked').style.display = 'none';
+    document.getElementById('rightsContent').style.display = 'block';
+    document.getElementById('suggestLocked').style.display = 'none';
+    document.getElementById('suggestContent').style.display = 'block';
+    renderTodayRight();
+    loadDashboard();
+  }
+
+  // ==================== PROFILE SUBMIT ====================
+  async function submitProfile(){
     const name = document.getElementById('name').value.trim();
     const phone = document.getElementById('phone').value.trim();
+    const category = document.getElementById('category').value;
+    const vendor = document.getElementById('vendor').value.trim();
     const division = document.getElementById('division').value.trim();
-    const org = document.getElementById('org').value.trim();
+    const joinYear = document.getElementById('joinYear').value;
+    const experience = document.getElementById('experience').value;
+    const salary = document.getElementById('salary').value;
+    const consent = document.getElementById('consent').checked;
 
-    if(!name || !phone || !division || !org){ alert('कृपया सभी ज़रूरी फ़ील्ड भरें'); return; }
-    if(!/^[6-9]\d{9}$/.test(phone)){ alert('कृपया सही 10 अंकों का मोबाइल नंबर डालें'); return; }
-    if(!document.getElementById('consent').checked){ alert('कृपया सहमति पर टिक करें'); return; }
+    clearFieldErrors();
+    let hasError = false;
+    if(!name){ markFieldError('name'); hasError = true; }
+    if(!/^\d{10}$/.test(phone)){ markFieldError('phone'); hasError = true; }
+    if(!category){ markFieldError('category'); hasError = true; }
+    if(!vendor){ markFieldError('vendor'); hasError = true; }
+    if(!division){ markFieldError('division'); hasError = true; }
+    if(!consent){ document.getElementById('err-consent').style.display = 'block'; hasError = true; }
+    if(hasError){ showToast('कृपया लाल निशान वाले फ़ील्ड ठीक करो'); return; }
 
     const demands = Array.from(document.querySelectorAll('#demands input:checked')).map(i => i.value);
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'भेजा जा रहा है...';
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true; submitBtn.textContent = 'सेव हो रहा है... ⏳';
 
     try{
       const response = await fetch(SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ type: 'signature', name, phone, division, org, demands })
+        body: JSON.stringify({ type:'signature', name, phone, category, vendor, division, joinYear, experience, salary, demands })
       });
-
       const result = await response.json();
 
-      if(result.status === 'duplicate'){
-        alert(result.message);
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'दस्तख़त करो';
+      if(result.status === 'error'){
+        showToast(result.message || 'कुछ गड़बड़ हुई');
+        submitBtn.disabled = false; submitBtn.textContent = 'Save / Update Profile';
         return;
       }
 
-      document.getElementById('formBody').classList.add('hide');
-      document.getElementById('userWelcomeTitle').textContent = `शुक्रिया, ${name}!`;
-      document.getElementById('userInfoDetails').textContent = 'तुम्हारी आवाज़ अब इस अभियान का हिस्सा है। तुम अकेले नहीं हो — इसे अपने साथियों तक भी पहुँचाओ।';
+      const isUpdate = result.status === 'updated';
+      renderProfileCard({ memberId: result.memberId, name, phone, category, division }, !isUpdate);
+      unlockMemberTabs();
+      saveLoginLocally(phone);
 
-      pickRandomQuote();
-      document.getElementById('successBlock').classList.add('show');
-      unlockDashboard();
-
-      // fetch current count to show "you are the Nth member"
-      loadWall(true);
+      submitBtn.disabled = false; submitBtn.textContent = 'Save / Update Profile';
     }catch(e){
-      alert('कुछ गड़बड़ हुई, दोबारा कोशिश करें।');
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'दस्तख़त करो';
+      showToast('कुछ गड़बड़ हुई, दोबारा कोशिश करो');
+      submitBtn.disabled = false; submitBtn.textContent = 'Save / Update Profile';
     }
-  });
+  }
 
-  // Load Updates & Chat (updateSuccessCounter: fills the success-screen counter,
-  // updateDashboard: fills the gated dashboard's total/today stats)
-  async function loadWall(updateSuccessCounter, updateDashboard){
+  // ==================== DASHBOARD ====================
+  async function loadDashboard(){
     try{
       const res = await fetch(SCRIPT_URL);
       const data = await res.json();
-      document.getElementById('memberCount').textContent = data.count || 0;
-      document.getElementById('progressCount').textContent = data.count || 0;
 
-      const target = 500;
-      document.getElementById('progressFill').style.width = Math.min(((data.count||0) / target) * 100, 100) + '%';
+      document.getElementById('homeLiveCount').textContent = data.count || 0;
+      document.getElementById('dashTotal').textContent = data.count || 0;
+      document.getElementById('dashToday').textContent = (data.todayCount !== undefined) ? data.todayCount : '—';
 
-      if(updateSuccessCounter){
-        document.getElementById('successCounterNum').textContent = data.count || '—';
-        document.getElementById('successCounter').style.display = 'inline-flex';
+      const divCount = Object.keys(data.divisionBreakdown || {}).length;
+      document.getElementById('homeDivCount').textContent = divCount;
+
+      renderBreakdown('catBreakdown', data.categoryBreakdown || {});
+      renderBreakdown('vendorBreakdown', data.vendorBreakdown || {});
+      renderBreakdown('divBreakdown', data.divisionBreakdown || {});
+
+      renderProgress(data.count || 0);
+      renderTimeline(data.count || 0);
+      renderAnnouncements('dashAnnouncements', data.updates || []);
+      renderAnnouncements('homeAnnouncement', data.updates || [], 1);
+      renderWall(data.messages || []);
+      renderPollFromResults(data.pollResults || {});
+    }catch(e){
+      showToast('डेटा लोड करने में दिक़्क़त आई');
+    }
+  }
+
+  function renderBreakdown(elId, counts){
+    const el = document.getElementById(elId);
+    const keys = Object.keys(counts);
+    if(keys.length === 0){ el.innerHTML = '<div class="bd-empty">अभी कोई डेटा नहीं</div>'; return; }
+    el.innerHTML = keys.map(k => `<div class="bd-row"><span>${k}</span><span class="cnt">${counts[k]}</span></div>`).join('');
+  }
+
+  function renderProgress(count){
+    // find current milestone target (next one above count)
+    let target = 500;
+    for(let i=0;i<MILESTONE_STEPS.length;i++){
+      if(MILESTONE_STEPS[i].target > count){ target = MILESTONE_STEPS[i].target; break; }
+      target = MILESTONE_STEPS[i].target;
+    }
+    if(target === 0) target = MILESTONE_STEPS[1].target;
+    const pct = Math.min((count/target)*100, 100);
+    document.getElementById('homeProgressLabel').textContent = `${count}/${target}`;
+    document.getElementById('homeProgressFill').style.width = pct + '%';
+    document.getElementById('homeMilestoneTarget').textContent = target;
+    document.getElementById('dashProgressLabel').textContent = `${count}/${target}`;
+    document.getElementById('dashProgressFill').style.width = pct + '%';
+    document.getElementById('dashMilestoneTarget').textContent = target;
+  }
+
+  function renderTimeline(count){
+    const el = document.getElementById('campaignTimeline');
+    let currentSet = false;
+    el.innerHTML = MILESTONE_STEPS.map(step => {
+      let status;
+      if(count >= step.target && step.target > 0) status = 'done';
+      else if(!currentSet){ status = 'current'; currentSet = true; }
+      else status = 'pending';
+      if(step.target === 0) status = 'done';
+      const icon = status === 'done' ? '✓' : (status === 'current' ? '●' : '');
+      return `<div class="tl-item tl-${status}"><div class="tl-dot">${icon}</div><div class="tl-text">${step.label}</div></div>`;
+    }).join('');
+  }
+
+  function renderAnnouncements(elId, updates, limit){
+    const el = document.getElementById(elId);
+    const list = limit ? updates.slice(0, limit) : updates;
+    if(!list || list.length === 0){ el.innerHTML = '<div class="bd-empty">अभी कोई अपडेट नहीं है</div>'; return; }
+    el.innerHTML = list.map(u => {
+      let chip = '';
+      if(u.tag === 'breaking') chip = '<span class="tagchip breaking">🔴 Breaking</span>';
+      if(u.tag === 'meeting') chip = '<span class="tagchip meeting">📅 Meeting</span>';
+      return `<div class="update-item"><div class="time">${u.time} ${chip}</div><div class="text">${(u.text||'').replace(/</g,'&lt;')}</div></div>`;
+    }).join('');
+  }
+
+  function renderWall(messages){
+    const list = document.getElementById('wallList');
+    if(!messages || messages.length === 0){ list.innerHTML = '<div class="bd-empty">अभी तक कोई बात नहीं लिखी गई</div>'; return; }
+    list.innerHTML = messages.map(m => `
+      <div class="wall-item">
+        <div class="who">${(m.name || 'गुमनाम साथी')}</div>
+        <div class="what">${(m.message || '').replace(/</g,'&lt;')}</div>
+      </div>
+    `).join('');
+  }
+
+  async function postWallMsg(){
+    const el = document.getElementById('wallMsg');
+    const val = el.value.trim();
+    if(!val){ showToast('कुछ तो लिखो'); return; }
+
+    const btn = document.getElementById('wallPostBtn');
+    btn.disabled = true; btn.textContent = 'भेजा जा रहा है...';
+
+    try{
+      await fetch(SCRIPT_URL, {
+        method:'POST', headers:{'Content-Type':'text/plain'},
+        body: JSON.stringify({ type:'message', message: val })
+      });
+      el.value = '';
+      showToast('तुम्हारी बात दर्ज कर दी गई');
+      setTimeout(loadDashboard, 800);
+      startWallCooldown(30);
+    }catch(e){
+      showToast('भेजने में दिक़्क़त आई');
+      btn.disabled = false; btn.textContent = 'भेजो';
+    }
+  }
+
+  function startWallCooldown(seconds){
+    const btn = document.getElementById('wallPostBtn');
+    const note = document.getElementById('wallCooldown');
+    let remaining = seconds;
+    note.classList.add('show');
+    btn.textContent = `फिर से भेजो (${remaining}s)`;
+    const timer = setInterval(() => {
+      remaining--;
+      if(remaining <= 0){
+        clearInterval(timer);
+        btn.disabled = false;
+        btn.textContent = 'भेजो';
+        note.classList.remove('show');
+        note.textContent = '';
+      } else {
+        btn.textContent = `फिर से भेजो (${remaining}s)`;
+        note.textContent = `स्पैम रोकने के लिए ${remaining} सेकंड रुको`;
       }
+    }, 1000);
+  }
 
-      if(updateDashboard){
-        document.getElementById('dashTotal').textContent = data.count || 0;
-        // requires backend to return `todayCount` — see note near the poll code
-        document.getElementById('dashToday').textContent = (data.todayCount !== undefined) ? data.todayCount : '—';
-      }
+  // ==================== POLL ====================
+  function renderPollFromResults(pollResults){
+    const wrap = document.getElementById('pollOptionsWrap');
+    if(pollVoted){
+      renderPollResults(pollResults);
+      return;
+    }
+    wrap.innerHTML = POLL_QUESTION_OPTIONS.map((opt,i) =>
+      `<label class="poll-option"><input type="radio" name="pollOpt" value="${i}" onclick="votePoll(${i})"> ${opt}</label>`
+    ).join('');
+  }
 
-      if(data.messages && data.messages.length > 0){
-        document.getElementById('wallList').innerHTML = data.messages.map(m => `
-          <div class="wall-item">
-            <div class="who">एक साथी</div>
-            <div class="what">${(m.message || '').replace(/</g,'&lt;')}</div>
-          </div>
-        `).join('');
-      }else{
-        document.getElementById('wallList').innerHTML = '<div class="wall-empty">अभी तक कोई बात नहीं लिखी गई।</div>';
-      }
+  async function votePoll(idx){
+    if(pollVoted) return;
+    pollVoted = true;
+    const option = POLL_QUESTION_OPTIONS[idx];
+    try{
+      await fetch(SCRIPT_URL, {
+        method:'POST', headers:{'Content-Type':'text/plain'},
+        body: JSON.stringify({ type:'poll', option })
+      });
+    }catch(e){}
+    document.getElementById('pollVotedNote').classList.add('show');
+    showToast('तुम्हारा वोट दर्ज हो गया');
+    setTimeout(loadDashboard, 800);
+  }
 
-      if(data.updates && data.updates.length > 0){
-        document.getElementById('updatesList').innerHTML = data.updates.map(u => `
-          <div class="update-item">
-            <div class="time">${u.time}</div>
-            <div class="text">${u.text}</div>
-          </div>
-        `).join('');
-      }else{
-        document.getElementById('updatesList').innerHTML = '<div class="wall-empty">कोई अपडेट नहीं है।</div>';
-      }
+  function renderPollResults(pollResults){
+    const total = POLL_QUESTION_OPTIONS.reduce((sum,opt) => sum + (pollResults[opt]||0), 0) || 1;
+    const el = document.getElementById('pollResults');
+    el.style.display = 'block';
+    el.innerHTML = POLL_QUESTION_OPTIONS.map(opt => {
+      const votes = pollResults[opt] || 0;
+      const pct = Math.round((votes/total)*100);
+      return `<div class="poll-bar-wrap"><div class="poll-bar-label"><span>${opt}</span><span>${pct}%</span></div><div class="poll-bar-track"><div class="poll-bar-fill" style="width:${pct}%;"></div></div></div>`;
+    }).join('');
+    document.getElementById('pollOptionsWrap').innerHTML = '';
+  }
+
+  // ==================== SUGGESTIONS / COMPLAINTS / ISSUES ====================
+  async function postPrivate(fieldId, type){
+    const el = document.getElementById(fieldId);
+    const val = el.value.trim();
+    if(!val){ showToast('कुछ तो लिखो'); return; }
+    try{
+      await fetch(SCRIPT_URL, {
+        method:'POST', headers:{'Content-Type':'text/plain'},
+        body: JSON.stringify({ type:'suggestion', category: type, suggestion: val })
+      });
+      el.value = '';
+      showToast('भेज दिया गया — सिर्फ़ आयोजक देखेंगे');
+    }catch(e){ showToast('भेजने में दिक़्क़त आई'); }
+  }
+
+  // ==================== SHARE / NOTIFICATIONS ====================
+  function joinWhatsappGroup(){
+    showToast('डेमो लिंक — असली ग्रुप बनने पर यहाँ जोड़ा जाएगा');
+  }
+  function shareCampaign(){
+    const text = encodeURIComponent('मैंने ठेका प्रथा खत्म करने की मुहिम में जुड़ गया — तुम भी जुड़ो और अपनी आवाज़ दर्ज करो: ' + window.location.href);
+    window.open('https://wa.me/?text=' + text, '_blank');
+  }
+  function copyInviteLink(){
+    const url = window.location.href;
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(url).then(()=> showToast('लिंक कॉपी हो गया')).catch(()=> showToast('कॉपी नहीं हो पाया, मैन्युअल कॉपी करो'));
+    } else {
+      showToast('इस ब्राउज़र में ऑटो-कॉपी सपोर्ट नहीं है');
+    }
+  }
+  function askNotification(){
+    showToast('नोटिफिकेशन की परमिशन माँगी जा रही है...');
+    try{
+      OneSignalDeferred.push(async function(OneSignal){
+        await OneSignal.Notifications.requestPermission();
+      });
     }catch(e){}
   }
 
-  // Wall Message
-  document.getElementById('wallBtn').addEventListener('click', async () => {
-    const wallMessage = document.getElementById('wallMessage');
-    const msg = wallMessage.value.trim();
-    if(!msg) return;
+  document.querySelectorAll('.faq-item').forEach(item => {});
 
-    try{
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ type: 'message', message: msg })
-      });
-      wallMessage.value = '';
-      setTimeout(() => loadWall(false, memberVerified), 1000);
-    }catch(e){}
-  });
-
-  // Suggestion
-  document.getElementById('suggestBtn').addEventListener('click', async () => {
-    const txt = document.getElementById('suggestText').value.trim();
-    if(!txt) return;
-
-    try{
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ type: 'suggestion', name: document.getElementById('suggestName').value.trim(), suggestion: txt })
-      });
-      document.getElementById('suggestText').value = '';
-      alert('सुझाव भेज दिया गया!');
-    }catch(e){}
-  });
-
-  // Admin Toggle
-  document.getElementById('adminToggle').addEventListener('click', () => {
-    document.getElementById('adminPanel').classList.toggle('show');
-  });
-
-  document.getElementById('updateBtn').addEventListener('click', async () => {
-    const key = document.getElementById('adminKey').value.trim();
-    const update = document.getElementById('updateText').value.trim();
-    if(!key || !update) return;
-
-    try{
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ type: 'update', key, update })
-      });
-      document.getElementById('updateText').value = '';
-      setTimeout(() => loadWall(false, memberVerified), 1000);
-    }catch(e){}
-  });
-
-  // ---- Notifications ----
-  function requestNotificationPermission(statusNoteEl){
-    OneSignalDeferred.push(async function(OneSignal) {
-      await OneSignal.Notifications.requestPermission();
-      try{
-        const enabled = OneSignal.Notifications.permission;
-        if(statusNoteEl){
-          statusNoteEl.textContent = enabled ? '✓ नोटिफिकेशन चालू है — अब कोई अपडेट नहीं छूटेगी।' : '';
-        }
-      }catch(e){}
-    });
-  }
-
-  // Notify button on the updates tab (existing behaviour)
-  document.getElementById('notifyBtn').addEventListener('click', () => {
-    requestNotificationPermission(null);
-  });
-
-  // Notify button on the success/celebration screen (new — right after signing)
-  document.getElementById('notifyBtnSuccess').addEventListener('click', () => {
-    requestNotificationPermission(document.getElementById('notifyStatusNote'));
-  });
-
-  // Share button on success screen — opens WhatsApp share sheet with campaign link
-  document.getElementById('shareBtnSuccess').addEventListener('click', () => {
-    const text = encodeURIComponent('मैंने "मज़दूर संघर्ष अभियान" पर हस्ताक्षर कर दिए — ठेका नहीं, स्थायी नौकरी और हक़! तुम भी जुड़ो: ' + window.location.href);
-    window.open(`https://wa.me/?text=${text}`, '_blank');
-  });
-
-  // Accordion
-  document.querySelectorAll('.faq-item').forEach(item => {
-    item.querySelector('.faq-q').addEventListener('click', () => item.classList.toggle('open'));
-  });
+  // ==================== Init ====================
+  loadDashboard(); // populates the public home stats + announcement even before login
+  autoLoginFromStorage(); // silently restore login on this device if previously saved
 </script>
 </body>
 </html>
