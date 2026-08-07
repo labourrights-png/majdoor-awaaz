@@ -336,6 +336,8 @@
     <div id="loginBox" class="card" style="display:none; border:1px solid var(--red);">
       <label for="loginPhoneInput">अपना 10 अंकों का मोबाइल नंबर डालें</label>
       <input type="tel" id="loginPhoneInput" placeholder="9876543210" maxlength="10" inputmode="numeric">
+      <label for="loginPinInput">4 अंकों का PIN डालें</label>
+      <input type="tel" id="loginPinInput" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
       <button class="action-btn" id="doLoginBtn" onclick="doLogin()" style="margin-top:12px;">लॉगिन करें</button>
       <button onclick="toggleLoginModal()" style="width:100%; background:transparent; border:none; color:var(--muted); margin-top:8px; font-size:12px; cursor:pointer;">रद्द करें</button>
     </div>
@@ -352,6 +354,19 @@
         <input type="tel" id="phone" placeholder="10 अंकों का नंबर" maxlength="10" inputmode="numeric">
         <div class="field-error" id="err-phone">सही 10 अंकों का मोबाइल नंबर डालो</div>
         <div class="hint">इसी नंबर से तुम्हें व्हाट्सएप ग्रुप में जोड़ा जाएगा। यही नंबर बाद में लॉगिन के लिए इस्तेमाल होगा।</div>
+
+        <div class="row2">
+          <div>
+            <label for="pin">4 अंकों का PIN बनाओ *</label>
+            <input type="tel" id="pin" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
+          </div>
+          <div>
+            <label for="pinConfirm">PIN दोबारा लिखो *</label>
+            <input type="tel" id="pinConfirm" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
+          </div>
+        </div>
+        <div class="field-error" id="err-pin">4 अंकों का सही PIN डालो और दोनों बार एक जैसा हो</div>
+        <div class="hint">यह PIN लॉगिन के लिए ज़रूरी होगा — इसे याद रखो, किसी और को मत बताओ।</div>
 
         <label for="category">कर्मचारी श्रेणी (Employee Category) *</label>
         <select id="category">
@@ -669,25 +684,36 @@
 
   // ==================== LOCAL STORAGE (remember login on this device) ====================
   const STORAGE_KEY = 'msa_phone';
+  const STORAGE_PIN_KEY = 'msa_pin';
 
-  function saveLoginLocally(phone){
-    try{ localStorage.setItem(STORAGE_KEY, phone); }catch(e){}
+  function saveLoginLocally(phone, pin){
+    try{
+      localStorage.setItem(STORAGE_KEY, phone);
+      localStorage.setItem(STORAGE_PIN_KEY, pin);
+    }catch(e){}
   }
   function logoutLocal(){
-    try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+    try{
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_PIN_KEY);
+    }catch(e){}
     location.reload();
   }
   async function autoLoginFromStorage(){
-    let savedPhone = null;
-    try{ savedPhone = localStorage.getItem(STORAGE_KEY); }catch(e){}
-    if(!savedPhone) return;
+    let savedPhone = null, savedPin = null;
     try{
-      const res = await fetch(`${SCRIPT_URL}?loginPhone=${savedPhone}`);
+      savedPhone = localStorage.getItem(STORAGE_KEY);
+      savedPin = localStorage.getItem(STORAGE_PIN_KEY);
+    }catch(e){}
+    if(!savedPhone || !savedPin) return;
+    try{
+      const res = await fetch(`${SCRIPT_URL}?loginPhone=${savedPhone}&loginPin=${savedPin}`);
       const data = await res.json();
       if(data.status === 'found'){
         renderProfileCard(data.user, false);
         unlockMemberTabs();
       }
+      // if wrong_pin or not_found, stay silent — user can log in manually
     }catch(e){}
   }
 
@@ -698,6 +724,9 @@
       const err = document.getElementById('err-'+id);
       if(err) err.style.display = 'none';
     });
+    document.getElementById('pin').classList.remove('input-error');
+    document.getElementById('pinConfirm').classList.remove('input-error');
+    document.getElementById('err-pin').style.display = 'none';
     document.getElementById('err-consent').style.display = 'none';
   }
   function markFieldError(id){
@@ -710,18 +739,22 @@
   // ==================== LOGIN ====================
   async function doLogin(){
     const phone = document.getElementById('loginPhoneInput').value.trim();
+    const pin = document.getElementById('loginPinInput').value.trim();
     if(!/^\d{10}$/.test(phone)){ showToast('सही 10 अंकों का नंबर डालो'); return; }
+    if(!/^\d{4}$/.test(pin)){ showToast('4 अंकों का सही PIN डालो'); return; }
     const btn = document.getElementById('doLoginBtn');
     btn.disabled = true; btn.textContent = 'चेक हो रहा है...';
     try{
-      const res = await fetch(`${SCRIPT_URL}?loginPhone=${phone}`);
+      const res = await fetch(`${SCRIPT_URL}?loginPhone=${phone}&loginPin=${pin}`);
       const data = await res.json();
       if(data.status === 'found'){
         toggleLoginModal();
         showToast('स्वागत है, ' + (data.user.name || 'साथी') + '!');
         renderProfileCard(data.user, false);
         unlockMemberTabs();
-        saveLoginLocally(phone);
+        saveLoginLocally(phone, pin);
+      } else if(data.status === 'wrong_pin'){
+        showToast('PIN ग़लत है — दोबारा कोशिश करो');
       } else {
         showToast('यह नंबर अभी रजिस्टर नहीं है — नीचे नया प्रोफ़ाइल बनाओ');
       }
@@ -753,6 +786,10 @@
       division: document.getElementById('pmcDivision').textContent
     };
     fillFormForEdit(u);
+    let savedPin = '';
+    try{ savedPin = localStorage.getItem(STORAGE_PIN_KEY) || ''; }catch(e){}
+    document.getElementById('pin').value = savedPin;
+    document.getElementById('pinConfirm').value = savedPin;
     document.getElementById('successBlock').classList.remove('show');
     document.getElementById('formBody').classList.remove('hide');
     clearFieldErrors();
@@ -789,6 +826,8 @@
   async function submitProfile(){
     const name = document.getElementById('name').value.trim();
     const phone = document.getElementById('phone').value.trim();
+    const pin = document.getElementById('pin').value.trim();
+    const pinConfirm = document.getElementById('pinConfirm').value.trim();
     const category = document.getElementById('category').value;
     const vendor = document.getElementById('vendor').value.trim();
     const division = document.getElementById('division').value.trim();
@@ -801,6 +840,12 @@
     let hasError = false;
     if(!name){ markFieldError('name'); hasError = true; }
     if(!/^\d{10}$/.test(phone)){ markFieldError('phone'); hasError = true; }
+    if(!/^\d{4}$/.test(pin) || pin !== pinConfirm){
+      document.getElementById('pin').classList.add('input-error');
+      document.getElementById('pinConfirm').classList.add('input-error');
+      document.getElementById('err-pin').style.display = 'block';
+      hasError = true;
+    }
     if(!category){ markFieldError('category'); hasError = true; }
     if(!vendor){ markFieldError('vendor'); hasError = true; }
     if(!division){ markFieldError('division'); hasError = true; }
@@ -816,7 +861,7 @@
       const response = await fetch(SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ type:'signature', name, phone, category, vendor, division, joinYear, experience, salary, demands })
+        body: JSON.stringify({ type:'signature', name, phone, pin, category, vendor, division, joinYear, experience, salary, demands })
       });
       const result = await response.json();
 
@@ -825,11 +870,18 @@
         submitBtn.disabled = false; submitBtn.textContent = 'Save / Update Profile';
         return;
       }
+      if(result.status === 'wrong_pin'){
+        showToast(result.message || 'यह नंबर पहले से रजिस्टर है और PIN ग़लत है');
+        document.getElementById('pin').classList.add('input-error');
+        document.getElementById('pinConfirm').classList.add('input-error');
+        submitBtn.disabled = false; submitBtn.textContent = 'Save / Update Profile';
+        return;
+      }
 
       const isUpdate = result.status === 'updated';
       renderProfileCard({ memberId: result.memberId, name, phone, category, division }, !isUpdate);
       unlockMemberTabs();
-      saveLoginLocally(phone);
+      saveLoginLocally(phone, pin);
 
       submitBtn.disabled = false; submitBtn.textContent = 'Save / Update Profile';
     }catch(e){
