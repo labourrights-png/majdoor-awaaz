@@ -334,11 +334,25 @@
     </div>
 
     <div id="loginBox" class="card" style="display:none; border:1px solid var(--red);">
-      <label for="loginPhoneInput">अपना 10 अंकों का मोबाइल नंबर डालें</label>
-      <input type="tel" id="loginPhoneInput" placeholder="9876543210" maxlength="10" inputmode="numeric">
-      <label for="loginPinInput">4 अंकों का PIN डालें</label>
-      <input type="tel" id="loginPinInput" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
-      <button class="action-btn" id="doLoginBtn" onclick="doLogin()" style="margin-top:12px;">लॉगिन करें</button>
+      <div id="loginModeNormal">
+        <label for="loginPhoneInput">अपना 10 अंकों का मोबाइल नंबर डालें</label>
+        <input type="tel" id="loginPhoneInput" placeholder="9876543210" maxlength="10" inputmode="numeric">
+        <label for="loginPinInput">4 अंकों का PIN डालें</label>
+        <input type="tel" id="loginPinInput" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
+        <button class="action-btn" id="doLoginBtn" onclick="doLogin()" style="margin-top:12px;">लॉगिन करें</button>
+        <span class="logout-link" onclick="toggleClaimPinMode()">पहले (PIN फ़ीचर आने से पहले) रजिस्टर किया था? यहाँ PIN बनाओ →</span>
+      </div>
+      <div id="loginModeClaim" style="display:none;">
+        <div class="hint" style="margin-bottom:10px;">अगर तुमने पहले रजिस्टर किया था (जब PIN नहीं था), तो यहाँ अपना मोबाइल नंबर डालकर एक नया PIN बना लो — बाकी जानकारी वैसी ही रहेगी।</div>
+        <label for="claimPhoneInput">मोबाइल नंबर</label>
+        <input type="tel" id="claimPhoneInput" placeholder="9876543210" maxlength="10" inputmode="numeric">
+        <label for="claimPinInput">नया 4 अंकों का PIN बनाओ</label>
+        <input type="tel" id="claimPinInput" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
+        <label for="claimPinConfirmInput">PIN दोबारा लिखो</label>
+        <input type="tel" id="claimPinConfirmInput" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
+        <button class="action-btn" id="claimPinBtn" onclick="claimPin()" style="margin-top:12px;">PIN बनाओ और लॉगिन करो</button>
+        <span class="logout-link" onclick="toggleClaimPinMode()">← वापस लॉगिन पर जाओ</span>
+      </div>
       <button onclick="toggleLoginModal()" style="width:100%; background:transparent; border:none; color:var(--muted); margin-top:8px; font-size:12px; cursor:pointer;">रद्द करें</button>
     </div>
 
@@ -680,6 +694,55 @@
   function toggleLoginModal(){
     const box = document.getElementById('loginBox');
     box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
+  }
+
+  function toggleClaimPinMode(){
+    const normal = document.getElementById('loginModeNormal');
+    const claim = document.getElementById('loginModeClaim');
+    const showClaim = claim.style.display === 'none';
+    normal.style.display = showClaim ? 'none' : 'block';
+    claim.style.display = showClaim ? 'block' : 'none';
+  }
+
+  // ==================== CLAIM PIN (for members who registered before PIN existed) ====================
+  async function claimPin(){
+    const phone = document.getElementById('claimPhoneInput').value.trim();
+    const pin = document.getElementById('claimPinInput').value.trim();
+    const pinConfirm = document.getElementById('claimPinConfirmInput').value.trim();
+
+    if(!/^\d{10}$/.test(phone)){ showToast('सही 10 अंकों का नंबर डालो'); return; }
+    if(!/^\d{4}$/.test(pin) || pin !== pinConfirm){ showToast('4 अंकों का PIN डालो, दोनों बार एक जैसा होना चाहिए'); return; }
+
+    const btn = document.getElementById('claimPinBtn');
+    btn.disabled = true; btn.textContent = 'बन रहा है...';
+
+    try{
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ type:'claimPin', phone, pin })
+      });
+      const result = await response.json();
+
+      if(result.status === 'ok'){
+        toggleLoginModal();
+        showToast('PIN बन गया — स्वागत है, ' + (result.user.name || 'साथी') + '!');
+        renderProfileCard(result.user, false);
+        unlockMemberTabs();
+        saveLoginLocally(phone, pin);
+      } else if(result.status === 'already_set'){
+        showToast(result.message || 'इस नंबर पर पहले से PIN बना हुआ है — नीचे लॉगिन करो');
+        toggleClaimPinMode();
+      } else if(result.status === 'not_found'){
+        showToast('यह नंबर रजिस्टर नहीं मिला — कृपया नीचे नया प्रोफ़ाइल बनाओ');
+      } else {
+        showToast(result.message || 'कुछ गड़बड़ हुई');
+      }
+    }catch(e){
+      showToast('कुछ गड़बड़ हुई, दोबारा कोशिश करो');
+    }finally{
+      btn.disabled = false; btn.textContent = 'PIN बनाओ और लॉगिन करो';
+    }
   }
 
   // ==================== LOCAL STORAGE (remember login on this device) ====================
