@@ -404,7 +404,22 @@
         <div class="field-error" id="err-vendor">यह जानकारी ज़रूरी है</div>
 
         <label for="division">डिवीज़न *</label>
-        <input type="text" id="division" placeholder="जैसे — Dwarka, Janakpuri, आदि">
+        <select id="division" onchange="toggleDivisionOther()">
+          <option value="">चुनो...</option>
+          <option value="Mohan Garden">Mohan Garden</option>
+          <option value="Uttam Nagar">Uttam Nagar</option>
+          <option value="Janakpuri">Janakpuri</option>
+          <option value="Vikas Puri">Vikas Puri</option>
+          <option value="Dwarka">Dwarka</option>
+          <option value="Najafgarh">Najafgarh</option>
+          <option value="Punjab Bagh">Punjab Bagh</option>
+          <option value="Tagore Garden">Tagore Garden</option>
+          <option value="Mundka">Mundka</option>
+          <option value="Palam">Palam</option>
+          <option value="Nangloi">Nangloi</option>
+          <option value="अन्य">अन्य (अपना डिवीज़न लिखो)</option>
+        </select>
+        <input type="text" id="divisionOther" placeholder="अपना डिवीज़न/सब-डिवीज़न यहाँ लिखो" style="display:none; margin-top:8px;">
         <div class="field-error" id="err-division">यह जानकारी ज़रूरी है</div>
 
         <div class="row2">
@@ -654,7 +669,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQJiOwfYcGlz1g9BIOz22M3mjmDntF1l-zDsklvhge_PiTZcMkY_HgGUGjyFAdMNUr/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwdFxmwjh5BL4fxrcUlp2Mn1yt5ExdYHxL8UbKusfRl2o6PeKYzA4CMcG4LS6QXaexA/exec';
   let hasProfile = false;
   let pollVoted = false;
   const POLL_QUESTION_OPTIONS = ['मैनेजमेंट को माँग-पत्र सौंपना', 'लेबर डिपार्टमेंट में शिकायत', 'शांतिपूर्ण प्रदर्शन'];
@@ -864,12 +879,47 @@
     }
   }
 
+  // ==================== DIVISION DROPDOWN (with "अन्य" free text fallback) ====================
+  const DIVISION_KNOWN_OPTIONS = ['Mohan Garden','Uttam Nagar','Janakpuri','Vikas Puri','Dwarka','Najafgarh','Punjab Bagh','Tagore Garden','Mundka','Palam','Nangloi'];
+
+  function toggleDivisionOther(){
+    const sel = document.getElementById('division');
+    const other = document.getElementById('divisionOther');
+    other.style.display = (sel.value === 'अन्य') ? 'block' : 'none';
+    if(sel.value !== 'अन्य') other.value = '';
+  }
+
+  function getDivisionValue(){
+    const sel = document.getElementById('division');
+    if(sel.value === 'अन्य') return document.getElementById('divisionOther').value.trim();
+    return sel.value;
+  }
+
+  function setDivisionValue(val){
+    const sel = document.getElementById('division');
+    const other = document.getElementById('divisionOther');
+    const trimmed = (val || '').trim();
+    if(DIVISION_KNOWN_OPTIONS.includes(trimmed)){
+      sel.value = trimmed;
+      other.style.display = 'none';
+      other.value = '';
+    } else if(trimmed){
+      sel.value = 'अन्य';
+      other.style.display = 'block';
+      other.value = trimmed;
+    } else {
+      sel.value = '';
+      other.style.display = 'none';
+      other.value = '';
+    }
+  }
+
   function fillFormForEdit(u){
     document.getElementById('name').value = u.name || '';
     document.getElementById('phone').value = u.phone || '';
     document.getElementById('category').value = u.category || '';
     document.getElementById('vendor').value = u.vendor || '';
-    document.getElementById('division').value = u.division || '';
+    setDivisionValue(u.division || '');
     document.getElementById('joinYear').value = u.joinYear || '';
     document.getElementById('experience').value = u.experience || '';
     document.getElementById('salary').value = u.salary || '';
@@ -929,7 +979,7 @@
     const pinConfirm = document.getElementById('pinConfirm').value.trim();
     const category = document.getElementById('category').value;
     const vendor = document.getElementById('vendor').value.trim();
-    const division = document.getElementById('division').value.trim();
+    const division = getDivisionValue();
     const joinYear = document.getElementById('joinYear').value;
     const experience = document.getElementById('experience').value;
     const salary = document.getElementById('salary').value;
