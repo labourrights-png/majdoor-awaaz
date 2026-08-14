@@ -406,18 +406,30 @@
         <label for="division">डिवीज़न *</label>
         <select id="division" onchange="toggleDivisionOther()">
           <option value="">चुनो...</option>
-          <option value="Mohan Garden">Mohan Garden</option>
-          <option value="Uttam Nagar">Uttam Nagar</option>
-          <option value="Janakpuri">Janakpuri</option>
-          <option value="Vikas Puri">Vikas Puri</option>
+          <option value="Alaknanda">Alaknanda</option>
+          <option value="Chhattarpur">Chhattarpur</option>
           <option value="Dwarka">Dwarka</option>
-          <option value="Najafgarh">Najafgarh</option>
-          <option value="Punjab Bagh">Punjab Bagh</option>
-          <option value="Tagore Garden">Tagore Garden</option>
+          <option value="Hauz Khas">Hauz Khas</option>
+          <option value="Jaffarpur">Jaffarpur</option>
+          <option value="Janak Puri">Janak Puri</option>
+          <option value="Khanpur">Khanpur</option>
+          <option value="Mohan Garden">Mohan Garden</option>
           <option value="Mundka">Mundka</option>
-          <option value="Palam">Palam</option>
+          <option value="Najafgarh">Najafgarh</option>
           <option value="Nangloi">Nangloi</option>
-          <option value="अन्य">अन्य (अपना डिवीज़न लिखो)</option>
+          <option value="Nehru Place">Nehru Place</option>
+          <option value="New Friends Colony">New Friends Colony</option>
+          <option value="Nizamuddin">Nizamuddin</option>
+          <option value="Palam">Palam</option>
+          <option value="Punjabi Bagh">Punjabi Bagh</option>
+          <option value="R.K. Puram">R.K. Puram</option>
+          <option value="Saket">Saket</option>
+          <option value="Sarita Vihar">Sarita Vihar</option>
+          <option value="Tagore Garden">Tagore Garden</option>
+          <option value="Uttam Nagar">Uttam Nagar</option>
+          <option value="Vasant Kunj">Vasant Kunj</option>
+          <option value="Vikas Puri">Vikas Puri</option>
+          <option value="अन्य">अन्य (अपना डिवीज़न/सब-डिवीज़न लिखो)</option>
         </select>
         <input type="text" id="divisionOther" placeholder="अपना डिवीज़न/सब-डिवीज़न यहाँ लिखो" style="display:none; margin-top:8px;">
         <div class="field-error" id="err-division">यह जानकारी ज़रूरी है</div>
@@ -669,7 +681,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQJiOwfYcGlz1g9BIOz22M3mjmDntF1l-zDsklvhge_PiTZcMkY_HgGUGjyFAdMNUr/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwdFxmwjh5BL4fxrcUlp2Mn1yt5ExdYHxL8UbKusfRl2o6PeKYzA4CMcG4LS6QXaexA/exec';
   let hasProfile = false;
   let pollVoted = false;
   const POLL_QUESTION_OPTIONS = ['मैनेजमेंट को माँग-पत्र सौंपना', 'लेबर डिपार्टमेंट में शिकायत', 'शांतिपूर्ण प्रदर्शन'];
@@ -880,7 +892,7 @@
   }
 
   // ==================== DIVISION DROPDOWN (with "अन्य" free text fallback) ====================
-  const DIVISION_KNOWN_OPTIONS = ['Mohan Garden','Uttam Nagar','Janakpuri','Vikas Puri','Dwarka','Najafgarh','Punjab Bagh','Tagore Garden','Mundka','Palam','Nangloi'];
+  const DIVISION_KNOWN_OPTIONS = ['Alaknanda','Chhattarpur','Dwarka','Hauz Khas','Jaffarpur','Janak Puri','Khanpur','Mohan Garden','Mundka','Najafgarh','Nangloi','Nehru Place','New Friends Colony','Nizamuddin','Palam','Punjabi Bagh','R.K. Puram','Saket','Sarita Vihar','Tagore Garden','Uttam Nagar','Vasant Kunj','Vikas Puri'];
 
   function toggleDivisionOther(){
     const sel = document.getElementById('division');
