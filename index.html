@@ -389,20 +389,6 @@
         <div class="field-error" id="err-pin">4 अंकों का सही PIN डालो और दोनों बार एक जैसा हो</div>
         <div class="hint">यह PIN लॉगिन के लिए ज़रूरी होगा — इसे याद रखो, किसी और को मत बताओ।</div>
 
-        <label for="category">कर्मचारी श्रेणी (Employee Category) *</label>
-        <select id="category">
-          <option value="">चुनो</option>
-          <option value="TO">TO</option>
-          <option value="LM">LM</option>
-          <option value="ALM">ALM</option>
-          <option value="अन्य">अन्य</option>
-        </select>
-        <div class="field-error" id="err-category">यह जानकारी ज़रूरी है</div>
-
-        <label for="vendor">वेंडर (Vendor) *</label>
-        <input type="text" id="vendor" placeholder="जैसे — Safeguard, XYZ, आदि">
-        <div class="field-error" id="err-vendor">यह जानकारी ज़रूरी है</div>
-
         <label for="division">डिवीज़न *</label>
         <select id="division" onchange="toggleDivisionOther()">
           <option value="">चुनो...</option>
@@ -475,7 +461,6 @@
         <div class="profile-mini-card">
           <div class="pmc-row"><span class="k">नाम</span><span class="v" id="pmcName">—</span></div>
           <div class="pmc-row"><span class="k">मोबाइल</span><span class="v" id="pmcPhone">—</span></div>
-          <div class="pmc-row"><span class="k">श्रेणी</span><span class="v" id="pmcCategory">—</span></div>
           <div class="pmc-row"><span class="k">डिवीज़न</span><span class="v" id="pmcDivision">—</span></div>
         </div>
 
@@ -836,7 +821,7 @@
 
   // ==================== FIELD VALIDATION ====================
   function clearFieldErrors(){
-    ['name','phone','category','vendor','division'].forEach(id => {
+    ['name','phone','division'].forEach(id => {
       document.getElementById(id).classList.remove('input-error');
       const err = document.getElementById('err-'+id);
       if(err) err.style.display = 'none';
@@ -920,8 +905,6 @@
   function fillFormForEdit(u){
     document.getElementById('name').value = u.name || '';
     document.getElementById('phone').value = u.phone || '';
-    document.getElementById('category').value = u.category || '';
-    document.getElementById('vendor').value = u.vendor || '';
     setDivisionValue(u.division || '');
     document.getElementById('joinYear').value = u.joinYear || '';
     document.getElementById('experience').value = u.experience || '';
@@ -934,7 +917,6 @@
     const u = {
       name: document.getElementById('pmcName').textContent,
       phone: document.getElementById('pmcPhone').textContent,
-      category: document.getElementById('pmcCategory').textContent,
       division: document.getElementById('pmcDivision').textContent
     };
     fillFormForEdit(u);
@@ -954,7 +936,6 @@
     document.getElementById('memberIdShow').textContent = u.memberId || '—';
     document.getElementById('pmcName').textContent = u.name || '—';
     document.getElementById('pmcPhone').textContent = u.phone || '—';
-    document.getElementById('pmcCategory').textContent = u.category || '—';
     document.getElementById('pmcDivision').textContent = u.division || '—';
     showRandomIdQuote();
     document.getElementById('formBody').classList.add('hide');
@@ -980,8 +961,6 @@
     const phone = document.getElementById('phone').value.trim();
     const pin = document.getElementById('pin').value.trim();
     const pinConfirm = document.getElementById('pinConfirm').value.trim();
-    const category = document.getElementById('category').value;
-    const vendor = document.getElementById('vendor').value.trim();
     const division = getDivisionValue();
     const joinYear = document.getElementById('joinYear').value;
     const experience = document.getElementById('experience').value;
@@ -998,8 +977,6 @@
       document.getElementById('err-pin').style.display = 'block';
       hasError = true;
     }
-    if(!category){ markFieldError('category'); hasError = true; }
-    if(!vendor){ markFieldError('vendor'); hasError = true; }
     if(!division){ markFieldError('division'); hasError = true; }
     if(!consent){ document.getElementById('err-consent').style.display = 'block'; hasError = true; }
     if(hasError){ showToast('कृपया लाल निशान वाले फ़ील्ड ठीक करो'); return; }
@@ -1013,7 +990,7 @@
       const response = await fetch(SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ type:'signature', name, phone, pin, category, vendor, division, joinYear, experience, salary, demands })
+        body: JSON.stringify({ type:'signature', name, phone, pin, division, joinYear, experience, salary, demands })
       });
       const result = await response.json();
 
@@ -1031,7 +1008,7 @@
       }
 
       const isUpdate = result.status === 'updated';
-      renderProfileCard({ memberId: result.memberId, name, phone, category, division }, !isUpdate);
+      renderProfileCard({ memberId: result.memberId, name, phone, division }, !isUpdate);
       unlockMemberTabs();
       saveLoginLocally(phone, pin);
 
@@ -1055,8 +1032,6 @@
       const divCount = Object.keys(data.divisionBreakdown || {}).length;
       document.getElementById('homeDivCount').textContent = divCount;
 
-      renderBreakdown('catBreakdown', data.categoryBreakdown || {});
-      renderBreakdown('vendorBreakdown', data.vendorBreakdown || {});
       renderBreakdown('divBreakdown', data.divisionBreakdown || {});
 
       renderProgress(data.count || 0);
