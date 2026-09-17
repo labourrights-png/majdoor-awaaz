@@ -1,27 +1,23 @@
 <!doctype html>
 <html lang="hi">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>मज़दूर संघर्ष अभियान</title>
-<style>html,body{margin:0;height:100%;background:#f5f7fa}#loader{font-family:sans-serif;text-align:center;padding:40px;color:#172033}</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>मज़दूर संघर्ष अभियान — कर्मचारी डिजिटल मंच</title>
+<meta name="description" content="कर्मचारियों के लिए साझा डिजिटल मंच — समाचार, अधिकार, माँगें, अपडेट और सहभागिता।">
+<style>
+html,body{margin:0;min-height:100%;background:#f5f7fa;font-family:Arial,sans-serif}
+.loader{min-height:100vh;display:grid;place-items:center;color:#172033;font-size:18px}
+</style>
 </head>
-<body><div id="loader">मज़दूर संघर्ष अभियान लोड हो रहा है…</div>
+<body>
+<div class="loader">मज़दूर संघर्ष अभियान लोड हो रहा है…</div>
 <script>
-(async function(){
-  try{
-    let s=await fetch('./platform-v2.html?safe=1',{cache:'no-store'}).then(r=>r.text());
-    s=s.replace('<script src="division-count.js"></script>','');
-    s=s.replace(/document\.getElementById\('divisionCount'\)\.textContent=\(DATA\.divisionBreakdown\|\|\[\]\)\.length/g,"document.getElementById('divisionCount').textContent=23");
-    s=s.replace(/document\.getElementById\('dashDivisions'\)\.textContent=\(DATA\.divisionBreakdown\|\|\[\]\)\.length/g,"document.getElementById('dashDivisions').textContent=23");
-    s=s.replace(/split\('\\\s*'\)/g,"split('\\n')");
-    s=s.replace('</body>','<script src="auth-fix.js"></script><script>(function(){\n'+
-      'const M={"Home":"होम","News":"समाचार","Campaign":"अभियान","Demands":"माँगें","Rights":"अधिकार","Dashboard":"डैशबोर्ड","Meetings":"बैठकें","Documents":"दस्तावेज़","Join":"सदस्य बनें","Login":"लॉगिन","Join Now":"अभी जुड़ें","Existing Member Login":"मौजूदा सदस्य लॉगिन","Mobile":"मोबाइल","PIN":"पिन","4-digit PIN":"4 अंकों का पिन","Current Salary":"वर्तमान वेतन","Experience":"अनुभव","Join Year":"जुड़ने का वर्ष","Category":"श्रेणी","Division":"डिवीजन","Source":"स्रोत","Read more ↗":"और पढ़ें ↗","Open document ↗":"दस्तावेज़ खोलें ↗","Interested":"रुचि है","Logout":"लॉगआउट","Polls":"मतदान","Active Poll":"सक्रिय मतदान","Type":"प्रकार","Suggestion":"सुझाव","Complaint":"शिकायत","Message":"संदेश","Submit":"जमा करें","TOTAL MEMBERS":"कुल सदस्य","DIVISION PARTICIPATION":"डिवीजन सहभागिता","UPDATES":"अपडेट","participants":"सहभागी","Problem:":"समस्या:","Demand:":"माँग:","Evidence / Document ↗":"प्रमाण / दस्तावेज़ ↗","Location:":"स्थान:","Privacy और transparency को प्राथमिकता":"गोपनीयता और पारदर्शिता को प्राथमिकता","Privacy और transparency":"गोपनीयता और पारदर्शिता"};\n'+
-      'function tr(n){if(n.nodeType!==3)return;if(n.parentElement&&n.parentElement.closest("#admin"))return;let x=n.nodeValue;Object.keys(M).forEach(k=>{x=x.split(k).join(M[k])});n.nodeValue=x}\n'+
-      'function run(){document.querySelectorAll("body *:not(#admin):not(#admin *)").forEach(e=>e.childNodes&&Array.from(e.childNodes).forEach(tr));document.querySelectorAll("input,textarea").forEach(e=>{if(e.closest("#admin"))return;if(e.placeholder)Object.keys(M).forEach(k=>e.placeholder=e.placeholder.split(k).join(M[k]))});}\n'+
-      'run();var hiTimer=setInterval(run,800);setTimeout(function(){clearInterval(hiTimer)},5000);\n'+
-      '})();</script></body>');
-    document.open();document.write(s);document.close();
-  }catch(e){document.getElementById('loader').innerHTML='वेबसाइट लोड नहीं हो पाई। कृपया पेज फिर से खोलें।';console.error(e)}
+(function(){
+  var target='./platform-v2.html?v='+Date.now();
+  window.location.replace(target);
 })();
 </script>
-</body></html>
+<noscript>कृपया JavaScript चालू करें और <a href="./platform-v2.html">वेबसाइट खोलें</a>।</noscript>
+</body>
+</html>
