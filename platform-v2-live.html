@@ -1,12 +1,5 @@
 <!doctype html>
-<html lang="hi">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>मज़दूर संघर्ष अभियान</title>
-  <meta name="description" content="मज़दूर संघर्ष अभियान — Digital Employee Platform">
-</head>
-<body>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Majdoor Awaaz — Platform V2</title></head><body>
 <script>
 (async function(){
   const current='platform-v2.html';
@@ -23,10 +16,6 @@
     html=html.replace(/pin:val\('loginPin'\)\|\|''/g,`pin:session.pin||val('loginPin')||''`);
     html=html.replace(/let pin=val\('loginPin'\);/g,`let pin=session.pin||val('loginPin')||'';`);
     document.open();document.write(html);document.close();
-  }catch(e){
-    document.body.innerHTML='<main style="font-family:Arial;padding:30px"><h2>Website loading error</h2><p>'+String(e.message||e).replace(/[<>]/g,'')+'</p></main>';
-  }
+  }catch(e){document.body.innerHTML='<main style="font-family:Arial;padding:30px"><h2>Platform V2 loading error</h2><p>'+String(e.message||e).replace(/[<>]/g,'')+'</p><p>Please open platform-v2.html directly after GitHub Pages finishes publishing.</p></main>';}
 })();
-</script>
-</body>
-</html>
+</script></body></html>
