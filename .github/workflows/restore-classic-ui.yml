@@ -11,56 +11,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Patch platform
-        shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
           p=Path('platform-v2.html')
           s=p.read_text(encoding='utf-8')
-          old='https://script.google.com/macros/s/AKfycbzQJiOwfYcGlz1g9BIOz22M3mjmDntF1l-zDsklvhge_PiTZcMkY_HgGUGjyFAdMNUr/exec'
-          new='https://script.google.com/macros/s/AKfycbwGS_m1Rva1zmoJuCXvXFsZKkWyvXFcjwwEE4Hj5-YHX1xBm8aX838RHYE9c-Pc4_M/exec'
-          s=s.replace(old,new)
-          replacements={
-            'Digital Employee Platform':'कर्मचारी डिजिटल मंच',
-            'Join / Login':'सदस्य बनें / Login',
-            'Employee & Labour News':'कर्मचारी एवं श्रमिक समाचार',
-            'Campaign Updates':'अभियान अपडेट',
-            'Demands & Progress':'हमारी माँगें एवं प्रगति',
-            'Employee Rights':'कर्मचारी अधिकार',
-            'Campaign Dashboard':'अभियान Dashboard',
-            'Meetings & Events':'बैठकें एवं कार्यक्रम',
-            'Documents & Evidence':'Documents एवं Evidence',
-            'Employee Voice':'कर्मचारी की आवाज़',
-            'My Dashboard':'मेरा Dashboard',
-            'My Participation':'मेरी सहभागिता',
-            'Suggestions / Complaints':'सुझाव / शिकायत',
-            'Publish Voice':'आवाज़ साझा करें',
-            'Open document ↗':'Document खोलें ↗',
-            'Read more ↗':'पूरी खबर पढ़ें ↗'
-          }
-          for a,b in replacements.items(): s=s.replace(a,b)
+          s=s.replace('https://script.google.com/macros/s/AKfycbzQJiOwfYcGlz1g9BIOz22M3mjmDntF1l-zDsklvhge_PiTZcMkY_HgGUGjyFAdMNUr/exec','https://script.google.com/macros/s/AKfycbwGS_m1Rva1zmoJuCXvXFsZKkWyvXFcjwwEE4Hj5-YHX1xBm8aX838RHYE9c-Pc4_M/exec')
+          for a,b in {'Digital Employee Platform':'कर्मचारी डिजिटल मंच','Join / Login':'सदस्य बनें / Login','Employee & Labour News':'कर्मचारी एवं श्रमिक समाचार','Campaign Updates':'अभियान अपडेट','Demands & Progress':'हमारी माँगें एवं प्रगति','Employee Rights':'कर्मचारी अधिकार','Campaign Dashboard':'अभियान Dashboard','Meetings & Events':'बैठकें एवं कार्यक्रम','Employee Voice':'कर्मचारी की आवाज़','My Dashboard':'मेरा Dashboard','My Participation':'मेरी सहभागिता','Suggestions / Complaints':'सुझाव / शिकायत','Publish Voice':'आवाज़ साझा करें'}.items(): s=s.replace(a,b)
           s=s.replace('<div class="stat"><b id="divisionCount">—</b><span>Divisions</span></div>','')
-          s=s.replace('<div class="stat"><b id="updateCount">—</b><span>अभियान अपडेट</span></div>','<div class="stat"><b id="updateCount">—</b><span>अभियान अपडेट</span></div>')
-          olddiv='<input id="regDivision">'
-          div='<select id="regDivision"><option value="">Division चुनें...</option><option>Alaknanda</option><option>Chhattarpur</option><option>Dwarka</option><option>Hauz Khas</option><option>Jaffarpur</option><option>Janak Puri</option><option>Khanpur</option><option>Mohan Garden</option><option>Mundka</option><option>Najafgarh</option><option>Nangloi</option><option>Nehru Place</option><option>New Friends Colony</option><option>Nizamuddin</option><option>Palam</option><option>Punjabi Bagh</option><option>R.K. Puram</option><option>Saket</option><option>Sarita Vihar</option><option>Tagore Garden</option><option>Uttam Nagar</option><option>Vasant Kunj</option><option>Vikas Puri</option></select>'
-          s=s.replace(olddiv,div)
-          oldcat='<input id="regCategory" placeholder="TO / LM / ALM / Other">'
-          cat='<select id="regCategory"><option value="">Category चुनें...</option><option value="TO">TO</option><option value="LM">LM</option><option value="ALM">ALM</option><option value="अन्य">अन्य</option></select>'
-          s=s.replace(oldcat,cat)
-          classic=r'''
-<style id="classic-ui">
-:root{--navy:#0a3161;--ink:#1a1a1a;--muted:#6b7280;--line:#e5e7eb;--bg:#f3f4f6;--red:#c1121f;--green:#138808;--radius:14px;--shadow:0 4px 18px rgba(0,0,0,.05)}
-body{background:#f3f4f6!important;padding:16px 12px 60px!important;max-width:560px!important;margin:auto!important}body:before{content:"";position:fixed;inset:0;z-index:-2;opacity:.08;background:linear-gradient(180deg,#ff9933 0 33.33%,#fff 33.33% 66.66%,#138808 66.66%)}
-.wrap{max-width:540px!important;padding:0!important}.topbar{display:none}header{position:relative!important;border:0!important;background:transparent!important;box-shadow:none!important}.nav{display:block!important;padding:0!important}.brand{font-family:'Baloo 2',sans-serif!important;text-align:center!important;font-size:27px!important;color:#c1121f!important;margin:0 0 14px!important}.brand small{display:block!important;font-size:11px!important;color:#ff9933!important;letter-spacing:.12em!important;text-transform:uppercase!important}.navlinks{background:#fff!important;border:1px solid var(--line)!important;border-radius:12px!important;padding:5px!important;display:flex!important;flex-wrap:wrap!important;gap:4px!important;box-shadow:0 4px 14px rgba(0,0,0,.06)!important}.navlinks button{flex:1 1 22%!important;min-width:82px!important;background:transparent!important;color:var(--muted)!important;padding:8px 4px!important;border-radius:8px!important;font-size:11px!important}.navlinks button.active,.navlinks button:hover{background:#c1121f!important;color:#fff!important}.join{margin-top:7px!important;width:100%!important;background:#0a3161!important;border-radius:9px!important}.hero{background:linear-gradient(180deg,rgba(193,18,31,.06),rgba(193,18,31,.02))!important;color:#1a1a1a!important;border-left:3px solid #c1121f!important;border-radius:8px!important;padding:18px 16px!important;box-shadow:none!important;grid-template-columns:1fr!important}.hero h1{font-family:'Baloo 2',sans-serif!important;font-size:28px!important;color:#1a1a1a!important}.hero p{color:#505866!important;line-height:1.7!important}.btn.primary{background:#c1121f!important;color:#fff!important}.hero .stats{margin-top:15px!important}.stat{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:12px!important;padding:13px!important;box-shadow:0 3px 12px rgba(0,0,0,.05)!important}.stat b{font-family:Teko,sans-serif!important;color:#c1121f!important}.section-head h2{font-family:'Baloo 2',sans-serif!important;font-weight:800!important}.section-head p{font-size:12px!important}.card,.form{border-radius:14px!important;box-shadow:0 4px 18px rgba(0,0,0,.05)!important}.card{border-left:1px solid #e5e7eb!important}.form{border-top:0!important}.btn.dark{background:#0a3161!important}.btn.red{background:#c1121f!important}.badge.red{background:#fdeaea!important;color:#c1121f!important}.badge.green{background:#e9f7ef!important;color:#138808!important}.mobilebar{background:#fff!important}.footer{font-size:10.5px!important;text-align:center!important}
-@media(max-width:850px){body{padding-bottom:70px!important}.wrap{padding-bottom:0!important}.navlinks{display:flex!important}.hero{grid-template-columns:1fr!important}.grid{grid-template-columns:1fr 1fr!important}}
-@media(max-width:560px){.nav{padding:0!important}.brand{font-size:24px!important}.grid,.cards2,.row{grid-template-columns:1fr!important}.hero{padding:22px 16px!important}}
-</style>
-'''
-          s=s.replace('</head>',classic+'</head>')
+          s=s.replace('<input id="regDivision">','<select id="regDivision"><option value="">Division चुनें...</option><option>Alaknanda</option><option>Chhattarpur</option><option>Dwarka</option><option>Hauz Khas</option><option>Jaffarpur</option><option>Janak Puri</option><option>Khanpur</option><option>Mohan Garden</option><option>Mundka</option><option>Najafgarh</option><option>Nangloi</option><option>Nehru Place</option><option>New Friends Colony</option><option>Nizamuddin</option><option>Palam</option><option>Punjabi Bagh</option><option>R.K. Puram</option><option>Saket</option><option>Sarita Vihar</option><option>Tagore Garden</option><option>Uttam Nagar</option><option>Vasant Kunj</option><option>Vikas Puri</option></select>')
+          s=s.replace('<input id="regCategory" placeholder="TO / LM / ALM / Other">','<select id="regCategory"><option value="">Category चुनें...</option><option value="TO">TO</option><option value="LM">LM</option><option value="ALM">ALM</option><option value="अन्य">अन्य</option></select>')
+          if 'classic-ui.css' not in s: s=s.replace('</head>','<link rel="stylesheet" href="classic-ui.css"></head>')
           p.write_text(s,encoding='utf-8')
           PY
       - name: Commit patched site
-        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
