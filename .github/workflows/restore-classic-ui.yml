@@ -30,6 +30,7 @@ jobs:
           pattern=r'<div class="hero">.*?</div>\n<div class="section-head"><div><h2>आज की मुख्य जानकारी</h2>'
           s=re.sub(pattern,hero+'\n<div class="section-head"><div><h2>आज की मुख्य जानकारी</h2>',s,count=1,flags=re.S)
           if 'classic-ui.css' not in s: s=s.replace('</head>','<link rel="stylesheet" href="classic-ui.css"></head>')
+          if 'division-count.js' not in s: s=s.replace('</head>','<script src="division-count.js"></script></head>')
           p.write_text(s,encoding='utf-8')
           PY
       - name: Commit patched site
@@ -38,5 +39,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if git diff --quiet; then exit 0; fi
           git add platform-v2.html
-          git commit -m "Update homepage hero and division stat"
+          git commit -m "Load division count integration script"
           git push
