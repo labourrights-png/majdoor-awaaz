@@ -12,7 +12,7 @@ s = re.sub(r"const SCRIPT_URL='[^']*';", "const SCRIPT_URL='" + BACKEND + "';", 
 api_re = r"async function api\(body\)\{.*?\}\s*async function load\(\)\{.*?\}"
 api_new = """async function api(body){let r=await fetch(SCRIPT_URL,{redirect:'follow',method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),cache:'no-store'});let t=await r.text();return JSON.parse(t.replace(/^\\uFEFF/,'').trim())}
 async function load(){try{let r=await fetch(SCRIPT_URL,{method:'GET',redirect:'follow',cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);DATA=await r.json();renderAll()}catch(e){toast('Backend connect नहीं हो पाया');console.error('Backend load failed',e)}}"""
-s = re.sub(api_re, api_new, s, count=1, flags=re.S)
+s = re.sub(api_re, lambda m: api_new, s, count=1, flags=re.S)
 s = s.replace("d.options=d.options.split('\\n').map(x=>x.trim()).filter(Boolean);", "d.options=d.options.split(/\\r?\\n/).map(x=>x.trim()).filter(Boolean);")
 s = s.replace("d.options=d.options.split('\\\\n').map(x=>x.trim()).filter(Boolean);", "d.options=d.options.split(/\\r?\\n/).map(x=>x.trim()).filter(Boolean);")
 s = re.sub(r"document\.getElementById\('divisionCount'\)\.textContent=\(DATA\.divisionBreakdown\|\|\[\]\)\.length", "document.getElementById('divisionCount').textContent=23", s)
