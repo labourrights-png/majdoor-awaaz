@@ -70,7 +70,7 @@
   .card{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 16px; margin-bottom:16px; box-shadow:0 4px 18px rgba(0,0,0,0.05); }
   label{ display:block; font-size:13.5px; font-weight:600; color:var(--muted); margin-bottom:6px; margin-top:14px; }
   label:first-of-type{ margin-top:0; }
-  input[type=text], input[type=tel], input[type=number], textarea, select{
+  input[type=text], input[type=tel], input[type=number], input[type=password], textarea, select{
     width:100%; padding:11px 12px; border-radius:8px; border:1px solid var(--line);
     background:#fafafa; color:var(--paper); font-size:14.5px; font-family:inherit;
   }
@@ -312,11 +312,9 @@
     <div class="section-title">📱 अभियान फैलाओ</div>
     <div class="card">
       <div class="icon-row">
-        <button class="action-btn whatsapp small" onclick="joinWhatsappGroup()">💬 व्हाट्सएप ग्रुप जॉइन करो</button>
         <button class="action-btn secondary small" onclick="shareCampaign()">📤 अभियान शेयर करो</button>
         <button class="action-btn small" style="background:var(--paper);" onclick="copyInviteLink()">🔗 इनवाइट लिंक कॉपी करो</button>
       </div>
-      <div class="hint" style="margin-top:12px;">व्हाट्सएप ग्रुप लिंक अभी डेमो लिंक है — असली ग्रुप बनने के बाद उसका लिंक यहाँ लगाना होगा।</div>
     </div>
 
     <div class="section-title">🔔 नोटिफिकेशन</div>
@@ -345,18 +343,18 @@
         <label for="loginPhoneInput">अपना 10 अंकों का मोबाइल नंबर डालें</label>
         <input type="tel" id="loginPhoneInput" placeholder="9876543210" maxlength="10" inputmode="numeric">
         <label for="loginPinInput">4 अंकों का PIN डालें</label>
-        <input type="tel" id="loginPinInput" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
+        <input type="password" id="loginPinInput" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
         <button class="action-btn" id="doLoginBtn" onclick="doLogin()" style="margin-top:12px;">लॉगिन करें</button>
-        <span class="logout-link" onclick="toggleClaimPinMode()">पहले (PIN फ़ीचर आने से पहले) रजिस्टर किया था? यहाँ PIN बनाओ →</span>
+        <span class="logout-link" onclick="toggleClaimPinMode()">पहले रजिस्टर किया था और PIN नहीं बनाया? यहाँ PIN बनाओ →</span>
       </div>
       <div id="loginModeClaim" style="display:none;">
         <div class="hint" style="margin-bottom:10px;">अगर तुमने पहले रजिस्टर किया था (जब PIN नहीं था), तो यहाँ अपना मोबाइल नंबर डालकर एक नया PIN बना लो — बाकी जानकारी वैसी ही रहेगी।</div>
         <label for="claimPhoneInput">मोबाइल नंबर</label>
         <input type="tel" id="claimPhoneInput" placeholder="9876543210" maxlength="10" inputmode="numeric">
         <label for="claimPinInput">नया 4 अंकों का PIN बनाओ</label>
-        <input type="tel" id="claimPinInput" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
+        <input type="password" id="claimPinInput" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
         <label for="claimPinConfirmInput">PIN दोबारा लिखो</label>
-        <input type="tel" id="claimPinConfirmInput" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
+        <input type="password" id="claimPinConfirmInput" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
         <button class="action-btn" id="claimPinBtn" onclick="claimPin()" style="margin-top:12px;">PIN बनाओ और लॉगिन करो</button>
         <span class="logout-link" onclick="toggleClaimPinMode()">← वापस लॉगिन पर जाओ</span>
       </div>
@@ -379,18 +377,28 @@
         <div class="row2">
           <div>
             <label for="pin">4 अंकों का PIN बनाओ *</label>
-            <input type="tel" id="pin" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
+            <input type="password" id="pin" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
           </div>
           <div>
             <label for="pinConfirm">PIN दोबारा लिखो *</label>
-            <input type="tel" id="pinConfirm" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
+            <input type="password" id="pinConfirm" placeholder="जैसे — 1234" maxlength="4" inputmode="numeric">
           </div>
         </div>
         <div class="field-error" id="err-pin">4 अंकों का सही PIN डालो और दोनों बार एक जैसा हो</div>
         <div class="hint">यह PIN लॉगिन के लिए ज़रूरी होगा — इसे याद रखो, किसी और को मत बताओ।</div>
 
+        <label for="category">कर्मचारी श्रेणी *</label>
+        <select id="category">
+          <option value="">चुनो...</option>
+          <option value="TO">TO (Telephone Operator)</option>
+          <option value="LM">LM (Lineman)</option>
+          <option value="ALM">ALM (Assistant Lineman)</option>
+          <option value="अन्य">अन्य</option>
+        </select>
+        <div class="field-error" id="err-category">यह जानकारी ज़रूरी है</div>
+
         <label for="division">डिवीज़न *</label>
-        <select id="division" onchange="toggleDivisionOther()">
+        <select id="division">
           <option value="">चुनो...</option>
           <option value="Alaknanda">Alaknanda</option>
           <option value="Chhattarpur">Chhattarpur</option>
@@ -415,9 +423,7 @@
           <option value="Uttam Nagar">Uttam Nagar</option>
           <option value="Vasant Kunj">Vasant Kunj</option>
           <option value="Vikas Puri">Vikas Puri</option>
-          <option value="अन्य">अन्य (अपना डिवीज़न/सब-डिवीज़न लिखो)</option>
         </select>
-        <input type="text" id="divisionOther" placeholder="अपना डिवीज़न/सब-डिवीज़न यहाँ लिखो" style="display:none; margin-top:8px;">
         <div class="field-error" id="err-division">यह जानकारी ज़रूरी है</div>
 
         <div class="row2">
@@ -455,12 +461,13 @@
       <div class="success" id="successBlock">
         <div class="tick">✓</div>
         <h2 id="successTitle">बधाई हो, तुम्हारी प्रोफ़ाइल दर्ज हो गई!</h2>
-        <p id="successSub">अब तुम इस मुहिम का हिस्सा हो। तुम्हें व्हाट्सएप ग्रुप में जल्द जोड़ा जाएगा।</p>
+        <p id="successSub">अब तुम इस मुहिम का हिस्सा हो।</p>
         <div class="id-badge"><div class="num" id="memberIdShow">—</div><div class="lbl">तुम्हारी मेंबर ID — इसे संभालकर रखो</div></div>
 
         <div class="profile-mini-card">
           <div class="pmc-row"><span class="k">नाम</span><span class="v" id="pmcName">—</span></div>
           <div class="pmc-row"><span class="k">मोबाइल</span><span class="v" id="pmcPhone">—</span></div>
+          <div class="pmc-row"><span class="k">श्रेणी</span><span class="v" id="pmcCategory">—</span></div>
           <div class="pmc-row"><span class="k">डिवीज़न</span><span class="v" id="pmcDivision">—</span></div>
         </div>
 
@@ -491,6 +498,7 @@
         <div class="dash-stat"><div class="num" id="dashTotal">—</div><div class="lbl">कुल साथी</div></div>
         <div class="dash-stat"><div class="num" id="dashToday">—</div><div class="lbl">आज नए जुड़े</div></div>
       </div>
+
       <div class="breakdown-card">
         <h4>डिवीज़न-वार सदस्य (Division-wise)</h4>
         <div id="divBreakdown"><div class="bd-empty">लोड हो रहा है...</div></div>
@@ -625,7 +633,7 @@
 
 </div>
 
-<!-- ============== 🔑 ORGANIZER UPDATE LOGIN (sabse last mein) ============== -->
+<!-- ============== 🔑 ORGANIZER UPDATE LOGIN ============== -->
 <div class="organizer-zone">
   <div class="organizer-toggle" onclick="toggleOrganizerZone()">🔑 आयोजक अपडेट डालें</div>
 
@@ -669,7 +677,6 @@
     { target: 1000, label: '1000 साथी — अगली रणनीति तय होगी' }
   ];
 
-  // ---- Random motivational line, different every time a profile is saved ----
   const idQuotePairs = [
     ["अकेले लड़ोगे तो दबा दिए जाओगे,", "एकजुट होकर लड़ोगे तो अपना हक़ छीन लोगे।"],
     ["चुप रहोगे तो हक़ नहीं मिलेगा,", "आवाज़ उठाओगे तो बदलाव ज़रूर आएगा।"],
@@ -685,7 +692,6 @@
     document.getElementById('idQuoteLine2').textContent = pair[1];
   }
 
-  // ---- Daily "know your rights" fact for the dashboard ----
   const dailyRights = [
     { q:'क्या बिना कारण नौकरी से निकाला जा सकता है?', a:'नहीं। उचित नोटिस और ठोस कारण बताए बिना नौकरी से निकालना आमतौर पर गैरकानूनी है।' },
     { q:'क्या कॉन्ट्रैक्ट वर्कर का PF कटना चाहिए?', a:'हाँ। तय शर्तें पूरी करने वाले हर कर्मचारी का PF कटना और कंपनी का बराबर योगदान देना ज़रूरी है।' },
@@ -743,7 +749,7 @@
     claim.style.display = showClaim ? 'block' : 'none';
   }
 
-  // ==================== CLAIM PIN (for members who registered before PIN existed) ====================
+  // ==================== CLAIM PIN (purane members ke liye) ====================
   async function claimPin(){
     const phone = document.getElementById('claimPhoneInput').value.trim();
     const pin = document.getElementById('claimPinInput').value.trim();
@@ -770,7 +776,7 @@
         unlockMemberTabs();
         saveLoginLocally(phone, pin);
       } else if(result.status === 'already_set'){
-        showToast(result.message || 'इस नंबर पर पहले से PIN बना हुआ है — नीचे लॉगिन करो');
+        showToast(result.message || 'इस नंबर पर पहले से PIN बना हुआ है — लॉगिन करो');
         toggleClaimPinMode();
       } else if(result.status === 'not_found'){
         showToast('यह नंबर रजिस्टर नहीं मिला — कृपया नीचे नया प्रोफ़ाइल बनाओ');
@@ -784,7 +790,7 @@
     }
   }
 
-  // ==================== LOCAL STORAGE (remember login on this device) ====================
+  // ==================== LOCAL STORAGE ====================
   const STORAGE_KEY = 'msa_phone';
   const STORAGE_PIN_KEY = 'msa_pin';
 
@@ -815,13 +821,12 @@
         renderProfileCard(data.user, false);
         unlockMemberTabs();
       }
-      // if wrong_pin or not_found, stay silent — user can log in manually
     }catch(e){}
   }
 
   // ==================== FIELD VALIDATION ====================
   function clearFieldErrors(){
-    ['name','phone','division'].forEach(id => {
+    ['name','phone','category','division'].forEach(id => {
       document.getElementById(id).classList.remove('input-error');
       const err = document.getElementById('err-'+id);
       if(err) err.style.display = 'none';
@@ -857,6 +862,8 @@
         saveLoginLocally(phone, pin);
       } else if(data.status === 'wrong_pin'){
         showToast('PIN ग़लत है — दोबारा कोशिश करो');
+      } else if(data.status === 'set_pin_required'){
+        showToast('तुमने अभी PIN नहीं बनाया — ऊपर "यहाँ PIN बनाओ" पर जाओ');
       } else {
         showToast('यह नंबर अभी रजिस्टर नहीं है — नीचे नया प्रोफ़ाइल बनाओ');
       }
@@ -867,56 +874,22 @@
     }
   }
 
-  // ==================== DIVISION DROPDOWN (with "अन्य" free text fallback) ====================
-  const DIVISION_KNOWN_OPTIONS = ['Alaknanda','Chhattarpur','Dwarka','Hauz Khas','Jaffarpur','Janak Puri','Khanpur','Mohan Garden','Mundka','Najafgarh','Nangloi','Nehru Place','New Friends Colony','Nizamuddin','Palam','Punjabi Bagh','R.K. Puram','Saket','Sarita Vihar','Tagore Garden','Uttam Nagar','Vasant Kunj','Vikas Puri'];
-
-  function toggleDivisionOther(){
-    const sel = document.getElementById('division');
-    const other = document.getElementById('divisionOther');
-    other.style.display = (sel.value === 'अन्य') ? 'block' : 'none';
-    if(sel.value !== 'अन्य') other.value = '';
-  }
-
-  function getDivisionValue(){
-    const sel = document.getElementById('division');
-    if(sel.value === 'अन्य') return document.getElementById('divisionOther').value.trim();
-    return sel.value;
-  }
-
-  function setDivisionValue(val){
-    const sel = document.getElementById('division');
-    const other = document.getElementById('divisionOther');
-    const trimmed = (val || '').trim();
-    if(DIVISION_KNOWN_OPTIONS.includes(trimmed)){
-      sel.value = trimmed;
-      other.style.display = 'none';
-      other.value = '';
-    } else if(trimmed){
-      sel.value = 'अन्य';
-      other.style.display = 'block';
-      other.value = trimmed;
-    } else {
-      sel.value = '';
-      other.style.display = 'none';
-      other.value = '';
-    }
-  }
-
   function fillFormForEdit(u){
     document.getElementById('name').value = u.name || '';
     document.getElementById('phone').value = u.phone || '';
-    setDivisionValue(u.division || '');
+    document.getElementById('category').value = u.category || '';
+    document.getElementById('division').value = u.division || '';
     document.getElementById('joinYear').value = u.joinYear || '';
     document.getElementById('experience').value = u.experience || '';
     document.getElementById('salary').value = u.salary || '';
     document.getElementById('profileFormTitle').textContent = 'प्रोफ़ाइल अपडेट करो';
   }
 
-  // Show the form again (pre-filled) to edit an existing profile
   function showEditForm(){
     const u = {
       name: document.getElementById('pmcName').textContent,
       phone: document.getElementById('pmcPhone').textContent,
+      category: document.getElementById('pmcCategory').textContent,
       division: document.getElementById('pmcDivision').textContent
     };
     fillFormForEdit(u);
@@ -929,13 +902,13 @@
     clearFieldErrors();
   }
 
-  // Render the persistent "My ID Card" view for a logged-in / registered member
   function renderProfileCard(u, isNew){
     document.getElementById('successTitle').textContent = isNew ? 'बधाई हो, तुम्हारी प्रोफ़ाइल दर्ज हो गई!' : 'स्वागत है, ' + (u.name || 'साथी') + '!';
-    document.getElementById('successSub').textContent = isNew ? 'अब तुम इस मुहिम का हिस्सा हो। तुम्हें व्हाट्सएप ग्रुप में जल्द जोड़ा जाएगा।' : 'तुम्हारी प्रोफ़ाइल पहले से दर्ज है — यह रहा तुम्हारा पहचान पत्र।';
+    document.getElementById('successSub').textContent = isNew ? 'अब तुम इस मुहिम का हिस्सा हो।' : 'तुम्हारी प्रोफ़ाइल पहले से दर्ज है — यह रहा तुम्हारा पहचान पत्र।';
     document.getElementById('memberIdShow').textContent = u.memberId || '—';
     document.getElementById('pmcName').textContent = u.name || '—';
     document.getElementById('pmcPhone').textContent = u.phone || '—';
+    document.getElementById('pmcCategory').textContent = u.category || '—';
     document.getElementById('pmcDivision').textContent = u.division || '—';
     showRandomIdQuote();
     document.getElementById('formBody').classList.add('hide');
@@ -961,7 +934,8 @@
     const phone = document.getElementById('phone').value.trim();
     const pin = document.getElementById('pin').value.trim();
     const pinConfirm = document.getElementById('pinConfirm').value.trim();
-    const division = getDivisionValue();
+    const category = document.getElementById('category').value;
+    const division = document.getElementById('division').value;
     const joinYear = document.getElementById('joinYear').value;
     const experience = document.getElementById('experience').value;
     const salary = document.getElementById('salary').value;
@@ -977,6 +951,7 @@
       document.getElementById('err-pin').style.display = 'block';
       hasError = true;
     }
+    if(!category){ markFieldError('category'); hasError = true; }
     if(!division){ markFieldError('division'); hasError = true; }
     if(!consent){ document.getElementById('err-consent').style.display = 'block'; hasError = true; }
     if(hasError){ showToast('कृपया लाल निशान वाले फ़ील्ड ठीक करो'); return; }
@@ -990,7 +965,7 @@
       const response = await fetch(SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ type:'signature', name, phone, pin, division, joinYear, experience, salary, demands })
+        body: JSON.stringify({ type:'signature', name, phone, pin, category, division, joinYear, experience, salary, demands })
       });
       const result = await response.json();
 
@@ -1008,7 +983,7 @@
       }
 
       const isUpdate = result.status === 'updated';
-      renderProfileCard({ memberId: result.memberId, name, phone, division }, !isUpdate);
+      renderProfileCard({ memberId: result.memberId, name, phone, category, division }, !isUpdate);
       unlockMemberTabs();
       saveLoginLocally(phone, pin);
 
@@ -1049,11 +1024,12 @@
     const el = document.getElementById(elId);
     const keys = Object.keys(counts);
     if(keys.length === 0){ el.innerHTML = '<div class="bd-empty">अभी कोई डेटा नहीं</div>'; return; }
-    el.innerHTML = keys.map(k => `<div class="bd-row"><span>${k}</span><span class="cnt">${counts[k]}</span></div>`).join('');
+    el.innerHTML = keys
+      .sort((a,b) => counts[b] - counts[a])
+      .map(k => `<div class="bd-row"><span>${k}</span><span class="cnt">${counts[k]}</span></div>`).join('');
   }
 
   function renderProgress(count){
-    // find current milestone target (next one above count)
     let target = 500;
     for(let i=0;i<MILESTONE_STEPS.length;i++){
       if(MILESTONE_STEPS[i].target > count){ target = MILESTONE_STEPS[i].target; break; }
@@ -1100,7 +1076,7 @@
     if(!messages || messages.length === 0){ list.innerHTML = '<div class="bd-empty">अभी तक कोई बात नहीं लिखी गई</div>'; return; }
     list.innerHTML = messages.map(m => `
       <div class="wall-item">
-        <div class="who">${(m.name || 'गुमनाम साथी')}</div>
+        <div class="who">गुमनाम साथी</div>
         <div class="what">${(m.message || '').replace(/</g,'&lt;')}</div>
       </div>
     `).join('');
@@ -1189,7 +1165,7 @@
     document.getElementById('pollOptionsWrap').innerHTML = '';
   }
 
-  // ==================== SUGGESTIONS / COMPLAINTS / ISSUES ====================
+  // ==================== SUGGESTIONS ====================
   async function postPrivate(fieldId, type){
     const el = document.getElementById(fieldId);
     const val = el.value.trim();
@@ -1205,11 +1181,8 @@
   }
 
   // ==================== SHARE / NOTIFICATIONS ====================
-  function joinWhatsappGroup(){
-    showToast('डेमो लिंक — असली ग्रुप बनने पर यहाँ जोड़ा जाएगा');
-  }
   function shareCampaign(){
-    const text = encodeURIComponent('मैंने ठेका प्रथा खत्म करने की मुहिम में जुड़ गया — तुम भी जुड़ो और अपनी आवाज़ दर्ज करो: ' + window.location.href);
+    const text = encodeURIComponent('मैं ठेका प्रथा खत्म करने की मुहिम से जुड़ गया — तुम भी जुड़ो और अपनी आवाज़ दर्ज करो: ' + window.location.href);
     window.open('https://wa.me/?text=' + text, '_blank');
   }
   function copyInviteLink(){
@@ -1228,8 +1201,6 @@
       });
     }catch(e){}
   }
-
-  document.querySelectorAll('.faq-item').forEach(item => {});
 
   // ==================== ORGANIZER UPDATE LOGIN ====================
   const ORG_TOKEN_KEY = 'msa_org_token';
@@ -1315,9 +1286,9 @@
   }
 
   // ==================== Init ====================
-  loadDashboard(); // populates the public home stats + announcement even before login
-  autoLoginFromStorage(); // silently restore login on this device if previously saved
-  autoLoginOrganizer(); // silently restore organizer session on this device if previously saved
+  loadDashboard();
+  autoLoginFromStorage();
+  autoLoginOrganizer();
 </script>
 </body>
 </html>
