@@ -11,6 +11,63 @@
 (async function(){
   const current='platform-v2.html';
   const live='https://script.google.com/macros/s/AKfycbwGS_m1Rva1zmoJuCXvXFsZKkWyvXKFcjwwEE4Hj5-YHX1xBm8aX838RHYE9c-Pc4_M/exec';
+  const patch=`
+<style id="majdoor-attractive-patch">
+:root{--red:#c1121f!important;--green:#138808!important;--navy:#0a3161!important;--bg:#f1f3f5!important;--ink:#171717!important;--shadow:0 10px 30px rgba(10,49,97,.10)!important}
+body{background:linear-gradient(180deg,#fff 0,#f5f7fa 42%,#eef2f5 100%)!important}
+.topbar{height:7px!important;background:linear-gradient(90deg,#ff9933 0 33.33%,#fff 33.33% 66.66%,#138808 66.66% 100%)!important}
+header{box-shadow:0 4px 18px rgba(10,49,97,.08)!important}
+.brand{font-size:21px!important;color:#0a3161!important}
+.brand:before{content:'🇮🇳 ';font-size:18px}
+.navlinks button.active,.navlinks button:hover{background:#fff1f2!important;color:#c1121f!important}
+.join{background:#c1121f!important;box-shadow:0 5px 16px rgba(193,18,31,.22)!important}
+.hero{background:linear-gradient(135deg,#0a3161 0%,#153e6d 62%,#1d527f 100%)!important;border-radius:26px!important;box-shadow:0 14px 40px rgba(10,49,97,.20)!important;position:relative;overflow:hidden!important}
+.hero:after{content:'🇮🇳';position:absolute;right:22px;bottom:-22px;font-size:130px;opacity:.07;pointer-events:none}
+.hero h1{font-weight:800!important;letter-spacing:-.5px}
+.hero p{font-size:15px!important}
+.stat{background:rgba(255,255,255,.13)!important;border-color:rgba(255,255,255,.22)!important;transition:transform .2s,background .2s}
+.stat:hover{transform:translateY(-3px);background:rgba(255,255,255,.18)!important}
+.section-head h2{font-weight:800!important;color:#0a3161!important}
+.card{border-radius:17px!important;box-shadow:0 5px 20px rgba(10,49,97,.055)!important;transition:transform .18s,box-shadow .18s}
+.card:hover{transform:translateY(-2px);box-shadow:0 9px 26px rgba(10,49,97,.10)!important}
+.btn.dark{background:#0a3161!important}.btn.red{background:#c1121f!important}
+.form{border-top:4px solid #c1121f!important;box-shadow:0 7px 25px rgba(10,49,97,.07)!important}
+.form h3{color:#0a3161!important;font-weight:800!important}
+.form input:focus,.form textarea:focus,.form select:focus{border-color:#c1121f!important;box-shadow:0 0 0 3px rgba(193,18,31,.08)!important}
+.badge.red{background:#fde8ea!important;color:#c1121f!important}.badge.green{background:#e7f6ed!important;color:#138808!important}
+@media(max-width:850px){.hero{border-radius:20px!important}.brand{font-size:17px!important}.wrap{padding-left:12px!important;padding-right:12px!important}}
+</style>
+<script>
+(function(){
+  const divisions=['Alaknanda','Chhattarpur','Dwarka','Hauz Khas','Jaffarpur','Janak Puri','Khanpur','Mohan Garden','Mundka','Najafgarh','Nangloi','Nehru Place','New Friends Colony','Nizamuddin','Palam','Punjabi Bagh','R.K. Puram','Saket','Sarita Vihar','Tagore Garden','Uttam Nagar','Vasant Kunj','Vikas Puri'];
+  function setupJoin(){
+    const d=document.getElementById('regDivision');
+    if(d && d.tagName==='INPUT'){
+      const s=document.createElement('select'); s.id='regDivision'; s.innerHTML='<option value="">Division चुनें...</option>'+divisions.map(x=>'<option value="'+x.replace(/&/g,'&amp;')+'">'+x+'</option>').join('');
+      d.replaceWith(s);
+    }
+    const c=document.getElementById('regCategory');
+    if(c && c.tagName==='INPUT'){
+      const s=document.createElement('select'); s.id='regCategory'; s.innerHTML='<option value="">Category चुनें...</option><option value="TO">TO (Telephone Operator)</option><option value="LM">LM (Lineman)</option><option value="ALM">ALM (Assistant Lineman)</option><option value="अन्य">अन्य</option>';
+      c.replaceWith(s);
+    }
+    const year=document.getElementById('regYear'); if(year) year.max='2026';
+  }
+  const oldRenderAll=window.renderAll;
+  function fixDivisionCount(){
+    const el=document.getElementById('divisionCount');
+    if(el){
+      const used=new Set((DATA&&DATA.divisionBreakdown||[]).map(x=>String(x.division||'').trim()).filter(Boolean));
+      el.textContent=used.size;
+      const d=document.getElementById('dashDivisions'); if(d)d.textContent=used.size;
+    }
+  }
+  const boot=setInterval(function(){setupJoin();fixDivisionCount();if(document.getElementById('regDivision'))clearInterval(boot)},250);
+  setTimeout(function(){setupJoin();fixDivisionCount()},1200);
+  const observer=new MutationObserver(function(){setupJoin();fixDivisionCount()});
+  observer.observe(document.body,{childList:true,subtree:true});
+})();
+</script>`;
   try{
     const r=await fetch(current,{cache:'no-store'});
     if(!r.ok) throw new Error('Could not load platform-v2.html');
@@ -22,6 +79,7 @@
     html=html.replace(/session=\{phone,member:r\.member\}/,`session={phone,pin,member:r.member}`);
     html=html.replace(/pin:val\('loginPin'\)\|\|''/g,`pin:session.pin||val('loginPin')||''`);
     html=html.replace(/let pin=val\('loginPin'\);/g,`let pin=session.pin||val('loginPin')||'';`);
+    html=html.replace('</body>',patch+'</body>');
     document.open();document.write(html);document.close();
   }catch(e){
     document.body.innerHTML='<main style="font-family:Arial;padding:30px"><h2>Website loading error</h2><p>'+String(e.message||e).replace(/[<>]/g,'')+'</p></main>';
