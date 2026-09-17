@@ -14,7 +14,11 @@ async function load(){try{let r=await fetch(SCRIPT_URL,{method:'GET',redirect:'f
 function renderAll()"""
 s = re.sub(r"async function api\(body\)\{.*?function renderAll\(\)", lambda m: api_block, s, count=1, flags=re.S)
 
-s = re.sub(r"d\.options=d\.options\.split\([^;]+\)\.map\(x=>x\.trim\(\)\)\.filter\(Boolean\);", "d.options=d.options.split(/\\r?\\n/).map(x=>x.trim()).filter(Boolean);", s)
+# Normalize the poll option splitter without letting re.sub interpret \r/\n as control characters.
+s = re.sub(r"d\.options=d\.options\.split\([^;]*?\)\.map\(x=>x\.trim\(\)\)\.filter\(Boolean\);", lambda m: r"d.options=d.options.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);", s, flags=re.S)
+# Also repair any already-corrupted literal-newline regex form.
+s = s.replace("d.options=d.options.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);", r"d.options=d.options.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);")
+
 s = re.sub(r"document\.getElementById\('divisionCount'\)\.textContent=\(DATA\.divisionBreakdown\|\|\[\]\)\.length", "document.getElementById('divisionCount').textContent=23", s)
 s = re.sub(r"document\.getElementById\('dashDivisions'\)\.textContent=\(DATA\.divisionBreakdown\|\|\[\]\)\.length", "document.getElementById('dashDivisions').textContent=23", s)
 
