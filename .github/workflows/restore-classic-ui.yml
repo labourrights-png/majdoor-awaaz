@@ -14,13 +14,21 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
           p=Path('platform-v2.html')
           s=p.read_text(encoding='utf-8')
-          s=s.replace('https://script.google.com/macros/s/AKfycbzQJiOwfYcGlz1g9BIOz22M3mjmDntF1l-zDsklvhge_PiTZcMkY_HgGUGjyFAdMNUr/exec','https://script.google.com/macros/s/AKfycbwGS_m1Rva1zmoJuCXvXFsZKkWyvXFcjwwEE4Hj5-YHX1xBm8aX838RHYE9c-Pc4_M/exec')
-          for a,b in {'Digital Employee Platform':'कर्मचारी डिजिटल मंच','Join / Login':'सदस्य बनें / Login','Employee & Labour News':'कर्मचारी एवं श्रमिक समाचार','Campaign Updates':'अभियान अपडेट','Demands & Progress':'हमारी माँगें एवं प्रगति','Employee Rights':'कर्मचारी अधिकार','Campaign Dashboard':'अभियान Dashboard','Meetings & Events':'बैठकें एवं कार्यक्रम','Employee Voice':'कर्मचारी की आवाज़','My Dashboard':'मेरा Dashboard','My Participation':'मेरी सहभागिता','Suggestions / Complaints':'सुझाव / शिकायत','Publish Voice':'आवाज़ साझा करें'}.items(): s=s.replace(a,b)
+          old='https://script.google.com/macros/s/AKfycbzQJiOwfYcGlz1g9BIOz22M3mjmDntF1l-zDsklvhge_PiTZcMkY_HgGUGjyFAdMNUr/exec'
+          new='https://script.google.com/macros/s/AKfycbwGS_m1Rva1zmoJuCXvXFsZKkWyvXFcjwwEE4Hj5-YHX1xBm8aX838RHYE9c-Pc4_M/exec'
+          s=s.replace(old,new)
+          labels={'Digital Employee Platform':'कर्मचारी डिजिटल मंच','Join / Login':'सदस्य बनें / Login','Employee & Labour News':'कर्मचारी एवं श्रमिक समाचार','Campaign Updates':'अभियान अपडेट','Demands & Progress':'हमारी माँगें एवं प्रगति','Employee Rights':'कर्मचारी अधिकार','Campaign Dashboard':'अभियान Dashboard','Meetings & Events':'बैठकें एवं कार्यक्रम','Employee Voice':'कर्मचारी की आवाज़','My Dashboard':'मेरा Dashboard','My Participation':'मेरी सहभागिता','Suggestions / Complaints':'सुझाव / शिकायत','Publish Voice':'आवाज़ साझा करें'}
+          for a,b in labels.items(): s=s.replace(a,b)
+          official=['Alaknanda','Chhattarpur','Dwarka','Hauz Khas','Jaffarpur','Janak Puri','Khanpur','Mohan Garden','Mundka','Najafgarh','Nangloi','Nehru Place','New Friends Colony','Nizamuddin','Palam','Punjabi Bagh','R.K. Puram','Saket','Sarita Vihar','Tagore Garden','Uttam Nagar','Vasant Kunj','Vikas Puri']
           s=s.replace('<div class="stat"><b id="divisionCount">—</b><span>Divisions</span></div>','')
-          s=s.replace('<input id="regDivision">','<select id="regDivision"><option value="">Division चुनें...</option><option>Alaknanda</option><option>Chhattarpur</option><option>Dwarka</option><option>Hauz Khas</option><option>Jaffarpur</option><option>Janak Puri</option><option>Khanpur</option><option>Mohan Garden</option><option>Mundka</option><option>Najafgarh</option><option>Nangloi</option><option>Nehru Place</option><option>New Friends Colony</option><option>Nizamuddin</option><option>Palam</option><option>Punjabi Bagh</option><option>R.K. Puram</option><option>Saket</option><option>Sarita Vihar</option><option>Tagore Garden</option><option>Uttam Nagar</option><option>Vasant Kunj</option><option>Vikas Puri</option></select>')
+          s=s.replace('<input id="regDivision">','<select id="regDivision"><option value="">Division चुनें...</option>'+''.join('<option>'+d+'</option>' for d in official)+'</select>')
           s=s.replace('<input id="regCategory" placeholder="TO / LM / ALM / Other">','<select id="regCategory"><option value="">Category चुनें...</option><option value="TO">TO</option><option value="LM">LM</option><option value="ALM">ALM</option><option value="अन्य">अन्य</option></select>')
+          hero='''<div class="hero"><div><div class="hero-kicker">मज़दूर संघर्ष अभियान</div><h1>ठेका नहीं, स्थायी नौकरी और हक़</h1><p>हम श्रमिक हैं — इस दिल्ली की रीढ़ की हड्डी। हमारे मेहनतकश हाथों से हर घर रोशन है, फिर भी हमें अंधेरे में रखा गया।<br><br>अप्रैल 2025 से न सरकार ने मज़दूरी बढ़ाई, न कंपनी ने सैलरी। लेकिन परमानेंट स्टाफ़ की तरक्की और कंपनी का मुनाफ़ा — दोनों बढ़ते रहे।<br><br><strong>यह दोगलापन अब और नहीं चलेगा।</strong></p><button class="btn primary" onclick="go('join')">🤝 अभी जुड़ें — Join Now</button></div><div class="stats"><div class="stat"><b id="memberCount">—</b><span>जुड़े हुए साथी (लाइव)</span></div><div class="stat"><b id="divisionCount">23</b><span>कुल Division</span></div><div class="stat"><b id="updateCount">—</b><span>अभियान अपडेट</span></div><div class="stat"><b id="newsCount">—</b><span>कर्मचारी समाचार</span></div></div></div>'''
+          pattern=r'<div class="hero">.*?</div>\n<div class="section-head"><div><h2>आज की मुख्य जानकारी</h2>'
+          s=re.sub(pattern,hero+'\n<div class="section-head"><div><h2>आज की मुख्य जानकारी</h2>',s,count=1,flags=re.S)
           if 'classic-ui.css' not in s: s=s.replace('</head>','<link rel="stylesheet" href="classic-ui.css"></head>')
           p.write_text(s,encoding='utf-8')
           PY
@@ -30,5 +38,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if git diff --quiet; then exit 0; fi
           git add platform-v2.html
-          git commit -m "Restore classic Hindi platform UI"
+          git commit -m "Update homepage hero and division stat"
           git push
