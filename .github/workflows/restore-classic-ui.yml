@@ -1,18 +1,13 @@
 name: Restore classic UI
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+on: [push]
 permissions:
   contents: write
 jobs:
   patch:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Repair site
-        run: python3 tools/repair_site.py
+      - uses: actions/checkout@v4
+      - run: python3 tools/repair_site.py
       - name: Commit patched site
         run: |
           git config user.name "github-actions[bot]"
