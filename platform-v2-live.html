@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Majdoor Awaaz — Platform V2</title></head><body>
+<script>
+(async function(){
+  const current='platform-v2.html';
+  const live='https://script.google.com/macros/s/AKfycbwGS_m1Rva1zmoJuCXvXFsZKkWyvXKFcjwwEE4Hj5-YHX1xBm8aX838RHYE9c-Pc4_M/exec';
+  try{
+    const r=await fetch(current,{cache:'no-store'});
+    if(!r.ok) throw new Error('Could not load platform-v2.html');
+    let html=await r.text();
+    html=html.replace(/const SCRIPT_URL\s*=\s*(['"]).*?\1\s*;/,`const SCRIPT_URL=${JSON.stringify(live)};`);
+    document.open();document.write(html);document.close();
+  }catch(e){document.body.innerHTML='<main style="font-family:Arial;padding:30px"><h2>Platform V2 loading error</h2><p>'+String(e.message||e).replace(/[<>]/g,'')+'</p><p>Please open platform-v2.html directly after GitHub Pages finishes publishing.</p></main>';}
+})();
+</script></body></html>
