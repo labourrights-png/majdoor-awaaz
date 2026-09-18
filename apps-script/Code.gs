@@ -76,6 +76,7 @@ function doPost(e){try{ensureSheets();var d=JSON.parse((e.postData&&e.postData.c
   if(type==='getParticipation')return getParticipation_(d);
   if(type==='aggregate'||type==='load'||type==='dashboard')return jsonOut_(aggregate_());
   if(type==='adminGet'){requireAdmin_(d);return adminData_()}
+  if(type==='adminResolveRecovery')return adminResolveRecovery_(d);
   if(type==='update')return adminSaveUpdate_(d);
   if(type==='adminSaveNews')return adminSaveNews_(d);
   if(type==='adminDeleteNews')return adminDelete_(d,'News');
