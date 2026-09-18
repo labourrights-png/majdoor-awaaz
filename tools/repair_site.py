@@ -1,7 +1,7 @@
 from pathlib import Path
 import re
 
-BACKEND = 'https://script.google.com/macros/s/AKfycbwGS_m1Rva1zmoJuCXvXFsZKkWyvXFcjwwEE4Hj5-YHX1xBm8aX838RHYE9c-Pc4_M/exec'
+BACKEND = 'https://script.google.com/macros/s/AKfycbwQyemsGMz4izH3fji20DtZxXmDgDkVsCqIeOt-5MZe7XEph7WJNsGyPaTEzQPRKIk/exec'
 DIVISIONS = ['Alaknanda','Chhattarpur','Dwarka','Hauz Khas','Jaffarpur','Janak Puri','Khanpur','Mohan Garden','Mundka','Najafgarh','Nangloi','Nehru Place','New Friends Colony','Nizamuddin','Palam','Punjabi Bagh','R.K. Puram','Saket','Sarita Vihar','Tagore Garden','Uttam Nagar','Vasant Kunj','Vikas Puri']
 
 p = Path('platform-v2.html')
