@@ -74,7 +74,7 @@ function doPost(e){try{ensureSheets();var d=JSON.parse((e.postData&&e.postData.c
   if(type==='vote'||type==='poll')return vote_(d);
   if(type==='participation')return participation_(d);
   if(type==='getParticipation')return getParticipation_(d);
-  if(type==='refreshNews'){var nr=syncNewsFromRSS();return jsonOut_({success:true,added:nr.added||0,lastSync:nr.lastSync||new Date().toISOString()})}if(type==='aggregate'||type==='load'||type==='dashboard')return jsonOut_(aggregate_());
+  if(type==='refreshNews'){var last=PropertiesService.getScriptProperties().getProperty('NEWS_LAST_SYNC'),fresh=last&&((Date.now()-new Date(last).getTime())<5*60*1000);if(fresh)return jsonOut_({success:true,added:0,lastSync:last,cached:true});var nr=syncNewsFromRSS();return jsonOut_({success:true,added:nr.added||0,lastSync:nr.lastSync||new Date().toISOString()})}if(type==='aggregate'||type==='load'||type==='dashboard')return jsonOut_(aggregate_());
   if(type==='adminGet'){requireAdmin_(d);return adminData_()}
   if(type==='adminResolveRecovery')return adminResolveRecovery_(d);
   if(type==='update')return adminSaveUpdate_(d);
