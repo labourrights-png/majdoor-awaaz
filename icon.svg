@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" rx="112" fill="#10233f"/>
+<path d="M92 352h328v52H92z" fill="#fff"/>
+<path d="M128 332l46-112h164l46 112z" fill="#fff"/>
+<circle cx="256" cy="154" r="62" fill="#ff9933"/>
+<path d="M178 332h156v-48H178z" fill="#138808"/>
+<text x="256" y="470" text-anchor="middle" font-family="Arial,sans-serif" font-size="38" font-weight="700" fill="#fff">आवाज़</text>
+</svg>
