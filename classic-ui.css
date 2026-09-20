@@ -52,3 +52,33 @@ header{background:#fff!important;border-bottom:1px solid var(--line)!important;p
 
 /* Admin panel intentionally keeps its existing styling; Hindi font rollout targets public/member UI. */
 #admin .form,#admin .tabs,#admin .tabs button,#admin input,#admin textarea,#admin select{font-family:inherit!important}
+
+/* Mobile app-style navigation: 5 primary tabs + More sheet */
+.mobilebar{display:none!important}
+.mobile-sheet{display:none}
+@media(max-width:850px){
+  body{padding-bottom:82px!important}
+  .mobilebar{display:grid!important;grid-template-columns:repeat(5,1fr)!important;align-items:stretch!important;position:fixed!important;bottom:8px!important;left:8px!important;right:8px!important;height:68px!important;background:rgba(255,255,255,.98)!important;border:1px solid #dfe4ea!important;border-radius:18px!important;z-index:90!important;padding:5px!important;box-shadow:0 10px 30px rgba(16,35,63,.16)!important;backdrop-filter:blur(12px)!important}
+  .mobilebar button{border:0!important;background:transparent!important;color:#667085!important;padding:5px 3px!important;border-radius:13px!important;min-width:0!important;width:100%!important;height:58px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;font-size:21px!important;line-height:1!important}
+  .mobilebar button small{font-size:10px!important;line-height:1.15!important;font-weight:600!important;white-space:nowrap!important}
+  .mobilebar button.active{background:#fdecef!important;color:var(--red)!important;font-weight:800!important}
+  .mobilebar button.mobile-more-btn{background:#f7f9fb!important;color:var(--navy)!important}
+  .mobile-sheet{display:block!important;position:fixed!important;inset:0!important;z-index:120!important;pointer-events:none!important;visibility:hidden!important}
+  .mobile-sheet.open{pointer-events:auto!important;visibility:visible!important}
+  .mobile-sheet-backdrop{position:absolute!important;inset:0!important;background:rgba(16,35,63,.42)!important;opacity:0!important;transition:opacity .2s ease!important}
+  .mobile-sheet.open .mobile-sheet-backdrop{opacity:1!important}
+  .mobile-sheet-panel{position:absolute!important;left:8px!important;right:8px!important;bottom:8px!important;background:#fff!important;border:1px solid #e2e6eb!important;border-radius:22px!important;padding:12px!important;box-shadow:0 18px 50px rgba(0,0,0,.2)!important;transform:translateY(18px)!important;opacity:0!important;transition:transform .2s ease,opacity .2s ease!important;max-height:min(72vh,620px)!important;overflow:auto!important}
+  .mobile-sheet.open .mobile-sheet-panel{transform:none!important;opacity:1!important}
+  .mobile-sheet-head{display:flex!important;align-items:center!important;justify-content:space-between!important;padding:5px 4px 12px!important;border-bottom:1px solid #edf0f3!important;margin-bottom:10px!important;font-size:17px!important}
+  .mobile-sheet-head button{border:0!important;background:#f1f3f5!important;border-radius:10px!important;width:38px!important;height:38px!important;font-size:18px!important}
+  .mobile-sheet-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .mobile-sheet-grid button{border:1px solid #e4e7eb!important;background:#f8fafc!important;color:#27364a!important;border-radius:13px!important;padding:12px 9px!important;min-height:48px!important;font-size:12px!important;font-weight:700!important;text-align:left!important}
+  .mobile-sheet-grid button:active{transform:scale(.98)!important;background:#eef3f8!important}
+  body.mobile-menu-open{overflow:hidden!important}
+}
+@media(max-width:380px){
+  .mobilebar{left:5px!important;right:5px!important;bottom:5px!important;height:65px!important}
+  .mobilebar button{height:55px!important;font-size:19px!important}
+  .mobilebar button small{font-size:9px!important}
+  .mobile-sheet-grid{grid-template-columns:1fr 1fr!important}
+}
