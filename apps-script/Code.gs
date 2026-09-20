@@ -6,7 +6,8 @@ var MEMBER_ID_PREFIX='AWAAZ-';
 var RESP_HEADERS=['Timestamp','MemberID','Naam','Phone','Category','Vendor','Division','JoinYear','Experience','Salary','Demands','PinHash'];
 var SHEETS={
   responses:'Responses',messages:'Messages',updates:'Updates',suggestions:'Suggestions',pollVotes:'PollVotes',
-  news:'News',demands:'Demands',documents:'Documents',meetings:'Meetings',notifications:'Notifications',polls:'Polls',participation:'Participation',sessions:'AuthSessions',recoveryRequests:'RecoveryRequests'
+  news:'News',demands:'Demands',documents:'Documents',meetings:'Meetings',notifications:'Notifications',polls:'Polls',participation:'Participation',sessions:'AuthSessions',recoveryRequests:'RecoveryRequests',
+  videoSubmissions:'VideoSubmissions',grievances:'Grievances',referralEvents:'ReferralEvents'
 };
 var HEADERS={
   Responses:RESP_HEADERS,
@@ -43,9 +44,9 @@ function memberSheet_(ss){
 function legacyMemberHeader_(sh){
   if(!sh||sh.getLastColumn()<4)return false;
   var h=sh.getRange(1,1,1,Math.min(sh.getLastColumn(),20)).getValues()[0].map(function(v){return String(v||'').trim().toLowerCase()});
-  var hasPhone=h.some(function(x){return ['phone','mobile','mobile number','मोबाइल','मोबाइल नंबर'].indexOf(x)>=0});
-  var hasName=h.some(function(x){return ['name','naam','नाम','employee name'].indexOf(x)>=0});
-  var hasDivision=h.some(function(x){return ['division','डिवीजन'].indexOf(x)>=0});
+  var hasPhone=h.some(function(x){return ['phone','mobile','mobile number','phone number','mobile no','mobile no.','contact','contact number','मोबाइल','मोबाइल नंबर','मोबाइल नं'].indexOf(x)>=0});
+  var hasName=h.some(function(x){return ['name','naam','नाम','employee name','employee','employee_name'].indexOf(x)>=0});
+  var hasDivision=h.some(function(x){return ['division','division name','डिवीजन','dept','department'].indexOf(x)>=0});
   return hasPhone&&hasName&&hasDivision;
 }
 function migrateLegacyMembers_(ss){
@@ -53,7 +54,7 @@ function migrateLegacyMembers_(ss){
   if(!target||target.getLastRow()>1||!legacy||legacy.getLastRow()<2||!legacyMemberHeader_(legacy))return;
   var lc=legacy.getLastColumn(),h=legacy.getRange(1,1,1,lc).getValues()[0].map(function(v){return String(v||'').trim().toLowerCase()});
   function idx(names){for(var i=0;i<names.length;i++){var j=h.indexOf(names[i]);if(j>=0)return j}return -1}
-  var ix={ts:idx(['timestamp','createdat','date']),id:idx(['memberid','member id','id']),name:idx(['naam','name','employee name','नाम']),phone:idx(['phone','mobile','mobile number','मोबाइल','मोबाइल नंबर']),category:idx(['category','श्रेणी']),vendor:idx(['vendor','agency','contractor']),division:idx(['division','डिवीजन']),joinYear:idx(['joinyear','join year','year']),experience:idx(['experience','अनुभव']),salary:idx(['salary','वेतन']),demands:idx(['demands','demand','मांग']),pin:idx(['pinhash','pin hash'])};
+  var ix={ts:idx(['timestamp','createdat','date']),id:idx(['memberid','member id','id']),name:idx(['naam','name','employee name','employee','employee_name','नाम']),phone:idx(['phone','mobile','mobile number','phone number','mobile no','mobile no.','contact','contact number','मोबाइल','मोबाइल नंबर','मोबाइल नं']),category:idx(['category','श्रेणी']),vendor:idx(['vendor','agency','contractor']),division:idx(['division','division name','डिवीजन','dept','department']),joinYear:idx(['joinyear','join year','year']),experience:idx(['experience','अनुभव']),salary:idx(['salary','वेतन']),demands:idx(['demands','demand','मांग']),pin:idx(['pinhash','pin hash'])};
   var rows=legacy.getRange(2,1,legacy.getLastRow()-1,lc).getValues(),out=[];
   rows.forEach(function(r){
     var phone=ix.phone>=0?cleanPhone_(r[ix.phone]):'';
@@ -82,7 +83,7 @@ function hashPin_(pin){var bytes=Utilities.computeDigest(Utilities.DigestAlgorit
 function jsonOut_(o){return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON)}
 function truthy_(v){return v===true||String(v).toLowerCase()==='true'||String(v)==='1'||String(v).toLowerCase()==='yes'}
 function limit_(v,n){return String(v||'').trim().slice(0,n)}
-function validUrl_(u){u=String(u||'').trim();if(!u)return true;try{var x=new URL(u);return x.protocol==='http:'||x.protocol==='https:'}catch(e){return false}}
+function validUrl_(u){u=String(u||'').trim();if(!u)return true;return /^https?:\/\/[^\s]+$/i.test(u)}
 function hashToken_(token){return hashPin_(String(token))}
 function newToken_(){return Utilities.getUuid()+'-'+Utilities.getUuid()+'-'+new Date().getTime()}
 function issueSession_(phone){var token=newToken_(),now=new Date(),exp=new Date(now.getTime()+7*24*60*60*1000),sh=ensureSheets().getSheetByName('AuthSessions');sh.appendRow([hashToken_(token),cleanPhone_(phone),now,exp,false]);return {token:token,expiresAt:exp.toISOString()}}
@@ -151,7 +152,7 @@ function doPost(e){try{ensureSheets();var d=JSON.parse((e.postData&&e.postData.c
 function saveMember_(d){
   var lock=LockService.getScriptLock();lock.waitLock(5000);
   try{
-    var ss=ensureSheets(),sh=memberSheet_(ss)||ss.getSheetByName('Responses'),phone=cleanPhone_(d.phone);
+    var ss=ensureSheets(),sh=ss.getSheetByName('Responses'),phone=cleanPhone_(d.phone);if(!sh)throw new Error('Responses sheet is not available');
     if(!validPhone_(phone))throw new Error('Valid 10-digit mobile required');
     if(!validPin_(d.pin))throw new Error('PIN must be 4 digits');
     var r=findMemberRow_(sh,phone);if(r>=0)throw new Error('Mobile already registered. Please login.');
