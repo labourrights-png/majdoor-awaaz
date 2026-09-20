@@ -23,7 +23,8 @@ var HEADERS={
   Participation:['Timestamp','Phone','MemberID','Action','ItemID'],
   AuthSessions:['TokenHash','Phone','CreatedAt','ExpiresAt','Revoked'],
   RecoveryRequests:['ID','RequestedAt','Phone','MemberID','Name','Division','Status','AdminNote','ResolvedAt'],
-  VideoSubmissions:['ID','CreatedAt','Phone','MemberID','Name','Division','Title','Caption','FileName','MimeType','SizeBytes','DriveFileId','VideoUrl','Status','AdminNote','PublishedAt']
+  VideoSubmissions:['ID','CreatedAt','Phone','MemberID','Name','Division','Title','Caption','FileName','MimeType','SizeBytes','DriveFileId','VideoUrl','Status','AdminNote','PublishedAt'],
+  Grievances:['ID','CreatedAt','UpdatedAt','Phone','MemberID','Name','Division','Category','Title','Description','EvidenceUrl','Status','AdminNote','ResolvedAt']
 };
 function prop_(k){return PropertiesService.getScriptProperties().getProperty(k)||''}
 function getAdminKey(){return prop_('ADMIN_KEY')}
@@ -112,6 +113,9 @@ function doPost(e){try{ensureSheets();var d=JSON.parse((e.postData&&e.postData.c
   if(type==='login')return login_(d);
   if(type==='requestRecovery')return requestRecovery_(d);
   if(type==='uploadVideo')return uploadVideo_(d);
+  if(type==='submitGrievance')return submitGrievance_(d);
+  if(type==='myGrievances')return myGrievances_(d);
+  if(type==='adminUpdateGrievance')return adminUpdateGrievance_(d);
   if(type==='profile'){var pm=requireSession_(d);return jsonOut_({success:true,member:pm})}
   if(type==='logout'){revokeSession_(d.sessionToken);return jsonOut_({success:true,message:'Logged out'})}
   if(type==='message'||type==='wall'){var m=requireLength_(d.text||d.message,2000,'Message');if(!m)throw new Error('Message required');ensureSheets().getSheetByName('Messages').appendRow([new Date(),m,!!d.anonymous]);return jsonOut_({success:true,message:'Employee Voice submitted'});}
@@ -175,11 +179,80 @@ function publicNotifications_(){return sortDesc_(published_('Notifications'),'Cr
 function publicPolls_(){return rows_('Polls').map(function(x){var active=truthy_(x.Active);return {id:x.ID,createdAt:x.CreatedAt,question:x.Question,options:JSON.parse(x.OptionsJSON||'[]'),active:active,endDate:x.EndDate}})}
 function publicMessages_(){return rows_('Messages').slice(-50).reverse().map(function(x){return {timestamp:x.Timestamp,text:x.Text,anonymous:truthy_(x.Anonymous)}})}
 function publicUpdates_(){return rows_('Updates').filter(function(x){return x.Published===''||truthy_(x.Published)}).slice(-50).reverse().map(function(x){return {timestamp:x.Timestamp,title:x.Title,text:x.Text,tag:x.Tag,published:truthy_(x.Published)}})}
-function aggregate_(){var ss=ensureSheets(),resp=ss.getSheetByName('Responses'),last=resp.getLastRow(),count=Math.max(0,last-1),today=0,div={};if(count){var vals=resp.getRange(2,1,count,12).getValues(),todayKey=Utilities.formatDate(new Date(),Session.getScriptTimeZone(),'yyyy-MM-dd');vals.forEach(function(r){if(r[0]&&Utilities.formatDate(new Date(r[0]),Session.getScriptTimeZone(),'yyyy-MM-dd')===todayKey)today++;var d=String(r[6]||'').trim()||'Unknown';div[d]=(div[d]||0)+1})}var divisionBreakdown=Object.keys(div).map(function(k){return {division:k,count:div[k]}}).sort(function(a,b){return b.count-a.count});var ap=activePoll_();return {count:count,todayCount:today,divisionBreakdown:divisionBreakdown,messages:publicMessages_(),updates:publicUpdates_(),news:publicNews_(),newsLastSync:PropertiesService.getScriptProperties().getProperty('NEWS_LAST_SYNC')||'',demands:publicDemands_(),documents:publicDocs_(),meetings:publicMeetings_(),notifications:publicNotifications_(),polls:publicPolls_(),shorts:publicShorts_(),activePoll:ap,activePollResults:ap?pollResults_(ap.id):{},pollResults:pollResults_('legacy')}}
+function grievanceId_(){return 'GRV-'+Utilities.formatDate(new Date(),Session.getScriptTimeZone(),'yyyyMMdd')+'-'+Utilities.getUuid().slice(0,8).toUpperCase()}
+
+function submitGrievance_(d){
+  var m=requireSession_(d),category=limit_(d.category,60),title=requireLength_(d.title,160,'Issue title'),description=requireLength_(d.description,3000,'Issue description'),evidenceUrl=String(d.evidenceUrl||'').trim();
+  if(!category)throw new Error('Issue category required');
+  if(!description)throw new Error('Issue description required');
+  if(!validUrl_(evidenceUrl))throw new Error('Evidence URL must be http/https');
+  var now=new Date(),id=grievanceId_(),sh=ensureSheets().getSheetByName('Grievances');
+  sh.appendRow([id,now,now,m.phone,m.memberId,m.name,m.division,category,title,description,evidenceUrl,'New','', '']);
+  return jsonOut_({success:true,message:'आपकी समस्या दर्ज हो गई। Tracking ID: '+id,id:id,status:'New'});
+}
+
+function myGrievances_(d){
+  var m=requireSession_(d),p=cleanPhone_(m.phone);
+  var list=rows_('Grievances').filter(function(x){return cleanPhone_(x.Phone)===p}).sort(function(a,b){return new Date(b.UpdatedAt||b.CreatedAt)-new Date(a.UpdatedAt||a.CreatedAt)});
+  return jsonOut_({success:true,items:list.map(function(x){return {id:x.ID,createdAt:x.CreatedAt,updatedAt:x.UpdatedAt,category:x.Category,title:x.Title,description:x.Description,evidenceUrl:x.EvidenceUrl,status:x.Status,adminNote:x.AdminNote,resolvedAt:x.ResolvedAt}})});
+}
+
+function grievanceStats_(){
+  var all=rows_('Grievances'),stats={total:all.length,open:0,resolved:0,newCount:0,underReview:0,evidenceRequired:0,submitted:0,closed:0};
+  all.forEach(function(x){
+    var st=String(x.Status||'').toLowerCase();
+    if(st==='resolved'){stats.resolved++;return}
+    if(st==='closed'){stats.closed++;return}
+    stats.open++;
+    if(st==='new')stats.newCount++;
+    else if(st==='under review')stats.underReview++;
+    else if(st==='evidence required')stats.evidenceRequired++;
+    else if(st==='submitted')stats.submitted++;
+  });
+  return stats;
+}
+
+function adminUpdateGrievance_(d){
+  requireAdmin_(d);
+  var id=String(d.id||'').trim(),status=limit_(d.status,40),note=limit_(d.note,1000),sh=ensureSheets().getSheetByName('Grievances'),last=sh.getLastRow();
+  var allowed=['New','Under Review','Evidence Required','Submitted','Resolved','Closed'];
+  if(!id)throw new Error('Grievance ID required');
+  if(allowed.indexOf(status)<0)throw new Error('Invalid grievance status');
+  for(var i=2;i<=last;i++){
+    if(String(sh.getRange(i,1).getValue())!==id)continue;
+    sh.getRange(i,3).setValue(new Date());
+    sh.getRange(i,12).setValue(status);
+    sh.getRange(i,13).setValue(note);
+    sh.getRange(i,14).setValue(status==='Resolved'||status==='Closed'?new Date():'');
+    return jsonOut_({success:true,message:'Issue status updated',id:id,status:status});
+  }
+  throw new Error('Grievance not found');
+}
+
+function aggregate_(){
+  var ss=ensureSheets(),resp=memberSheet_(ss),last=resp?resp.getLastRow():1,count=Math.max(0,last-1),today=0,div={};
+  if(count){
+    var vals=resp.getRange(2,1,count,12).getValues(),todayKey=Utilities.formatDate(new Date(),Session.getScriptTimeZone(),'yyyy-MM-dd');
+    vals.forEach(function(r){
+      if(r[0]&&Utilities.formatDate(new Date(r[0]),Session.getScriptTimeZone(),'yyyy-MM-dd')===todayKey)today++;
+      var d=String(r[6]||'').trim()||'Unknown';div[d]=(div[d]||0)+1;
+    });
+  }
+  var divisionBreakdown=Object.keys(div).map(function(k){return {division:k,count:div[k]}}).sort(function(a,b){return b.count-a.count});
+  var ap=activePoll_();
+  return {
+    count:count,todayCount:today,divisionBreakdown:divisionBreakdown,
+    messages:publicMessages_(),updates:publicUpdates_(),news:publicNews_(),
+    newsLastSync:PropertiesService.getScriptProperties().getProperty('NEWS_LAST_SYNC')||'',
+    demands:publicDemands_(),documents:publicDocs_(),meetings:publicMeetings_(),
+    notifications:publicNotifications_(),polls:publicPolls_(),shorts:publicShorts_(),
+    grievanceStats:grievanceStats_(),activePoll:ap,activePollResults:ap?pollResults_(ap.id):{},pollResults:pollResults_('legacy')
+  };
+}
 function requestRecovery_(d){var phone=cleanPhone_(d.phone);if(!validPhone_(phone))throw new Error('Valid 10-digit mobile required');var cache=CacheService.getScriptCache(),key='recovery:'+phone;if(cache.get(key))return jsonOut_({success:true,message:'Recovery request already submitted. Please contact admin for verification.'});var sh=ensureSheets().getSheetByName('RecoveryRequests'),member=readMember_(phone),id=uuid_();sh.appendRow([id,new Date(),phone,member?member.memberId:'',member?member.name:'',member?member.division:'','Pending','','']);cache.put(key,'1',600);return jsonOut_({success:true,message:'Recovery request submitted. Admin verification ke baad temporary PIN diya jayega.'})}
 function adminResolveRecovery_(d){requireAdmin_(d);var id=String(d.id||'').trim(),action=String(d.action||'').toLowerCase(),sh=ensureSheets().getSheetByName('RecoveryRequests'),last=sh.getLastRow();if(!id)throw new Error('Recovery request ID required');if(action==='approve'){var pin=String(d.newPin||'');if(!validPin_(pin))throw new Error('Temporary PIN must be 4 digits');for(var i=2;i<=last;i++){if(String(sh.getRange(i,1).getValue())===id){var phone=cleanPhone_(sh.getRange(i,3).getValue()),r=findMemberRow_(memberSheet_(),phone);if(r<0)throw new Error('Member not found');memberSheet_().getRange(r,12).setValue(hashPin_(pin));sh.getRange(i,7,1,3).setValues([['Approved','Temporary PIN issued',new Date()]]);return jsonOut_({success:true,message:'Temporary PIN set. Give this PIN to the verified member.',temporaryPin:pin})}}throw new Error('Recovery request not found')}if(action==='deny'){for(var j=2;j<=last;j++){if(String(sh.getRange(j,1).getValue())===id){sh.getRange(j,7,1,3).setValues([['Denied',limit_(d.note,500)||'Request denied',new Date()]]);return jsonOut_({success:true,message:'Recovery request denied'})}}throw new Error('Recovery request not found')}throw new Error('Invalid recovery action')}
-function adminData_(){var a=aggregate_();a.success=true;a.admin=true;a.allMembers=rows_('Responses').map(function(x){return {timestamp:x.Timestamp,memberId:x.MemberID,name:x.Naam,phone:x.Phone,category:x.Category,vendor:x.Vendor,division:x.Division,joinYear:x.JoinYear,experience:x.Experience,salary:x.Salary,demands:x.Demands}});a.suggestions=rows_('Suggestions').slice(-200).reverse();a.allNews=rows_('News').reverse();a.allDemands=rows_('Demands').reverse();a.allDocuments=rows_('Documents').reverse();a.allMeetings=rows_('Meetings').reverse();a.allNotifications=rows_('Notifications').reverse();a.allPolls=rows_('Polls').reverse();a.recoveryRequests=rows_('RecoveryRequests').reverse();a.allVideos=rows_('VideoSubmissions').reverse();return jsonOut_(a)}
-function doGet(e){try{var p=(e&&e.parameter)||{};if(String(p.health||'')==='1'){var ss=getDatabase_();return jsonOut_({success:true,backend:'online',spreadsheet:ss.getName(),spreadsheetId:ss.getId(),timestamp:new Date().toISOString()})}ensureSheets();maybeRefreshNews_();var a=aggregate_();if(p.resource==='news')return jsonOut_(a.news);if(p.resource==='shorts')return jsonOut_(a.shorts);if(p.resource==='demands')return jsonOut_(a.demands);if(p.resource==='documents')return jsonOut_(a.documents);if(p.resource==='meetings')return jsonOut_(a.meetings);if(p.resource==='notifications')return jsonOut_(a.notifications);if(p.resource==='polls')return jsonOut_({polls:a.polls,activePoll:a.activePoll,results:a.activePollResults});if(p.resource==='dashboard')return jsonOut_({count:a.count,todayCount:a.todayCount,divisionBreakdown:a.divisionBreakdown,updates:a.updates.length,news:a.news.length,demands:a.demands.length});return jsonOut_(a)}catch(err){return jsonOut_({success:false,error:String(err.message||err)})}}
+function adminData_(){var a=aggregate_();a.success=true;a.admin=true;var msh=memberSheet_(),mlast=msh?msh.getLastRow():1,mvals=mlast>1?msh.getRange(2,1,mlast-1,RESP_HEADERS.length).getValues():[];a.allMembers=mvals.map(function(r){return {timestamp:r[0],memberId:r[1],name:r[2],phone:r[3],category:r[4],vendor:r[5],division:r[6],joinYear:r[7],experience:r[8],salary:r[9],demands:r[10]}});a.allGrievances=rows_('Grievances').reverse();a.suggestions=rows_('Suggestions').slice(-200).reverse();a.allNews=rows_('News').reverse();a.allDemands=rows_('Demands').reverse();a.allDocuments=rows_('Documents').reverse();a.allMeetings=rows_('Meetings').reverse();a.allNotifications=rows_('Notifications').reverse();a.allPolls=rows_('Polls').reverse();a.recoveryRequests=rows_('RecoveryRequests').reverse();a.allVideos=rows_('VideoSubmissions').reverse();return jsonOut_(a)}
+function doGet(e){try{var p=(e&&e.parameter)||{};if(String(p.health||'')==='1'){var ss=getDatabase_();return jsonOut_({success:true,backend:'online',spreadsheet:ss.getName(),spreadsheetId:ss.getId(),timestamp:new Date().toISOString()})}ensureSheets();maybeRefreshNews_();var a=aggregate_();if(p.resource==='news')return jsonOut_(a.news);if(p.resource==='shorts')return jsonOut_(a.shorts);if(p.resource==='demands')return jsonOut_(a.demands);if(p.resource==='documents')return jsonOut_(a.documents);if(p.resource==='meetings')return jsonOut_(a.meetings);if(p.resource==='notifications')return jsonOut_(a.notifications);if(p.resource==='polls')return jsonOut_({polls:a.polls,activePoll:a.activePoll,results:a.activePollResults});if(p.resource==='dashboard')return jsonOut_({count:a.count,todayCount:a.todayCount,divisionBreakdown:a.divisionBreakdown,updates:a.updates.length,news:a.news.length,demands:a.demands.length,grievanceStats:a.grievanceStats});return jsonOut_(a)}catch(err){return jsonOut_({success:false,error:String(err.message||err)})}}
 /* LIVE NEWS ENGINE
    Sources: Google News RSS + optional YouTube Data API.
    AI: optional Gemini enrichment. API keys live only in Script Properties.
