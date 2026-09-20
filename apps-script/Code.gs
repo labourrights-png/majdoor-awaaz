@@ -24,7 +24,8 @@ var HEADERS={
   AuthSessions:['TokenHash','Phone','CreatedAt','ExpiresAt','Revoked'],
   RecoveryRequests:['ID','RequestedAt','Phone','MemberID','Name','Division','Status','AdminNote','ResolvedAt'],
   VideoSubmissions:['ID','CreatedAt','Phone','MemberID','Name','Division','Title','Caption','FileName','MimeType','SizeBytes','DriveFileId','VideoUrl','Status','AdminNote','PublishedAt'],
-  Grievances:['ID','CreatedAt','UpdatedAt','Phone','MemberID','Name','Division','Category','Title','Description','EvidenceUrl','Status','AdminNote','ResolvedAt']
+  Grievances:['ID','CreatedAt','UpdatedAt','Phone','MemberID','Name','Division','Category','Title','Description','EvidenceUrl','Status','AdminNote','ResolvedAt'],
+  ReferralEvents:['ID','CreatedAt','ReferrerID','NewMemberID','NewMemberPhone','Status']
 };
 function prop_(k){return PropertiesService.getScriptProperties().getProperty(k)||''}
 function getAdminKey(){return prop_('ADMIN_KEY')}
@@ -115,6 +116,7 @@ function doPost(e){try{ensureSheets();var d=JSON.parse((e.postData&&e.postData.c
   if(type==='uploadVideo')return uploadVideo_(d);
   if(type==='submitGrievance')return submitGrievance_(d);
   if(type==='myGrievances')return myGrievances_(d);
+  if(type==='myReferralStats')return myReferralStats_(d);
   if(type==='adminUpdateGrievance')return adminUpdateGrievance_(d);
   if(type==='profile'){var pm=requireSession_(d);return jsonOut_({success:true,member:pm})}
   if(type==='logout'){revokeSession_(d.sessionToken);return jsonOut_({success:true,message:'Logged out'})}
@@ -146,7 +148,31 @@ function doPost(e){try{ensureSheets();var d=JSON.parse((e.postData&&e.postData.c
   if(type==='deleteUpdate')return adminDeleteUpdate_(d);
   throw new Error('Unknown request type');
 }catch(err){return jsonOut_({success:false,error:String(err.message||err)})}}
-function saveMember_(d){var lock=LockService.getScriptLock();lock.waitLock(5000);try{var ss=ensureSheets(),sh=ss.getSheetByName('Responses'),phone=cleanPhone_(d.phone);if(!validPhone_(phone))throw new Error('Valid 10-digit mobile required');if(!validPin_(d.pin))throw new Error('PIN must be 4 digits');var r=findMemberRow_(sh,phone);if(r>=0)throw new Error('Mobile already registered. Please login.');var name=requireLength_(d.name,100,'Name');var memberId=MEMBER_ID_PREFIX+String(Math.max(1,sh.getLastRow())).padStart(4,'0');sh.appendRow([new Date(),memberId,name,phone,limit_(d.category,30),limit_(d.vendor,100),limit_(d.division,80),limit_(d.joinYear,10),limit_(d.experience,30),limit_(d.salary,30),limit_(d.demands,1000),hashPin_(d.pin)]);var session=issueSession_(phone);return jsonOut_({success:true,message:'Registration successful',member:{memberId:memberId,name:name,phone:phone,division:d.division,category:d.category},sessionToken:session.token,expiresAt:session.expiresAt})}finally{lock.releaseLock()}}
+function saveMember_(d){
+  var lock=LockService.getScriptLock();lock.waitLock(5000);
+  try{
+    var ss=ensureSheets(),sh=memberSheet_(ss)||ss.getSheetByName('Responses'),phone=cleanPhone_(d.phone);
+    if(!validPhone_(phone))throw new Error('Valid 10-digit mobile required');
+    if(!validPin_(d.pin))throw new Error('PIN must be 4 digits');
+    var r=findMemberRow_(sh,phone);if(r>=0)throw new Error('Mobile already registered. Please login.');
+    var name=requireLength_(d.name,100,'Name');
+    var memberId=MEMBER_ID_PREFIX+String(Math.max(1,sh.getLastRow())).padStart(4,'0');
+    sh.appendRow([new Date(),memberId,name,phone,limit_(d.category,30),limit_(d.vendor,100),limit_(d.division,80),limit_(d.joinYear,10),limit_(d.experience,30),limit_(d.salary,30),limit_(d.demands,1000),hashPin_(d.pin)]);
+    var ref=String(d.referralCode||'').trim(),referrer='';
+    if(ref&&ref!==memberId){
+      var all=rows_('Responses'),found=all.some(function(x){if(String(x.MemberID||'').trim()===ref){referrer=ref;return true}return false});
+      if(found)ensureSheets().getSheetByName('ReferralEvents').appendRow(['REF-'+Utilities.getUuid().slice(0,8).toUpperCase(),new Date(),referrer,memberId,phone,'Registered']);
+    }
+    var session=issueSession_(phone);
+    return jsonOut_({success:true,message:'Registration successful',member:{memberId:memberId,name:name,phone:phone,division:d.division,category:d.category},sessionToken:session.token,expiresAt:session.expiresAt});
+  }finally{lock.releaseLock()}
+}
+
+function myReferralStats_(d){
+  var m=requireSession_(d),id=String(m.memberId||'').trim(),all=rows_('ReferralEvents').filter(function(x){return String(x.ReferrerID||'').trim()===id});
+  return jsonOut_({success:true,memberId:id,total:all.length,registered:all.filter(function(x){return String(x.Status||'')==='Registered'}).length,items:all.slice(-50).reverse().map(function(x){return {id:x.ID,createdAt:x.CreatedAt,newMemberId:x.NewMemberID,status:x.Status}})});
+}
+
 function saveProfile_(d){var m=requireSession_(d),sh=memberSheet_(),r=findMemberRow_(sh,m.phone);if(r<0)throw new Error('Member not found');var old=sh.getRange(r,1,1,RESP_HEADERS.length).getValues()[0];var vals=[old[0],old[1],d.name!==undefined?requireLength_(d.name,100,'Name'):old[2],old[3],d.category!==undefined?limit_(d.category,30):old[4],d.vendor!==undefined?limit_(d.vendor,100):old[5],d.division!==undefined?limit_(d.division,80):old[6],d.joinYear!==undefined?limit_(d.joinYear,10):old[7],d.experience!==undefined?limit_(d.experience,30):old[8],d.salary!==undefined?limit_(d.salary,30):old[9],d.demands!==undefined?limit_(d.demands,1000):old[10],old[11]];sh.getRange(r,1,1,RESP_HEADERS.length).setValues([vals]);return jsonOut_({success:true,message:'Profile updated',member:memberFromRow_(vals)})}
 function claimPin_(d){return adminResetPin_(d)}
 function login_(d){var phone=cleanPhone_(d.phone);if(!validPhone_(phone)||!validPin_(d.pin))return jsonOut_({success:false,message:'Mobile or PIN incorrect'});var g=loginGuard_(phone);if(g.locked)throw new Error('Too many failed attempts. Try again in 15 minutes.');var m=readMember_(phone,d.pin);if(!m){var f=recordLoginFailure_(phone);return jsonOut_({success:false,message:f.locked?'Too many failed attempts. Try again in 15 minutes.':'Mobile or PIN incorrect'})}clearLoginFailures_(phone);var s=issueSession_(phone);return jsonOut_({success:true,message:'Login successful',member:m,sessionToken:s.token,expiresAt:s.expiresAt})}
@@ -246,7 +272,7 @@ function aggregate_(){
     newsLastSync:PropertiesService.getScriptProperties().getProperty('NEWS_LAST_SYNC')||'',
     demands:publicDemands_(),documents:publicDocs_(),meetings:publicMeetings_(),
     notifications:publicNotifications_(),polls:publicPolls_(),shorts:publicShorts_(),
-    grievanceStats:grievanceStats_(),activePoll:ap,activePollResults:ap?pollResults_(ap.id):{},pollResults:pollResults_('legacy')
+    grievanceStats:grievanceStats_(),referralStats:{total:rows_('ReferralEvents').length},activePoll:ap,activePollResults:ap?pollResults_(ap.id):{},pollResults:pollResults_('legacy')
   };
 }
 function requestRecovery_(d){var phone=cleanPhone_(d.phone);if(!validPhone_(phone))throw new Error('Valid 10-digit mobile required');var cache=CacheService.getScriptCache(),key='recovery:'+phone;if(cache.get(key))return jsonOut_({success:true,message:'Recovery request already submitted. Please contact admin for verification.'});var sh=ensureSheets().getSheetByName('RecoveryRequests'),member=readMember_(phone),id=uuid_();sh.appendRow([id,new Date(),phone,member?member.memberId:'',member?member.name:'',member?member.division:'','Pending','','']);cache.put(key,'1',600);return jsonOut_({success:true,message:'Recovery request submitted. Admin verification ke baad temporary PIN diya jayega.'})}
