@@ -69,7 +69,33 @@ function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&l
 function go(id){if(['dashboard','me','polls','suggestions','help'].includes(id)&&!session){toast('पहले Login करें 🔐');id='join'}closeMobileMenu();document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('[data-nav]').forEach(x=>x.classList.toggle('active',x.dataset.nav===id));scrollTo({top:0,behavior:'smooth'})}function toggleMobileMenu(){let s=document.getElementById('mobileSheet');if(s)s.classList.toggle('open');document.body.classList.toggle('mobile-menu-open',!!s&&s.classList.contains('open'))}function closeMobileMenu(){let s=document.getElementById('mobileSheet');if(s)s.classList.remove('open');document.body.classList.remove('mobile-menu-open')}
 function buildNav(){let n=document.getElementById('navlinks');n.innerHTML=nav.map(([id,t])=>`<button data-nav="${id}" onclick="go('${id}')">${t}</button>`).join('')+`<button data-nav="admin" onclick="go('admin')">Admin</button>`;let m=document.getElementById('mobilebar');m.innerHTML=[['home','⌂','Home'],['news','📰','News'],['shorts','🎬','Shorts'],['help','🆘','Help'],['mobile-more','☰','More']].map(([id,icon,label])=>id==='mobile-more'?`<button class="mobile-more-btn" data-nav="mobile-more" onclick="toggleMobileMenu()" aria-label="More"><span>${icon}</span><small>${label}</small></button>`:`<button data-nav="${id}" onclick="go('${id}')" aria-label="${label}"><span>${icon}</span><small>${label}</small></button>`).join('');let s=document.getElementById('mobileSheet');if(s)s.innerHTML=`<div class="mobile-sheet-backdrop" onclick="closeMobileMenu()"></div><div class="mobile-sheet-panel"><div class="mobile-sheet-head"><b>मेन्यू</b><button onclick="closeMobileMenu()" aria-label="Close">✕</button></div><div class="mobile-sheet-grid">${nav.filter(([id])=>id!=='home').map(([id,t])=>`<button data-nav="${id}" onclick="go('${id}');closeMobileMenu()">${t}</button>`).join('')}<button data-nav="admin" onclick="go('admin');closeMobileMenu()">⚙️ Admin</button></div></div>`}
 async function api(body){let r=await fetch(SCRIPT_URL,{redirect:'follow',method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),cache:'no-store'});let t=await r.text();return JSON.parse(t.replace(/^\uFEFF/,'').trim())}
-async function load(){try{let r=await fetch(SCRIPT_URL,{method:'GET',redirect:'follow',cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);DATA=await r.json();renderAll()}catch(e){toast('Backend connect नहीं हो पाया');console.error('Backend load failed',e)}}
+const DATA_CACHE_KEY='MAZDOOR_AWAAZ_DATA_V1';
+async function load(){
+  let hasCached=false;
+  try{
+    const cached=localStorage.getItem(DATA_CACHE_KEY);
+    if(cached){
+      const parsed=JSON.parse(cached);
+      if(parsed&&typeof parsed==='object'){
+        DATA=parsed;
+        hasCached=true;
+        renderAll();
+      }
+    }
+  }catch(e){console.warn('Local data cache unavailable',e)}
+  try{
+    let r=await fetch(SCRIPT_URL,{method:'GET',redirect:'follow',cache:'no-store'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    let fresh=await r.json();
+    if(!fresh||typeof fresh!=='object')throw new Error('Invalid backend data');
+    DATA=fresh;
+    try{localStorage.setItem(DATA_CACHE_KEY,JSON.stringify(DATA))}catch(e){console.warn('Local data cache save failed',e)}
+    renderAll();
+  }catch(e){
+    if(!hasCached)toast('Backend connect नहीं हो पाया');
+    console.error('Backend load failed',e);
+  }
+}
 function renderAll(){document.getElementById('memberCount').textContent=Number.isFinite(Number(DATA.count))?Number(DATA.count):0;document.getElementById('divisionCount').textContent=23;document.getElementById('updateCount').textContent=(DATA.updates||[]).length;document.getElementById('newsCount').textContent=(DATA.news||[]).length;document.getElementById('dashMembers').textContent=DATA.count??0;document.getElementById('dashDivisions').textContent=23;document.getElementById('dashUpdates').textContent=(DATA.updates||[]).length;renderNews();renderShorts();renderUpdates();renderDemands();renderMeetings();renderDocs();renderVoice();renderRights();renderDashboard();renderPolls();renderNotifications();renderHelp();renderTransparency();}
 function renderNews(cat='All'){let cats=['All','विरोध/हड़ताल','श्रमिक','वेतन/मज़दूरी','PF/ESI','कानून/कोर्ट','सरकारी अपडेट','कर्मचारी समाचार','वीडियो'];document.getElementById('newsTabs').innerHTML=cats.map(c=>`<button class="${c===cat?'active':''}" onclick="renderNews('${esc(c)}')">${esc(c)}</button>`).join('');let all=DATA.news||[];let a=all.filter(x=>cat==='All'||(cat==='वीडियो'?!!x.videoUrl:x.category===cat));let list=a.map(x=>`<article class="news-card"><div class="news-thumb ${x.videoUrl?'video':''}">${x.imageUrl?`<img src="${esc(x.imageUrl)}" alt="" loading="lazy">`:'<span>📰</span>'}${x.videoUrl?'<span class="news-play">▶</span>':''}</div><div class="news-body"><div class="meta"><span class="badge">${esc(x.category||'कर्मचारी समाचार')}</span> • ${esc(formatNewsDate(x.date))} • ${esc(x.source||'स्रोत')}</div><h3>${esc(x.headline)}</h3><p class="news-summary">${esc(x.summary||'')}</p>${x.aiSummary?'<div class="news-ai">✦ AI सारांश</div>':''}<div class="news-actions">${x.url?`<a class="btn light" href="${esc(x.url)}" target="_blank" rel="noopener">मूल खबर ↗</a>`:''}${x.videoUrl?`<a class="btn red" href="${esc(x.videoUrl)}" target="_blank" rel="noopener">▶ वीडियो देखें</a>`:''}</div></div></article>`).join('');document.getElementById('newsList').innerHTML=list||'<div class="empty">इस श्रेणी में अभी खबर उपलब्ध नहीं है।</div>';document.getElementById('homeNews').innerHTML=all.slice(0,3).map(x=>`<article class="card"><div class="meta">${esc(formatNewsDate(x.date))} • ${esc(x.category)}</div><h3>${esc(x.headline)}</h3><p>${esc(x.summary||'')}</p></article>`).join('')||'<div class="empty">News जल्द उपलब्ध होगी।</div>';let ts=document.getElementById('newsRefreshInfo');if(ts){let ls=window.NEWS_LAST_SYNC||'';ts.textContent=ls?'अंतिम अपडेट: '+formatNewsDate(ls):'खबरें अपने-आप अपडेट होती हैं।'}}
 function formatNewsDate(v){if(!v)return 'अभी';let d=new Date(v);if(isNaN(d))return String(v);return d.toLocaleString('hi-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
