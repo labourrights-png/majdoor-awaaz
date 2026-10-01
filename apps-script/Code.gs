@@ -112,6 +112,7 @@ function doPost(e){try{ensureSheets();var d=JSON.parse((e.postData&&e.postData.c
   if(type==='signature')return saveMember_(d);
   if(type==='saveProfile')return saveProfile_(d);
   if(type==='claimPin')return adminResetPin_(d);
+  if(type==='setPin')return setExistingMemberPin_(d);
   if(type==='login')return login_(d);
   if(type==='requestRecovery')return requestRecovery_(d);
   if(type==='uploadVideo')return uploadVideo_(d);
@@ -176,6 +177,17 @@ function myReferralStats_(d){
 
 function saveProfile_(d){var m=requireSession_(d),sh=memberSheet_(),r=findMemberRow_(sh,m.phone);if(r<0)throw new Error('Member not found');var old=sh.getRange(r,1,1,RESP_HEADERS.length).getValues()[0];var vals=[old[0],old[1],d.name!==undefined?requireLength_(d.name,100,'Name'):old[2],old[3],d.category!==undefined?limit_(d.category,30):old[4],d.vendor!==undefined?limit_(d.vendor,100):old[5],d.division!==undefined?limit_(d.division,80):old[6],d.joinYear!==undefined?limit_(d.joinYear,10):old[7],d.experience!==undefined?limit_(d.experience,30):old[8],d.salary!==undefined?limit_(d.salary,30):old[9],d.demands!==undefined?limit_(d.demands,1000):old[10],old[11]];sh.getRange(r,1,1,RESP_HEADERS.length).setValues([vals]);return jsonOut_({success:true,message:'Profile updated',member:memberFromRow_(vals)})}
 function claimPin_(d){return adminResetPin_(d)}
+function setExistingMemberPin_(d){
+  var phone=cleanPhone_(d.phone),memberId=String(d.memberId||'').trim(),name=String(d.name||'').trim(),newPin=String(d.newPin||'');
+  if(!validPhone_(phone)||!memberId||!name||!validPin_(newPin))throw new Error('Registered mobile, Member ID, name and a 4-digit PIN are required');
+  var sh=memberSheet_(),r=findMemberRow_(sh,phone);
+  if(r<0)throw new Error('Registered member not found');
+  var row=sh.getRange(r,1,1,RESP_HEADERS.length).getValues()[0],storedId=String(row[1]||'').trim(),storedName=String(row[2]||'').trim(),existingHash=String(row[11]||'');
+  if(storedId.toLowerCase()!==memberId.toLowerCase()||storedName.toLowerCase()!==name.toLowerCase())throw new Error('Member details do not match');
+  if(existingHash)throw new Error('PIN already exists. Use Login or PIN Recovery instead');
+  sh.getRange(r,12).setValue(hashPin_(newPin));
+  return jsonOut_({success:true,message:'Your PIN has been created successfully'});
+}
 function login_(d){var phone=cleanPhone_(d.phone);if(!validPhone_(phone)||!validPin_(d.pin))return jsonOut_({success:false,message:'Mobile or PIN incorrect'});var g=loginGuard_(phone);if(g.locked)throw new Error('Too many failed attempts. Try again in 15 minutes.');var m=readMember_(phone,d.pin);if(!m){var f=recordLoginFailure_(phone);return jsonOut_({success:false,message:f.locked?'Too many failed attempts. Try again in 15 minutes.':'Mobile or PIN incorrect'})}clearLoginFailures_(phone);var s=issueSession_(phone);return jsonOut_({success:true,message:'Login successful',member:m,sessionToken:s.token,expiresAt:s.expiresAt})}
 function vote_(d){var m=requireSession_(d),pollId=String(d.pollId||''),lock=LockService.getScriptLock();if(!pollId)throw new Error('Poll required');lock.waitLock(5000);try{var poll=activePoll_();if(!poll||String(poll.id)!==pollId)throw new Error('Poll expired or inactive');var idx=pollOptionIndex_(poll,d.option);if(idx<0)throw new Error('Invalid poll option');var sh=ensureSheets().getSheetByName('PollVotes'),last=sh.getLastRow();if(last>=2){var rows=sh.getRange(2,1,last-1,4).getValues();for(var i=0;i<rows.length;i++)if(cleanPhone_(rows[i][1])===cleanPhone_(m.phone)&&String(rows[i][3]||'')===pollId)return jsonOut_({success:false,message:'आप इस poll में पहले vote कर चुके हैं।'})}sh.appendRow([new Date(),cleanPhone_(m.phone),String(idx),pollId]);appendParticipation_(m.phone,m.memberId,'pollVote',pollId);return jsonOut_({success:true,message:'Vote submitted'})}finally{lock.releaseLock()}}
 function participation_(d){var m=requireSession_(d);appendParticipation_(m.phone,m.memberId,limit_(d.action,80)||'participation',limit_(d.itemId,120));return jsonOut_({success:true,message:'Participation saved'})}
