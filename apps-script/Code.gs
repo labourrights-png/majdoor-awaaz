@@ -32,7 +32,8 @@ function prop_(k){return PropertiesService.getScriptProperties().getProperty(k)|
 function getAdminKey(){return prop_('ADMIN_KEY')}
 function ensureSheet_(ss,name,headers){var sh=ss.getSheetByName(name);if(!sh)sh=ss.insertSheet(name);if(sh.getLastRow()===0){sh.getRange(1,1,1,headers.length).setValues([headers])}else{var current=sh.getRange(1,1,1,Math.max(sh.getLastColumn(),headers.length)).getValues()[0];headers.forEach(function(h,i){if(!current[i])sh.getRange(1,i+1).setValue(h)})}return sh}
 function getDatabase_(){var id=prop_('SPREADSHEET_ID');if(!id)throw new Error('Server configuration missing: SPREADSHEET_ID');return SpreadsheetApp.openById(id)}
-function ensureSheets(){var ss=getDatabase_();Object.keys(HEADERS).forEach(function(n){ensureSheet_(ss,n,HEADERS[n])});migrateLegacyMembers_(ss);return ss}
+var REQUEST_DB_=null;
+function ensureSheets(){if(REQUEST_DB_)return REQUEST_DB_;var ss=getDatabase_();Object.keys(HEADERS).forEach(function(n){ensureSheet_(ss,n,HEADERS[n])});migrateLegacyMembers_(ss);REQUEST_DB_=ss;return ss}
 function memberSheet_(ss){
   ss=ss||getDatabase_();
   var sh=ss.getSheetByName('Responses');
@@ -108,7 +109,7 @@ function sortDesc_(a,key){return a.sort(function(x,y){return new Date(y[key]||0)
 function upsert_(sheetName,id,values){var sh=ensureSheets().getSheetByName(sheetName),headers=HEADERS[sheetName],rid=id||uuid_(),last=sh.getLastRow(),row=-1;if(last>=2){var ids=sh.getRange(2,1,last-1,1).getValues();for(var i=0;i<ids.length;i++)if(String(ids[i][0])===String(rid)){row=i+2;break}}if(row<0){values[0]=rid;sh.appendRow(values)}else sh.getRange(row,1,1,headers.length).setValues([values]);return rid}
 function deleteById_(sheetName,id){var sh=ensureSheets().getSheetByName(sheetName),last=sh.getLastRow();if(last<2)return false;var ids=sh.getRange(2,1,last-1,1).getValues();for(var i=0;i<ids.length;i++)if(String(ids[i][0])===String(id)){sh.deleteRow(i+2);return true}return false}
 function sendPushNotification_(title,message,url){var key=prop_('ONESIGNAL_REST_API_KEY'),app=prop_('ONESIGNAL_APP_ID');if(!key||!app)return {sent:false,reason:'OneSignal properties missing'};try{var payload={app_id:app,included_segments:['All'],headings:{en:title},contents:{en:message}};if(url)payload.url=url;var res=UrlFetchApp.fetch('https://onesignal.com/api/v1/notifications',{method:'post',contentType:'application/json',headers:{Authorization:'Basic '+key},payload:JSON.stringify(payload),muteHttpExceptions:true});return {sent:res.getResponseCode()>=200&&res.getResponseCode()<300,code:res.getResponseCode()}}catch(e){return {sent:false,reason:String(e)}}}
-function doPost(e){try{ensureSheets();var d=JSON.parse((e.postData&&e.postData.contents)||'{}'),type=d.type||'';
+function doPost(e){try{ensureSheets();var d=JSON.parse((e.postData&&e.postData.contents)||'{}'),type=d.type||'';invalidateAggregateCache_();
   if(type==='signature')return saveMember_(d);
   if(type==='saveProfile')return saveProfile_(d);
   if(type==='claimPin')return adminResetPin_(d);
@@ -288,10 +289,42 @@ function aggregate_(){
     grievanceStats:grievanceStats_(),referralStats:{total:rows_('ReferralEvents').length},activePoll:ap,activePollResults:ap?pollResults_(ap.id):{},pollResults:pollResults_('legacy')
   };
 }
+function aggregateCached_(){
+  var cache=CacheService.getScriptCache(),key='MAZDOOR_AWAAZ_AGG_V2',raw=cache.get(key);
+  if(raw){
+    try{return JSON.parse(raw)}catch(e){cache.remove(key)}
+  }
+  var data=aggregate_();
+  try{
+    var packed=JSON.stringify(data);
+    if(packed.length<95000)cache.put(key,packed,20);
+  }catch(e){}
+  return data;
+}
+function invalidateAggregateCache_(){try{CacheService.getScriptCache().remove('MAZDOOR_AWAAZ_AGG_V2')}catch(e){}}
 function requestRecovery_(d){var phone=cleanPhone_(d.phone);if(!validPhone_(phone))throw new Error('Valid 10-digit mobile required');var cache=CacheService.getScriptCache(),key='recovery:'+phone;if(cache.get(key))return jsonOut_({success:true,message:'Recovery request already submitted. Please contact admin for verification.'});var sh=ensureSheets().getSheetByName('RecoveryRequests'),member=readMember_(phone),id=uuid_();sh.appendRow([id,new Date(),phone,member?member.memberId:'',member?member.name:'',member?member.division:'','Pending','','']);cache.put(key,'1',600);return jsonOut_({success:true,message:'Recovery request submitted. Admin verification ke baad temporary PIN diya jayega.'})}
 function adminResolveRecovery_(d){requireAdmin_(d);var id=String(d.id||'').trim(),action=String(d.action||'').toLowerCase(),sh=ensureSheets().getSheetByName('RecoveryRequests'),last=sh.getLastRow();if(!id)throw new Error('Recovery request ID required');if(action==='approve'){var pin=String(d.newPin||'');if(!validPin_(pin))throw new Error('Temporary PIN must be 4 digits');for(var i=2;i<=last;i++){if(String(sh.getRange(i,1).getValue())===id){var phone=cleanPhone_(sh.getRange(i,3).getValue()),r=findMemberRow_(memberSheet_(),phone);if(r<0)throw new Error('Member not found');memberSheet_().getRange(r,12).setValue(hashPin_(pin));sh.getRange(i,7,1,3).setValues([['Approved','Temporary PIN issued',new Date()]]);return jsonOut_({success:true,message:'Temporary PIN set. Give this PIN to the verified member.',temporaryPin:pin})}}throw new Error('Recovery request not found')}if(action==='deny'){for(var j=2;j<=last;j++){if(String(sh.getRange(j,1).getValue())===id){sh.getRange(j,7,1,3).setValues([['Denied',limit_(d.note,500)||'Request denied',new Date()]]);return jsonOut_({success:true,message:'Recovery request denied'})}}throw new Error('Recovery request not found')}throw new Error('Invalid recovery action')}
 function adminData_(){var a=aggregate_();a.success=true;a.admin=true;var msh=memberSheet_(),mlast=msh?msh.getLastRow():1,mvals=mlast>1?msh.getRange(2,1,mlast-1,RESP_HEADERS.length).getValues():[];a.allMembers=mvals.map(function(r){return {timestamp:r[0],memberId:r[1],name:r[2],phone:r[3],category:r[4],vendor:r[5],division:r[6],joinYear:r[7],experience:r[8],salary:r[9],demands:r[10]}});a.allGrievances=rows_('Grievances').reverse();a.suggestions=rows_('Suggestions').slice(-200).reverse();a.allNews=rows_('News').reverse();a.allDemands=rows_('Demands').reverse();a.allDocuments=rows_('Documents').reverse();a.allMeetings=rows_('Meetings').reverse();a.allNotifications=rows_('Notifications').reverse();a.allPolls=rows_('Polls').reverse();a.recoveryRequests=rows_('RecoveryRequests').reverse();a.allVideos=rows_('VideoSubmissions').reverse();return jsonOut_(a)}
-function doGet(e){try{var p=(e&&e.parameter)||{};if(String(p.health||'')==='1'){var ss=getDatabase_();return jsonOut_({success:true,backend:'online',spreadsheet:ss.getName(),spreadsheetId:ss.getId(),timestamp:new Date().toISOString()})}ensureSheets();var a=aggregate_();if(p.resource==='news')return jsonOut_(a.news);if(p.resource==='shorts')return jsonOut_(a.shorts);if(p.resource==='demands')return jsonOut_(a.demands);if(p.resource==='documents')return jsonOut_(a.documents);if(p.resource==='meetings')return jsonOut_(a.meetings);if(p.resource==='notifications')return jsonOut_(a.notifications);if(p.resource==='polls')return jsonOut_({polls:a.polls,activePoll:a.activePoll,results:a.activePollResults});if(p.resource==='dashboard')return jsonOut_({count:a.count,todayCount:a.todayCount,divisionBreakdown:a.divisionBreakdown,updates:a.updates.length,news:a.news.length,demands:a.demands.length,grievanceStats:a.grievanceStats});return jsonOut_(a)}catch(err){return jsonOut_({success:false,error:String(err.message||err)})}}
+function doGet(e){try{
+  var p=(e&&e.parameter)||{};
+  if(String(p.health||'')==='1'){
+    var ss=getDatabase_();
+    return jsonOut_({success:true,backend:'online',spreadsheet:ss.getName(),spreadsheetId:ss.getId(),timestamp:new Date().toISOString()});
+  }
+  ensureSheets();
+  if(p.resource==='news')return jsonOut_(publicNews_());
+  if(p.resource==='shorts')return jsonOut_(publicShorts_());
+  if(p.resource==='demands')return jsonOut_(publicDemands_());
+  if(p.resource==='documents')return jsonOut_(publicDocs_());
+  if(p.resource==='meetings')return jsonOut_(publicMeetings_());
+  if(p.resource==='notifications')return jsonOut_(publicNotifications_());
+  if(p.resource==='polls')return jsonOut_({polls:publicPolls_(),activePoll:activePoll_(),results:{}});
+  if(p.resource==='dashboard'){
+    var d=aggregateCached_();
+    return jsonOut_({count:d.count,todayCount:d.todayCount,divisionBreakdown:d.divisionBreakdown,updates:d.updates.length,news:d.news.length,demands:d.demands.length,grievanceStats:d.grievanceStats});
+  }
+  return jsonOut_(aggregateCached_());
+}catch(err){return jsonOut_({success:false,error:String(err.message||err)})}}
 /* LIVE NEWS ENGINE
    Sources: Google News RSS + optional YouTube Data API.
    AI: optional Gemini enrichment. API keys live only in Script Properties.
