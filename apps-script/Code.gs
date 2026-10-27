@@ -98,6 +98,20 @@ function requireLength_(v,max,label){var s=String(v||'').trim();if(s.length>max)
 function pollOptionIndex_(poll,opt){var opts=poll.options||[];var s=String(opt);var idx=Number(s);if(/^\d+$/.test(s)&&idx>=0&&idx<opts.length)return idx;if(opts.indexOf(s)>=0)return opts.indexOf(s);return -1}
 function uuid_(){return Utilities.getUuid()}
 function findMemberRow_(sh,phone){var p=cleanPhone_(phone),last=sh.getLastRow();if(last<2)return -1;var vals=sh.getRange(2,4,last-1,1).getValues();for(var i=0;i<vals.length;i++)if(cleanPhone_(vals[i][0])===p)return i+2;return -1}
+function findExistingMemberAcrossSheets_(ss,phone){
+  var p=cleanPhone_(phone),names=['Responses','Sheet1'];
+  for(var n=0;n<names.length;n++){
+    var sh=ss.getSheetByName(names[n]);if(!sh||sh.getLastRow()<2)continue;
+    var lastCol=sh.getLastColumn(),headers=sh.getRange(1,1,1,lastCol).getValues()[0].map(function(v){return String(v||'').trim().toLowerCase()});
+    var phoneNames=['phone','mobile','mobile number','phone number','mobile no','mobile no.','contact','contact number','मोबाइल','मोबाइल नंबर','मोबाइल नं'];
+    var col=-1;for(var j=0;j<phoneNames.length;j++){var ix=headers.indexOf(phoneNames[j]);if(ix>=0){col=ix+1;break}}
+    if(col<0&&names[n]==='Responses')col=4;
+    if(col<1)continue;
+    var vals=sh.getRange(2,col,sh.getLastRow()-1,1).getDisplayValues();
+    for(var i=0;i<vals.length;i++)if(cleanPhone_(vals[i][0])===p)return {sheet:sh,row:i+2};
+  }
+  return null;
+}
 function memberFromRow_(row){return {memberId:row[1],name:row[2],phone:row[3],category:row[4],vendor:row[5],division:row[6],joinYear:row[7],experience:row[8],salary:row[9],demands:row[10]}}
 function readMember_(phone,pin){var sh=memberSheet_(),r=findMemberRow_(sh,phone);if(r<0)return null;var row=sh.getRange(r,1,1,RESP_HEADERS.length).getValues()[0];if(pin!==undefined&&hashPin_(pin)!==String(row[11]||''))return null;return memberFromRow_(row)}
 function requireAdmin_(data){if(!getAdminKey()||String(data.key||'')!==getAdminKey())throw new Error('Admin authentication failed')}
@@ -157,7 +171,7 @@ function saveMember_(d){
     var ss=ensureSheets(),sh=ss.getSheetByName('Responses'),phone=cleanPhone_(d.phone);if(!sh)throw new Error('Responses sheet is not available');
     if(!validPhone_(phone))throw new Error('Valid 10-digit mobile required');
     if(!validPin_(d.pin))throw new Error('PIN must be 4 digits');
-    var r=findMemberRow_(sh,phone);if(r>=0)throw new Error('Mobile already registered. Please login.');
+    var existing=findExistingMemberAcrossSheets_(ss,phone);if(existing)throw new Error('Mobile already registered. Please login.');
     var name=requireLength_(d.name,100,'Name');
     var memberId=MEMBER_ID_PREFIX+String(Math.max(1,sh.getLastRow())).padStart(4,'0');
     sh.appendRow([new Date(),memberId,name,phone,limit_(d.category,30),limit_(d.vendor,100),limit_(d.division,80),limit_(d.joinYear,10),limit_(d.experience,30),limit_(d.salary,30),limit_(d.demands,1000),hashPin_(d.pin)]);
