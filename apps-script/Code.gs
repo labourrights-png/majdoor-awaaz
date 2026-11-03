@@ -56,10 +56,12 @@ function migrateLegacyMembers_(ss){
   var lc=legacy.getLastColumn(),h=legacy.getRange(1,1,1,lc).getValues()[0].map(function(v){return String(v||'').trim().toLowerCase()});
   function idx(names){for(var i=0;i<names.length;i++){var j=h.indexOf(names[i]);if(j>=0)return j}return -1}
   var ix={ts:idx(['timestamp','createdat','date']),id:idx(['memberid','member id','id']),name:idx(['naam','name','employee name','employee','employee_name','नाम']),phone:idx(['phone','mobile','mobile number','phone number','mobile no','mobile no.','contact','contact number','मोबाइल','मोबाइल नंबर','मोबाइल नं']),category:idx(['category','श्रेणी']),vendor:idx(['vendor','agency','contractor']),division:idx(['division','division name','डिवीजन','dept','department']),joinYear:idx(['joinyear','join year','year']),experience:idx(['experience','अनुभव']),salary:idx(['salary','वेतन']),demands:idx(['demands','demand','मांग']),pin:idx(['pinhash','pin hash'])};
-  var rows=legacy.getRange(2,1,legacy.getLastRow()-1,lc).getValues(),out=[];
+  var rows=legacy.getRange(2,1,legacy.getLastRow()-1,lc).getValues(),out=[],seenPhones={};
+  // Keep only one legacy row per normalized mobile number during migration.
   rows.forEach(function(r){
     var phone=ix.phone>=0?cleanPhone_(r[ix.phone]):'';
-    if(!validPhone_(phone))return;
+    if(!validPhone_(phone)||seenPhones[phone])return;
+    seenPhones[phone]=true;
     out.push([
       ix.ts>=0&&r[ix.ts]?r[ix.ts]:new Date(),
       ix.id>=0&&r[ix.id]?r[ix.id]:MEMBER_ID_PREFIX+Utilities.getUuid().slice(0,8).toUpperCase(),
