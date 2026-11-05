@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <application
         android:theme="@style/AppTheme"
-        android:label="Majdoor Awaaz"
+        android:label="MAJDOOR EKTA"
         android:icon="@drawable/ic_launcher"
         android:usesCleartextTraffic="false"
         android:hardwareAccelerated="true"
