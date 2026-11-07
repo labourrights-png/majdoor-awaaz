@@ -1,7 +1,7 @@
 {
-  "name": "मज़दूर संघर्ष अभियान",
-  "short_name": "मज़दूर आवाज़",
-  "description": "कर्मचारियों के लिए साझा डिजिटल मंच — समाचार, अधिकार, माँगें, अपडेट और सहभागिता।",
+  "name": "MAJDOOR EKTA",
+  "short_name": "MAJDOOR EKTA",
+  "description": "MAJDOOR EKTA — कर्मचारी डिजिटल मंच: समाचार, अधिकार, माँगें, अभियान अपडेट और सहभागिता।",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -9,6 +9,11 @@
   "background_color": "#f5f7fa",
   "theme_color": "#10233f",
   "icons": [
-    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
   ]
 }
