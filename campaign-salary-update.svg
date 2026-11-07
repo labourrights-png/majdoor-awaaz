@@ -1,25 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
-<title id="title">अप्रैल 2025 से वेतन वृद्धि नहीं — ज़मीनी कर्मचारियों का सवाल</title>
-<desc id="desc">कॉन्ट्रैक्ट कर्मचारियों की वेतन वृद्धि, वार्षिक increment और सुविधाओं की मांग का अभियान पोस्टर।</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1404" height="1536" viewBox="0 0 1404 1536" role="img" aria-labelledby="t d">
+<title id="t">अप्रैल 2025 से वेतन वृद्धि नहीं — ज़मीनी कर्मचारियों का सवाल</title>
+<desc id="d">BSES कॉन्ट्रैक्ट कर्मचारियों के वेतन, वार्षिक increment और सुविधाओं की माँग का अभियान पोस्टर।</desc>
 <defs>
- <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#10233f"/><stop offset="1" stop-color="#1b456b"/></linearGradient>
- <linearGradient id="gold" x2="1"><stop stop-color="#ffdf66"/><stop offset="1" stop-color="#ffb800"/></linearGradient>
+ <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#fffdf8"/><stop offset="1" stop-color="#f4efe4"/></linearGradient>
+ <linearGradient id="navy" x2="1" y2="1"><stop stop-color="#102542"/><stop offset="1" stop-color="#1d496c"/></linearGradient>
+ <linearGradient id="green" x2="0" y2="1"><stop stop-color="#063f31"/><stop offset="1" stop-color="#001e1b"/></linearGradient>
+ <linearGradient id="gold" x2="1"><stop stop-color="#ffe45c"/><stop offset="1" stop-color="#ffb900"/></linearGradient>
+ <linearGradient id="red" x2="0" y2="1"><stop stop-color="#df1026"/><stop offset="1" stop-color="#a90016"/></linearGradient>
+ <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#12243a" flood-opacity=".18"/></filter>
 </defs>
-<rect width="1200" height="760" rx="34" fill="#f7f4ec"/>
-<rect x="0" y="0" width="1200" height="18" fill="#138808"/><rect x="0" y="0" width="400" height="18" fill="#ff9933"/>
-<text x="600" y="100" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="58" font-weight="800" fill="#10233f">मज़दूर संघर्ष अभियान</text>
-<text x="600" y="150" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="29" font-weight="600" fill="#536174">कर्मचारी डिजिटल मंच • वेतन वृद्धि का सवाल</text>
-<rect x="42" y="190" width="1116" height="150" rx="24" fill="url(#bg)"/>
-<text x="600" y="250" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="43" font-weight="800" fill="#fff">अप्रैल 2025 से अब तक</text>
-<text x="600" y="310" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="48" font-weight="900" fill="#ffdf66">कॉन्ट्रैक्ट कर्मचारियों की सैलरी में वृद्धि नहीं</text>
-<rect x="42" y="375" width="1116" height="180" rx="22" fill="#fff" stroke="#d9e0e8" stroke-width="3"/>
-<circle cx="145" cy="465" r="58" fill="#e8f0f7"/><path d="M118 487 L145 416 L172 487 M128 460 H162 M121 478 H169" fill="none" stroke="#1b456b" stroke-width="9" stroke-linecap="round"/>
-<text x="245" y="435" font-family="Noto Sans Devanagari,sans-serif" font-size="35" font-weight="800" fill="#10233f">ज़मीनी कर्मचारी दिन-रात बिजली व्यवस्था</text>
-<text x="245" y="485" font-family="Noto Sans Devanagari,sans-serif" font-size="35" font-weight="800" fill="#10233f">और शिकायतों के समाधान में योगदान देते हैं।</text>
-<text x="245" y="525" font-family="Noto Sans Devanagari,sans-serif" font-size="25" font-weight="600" fill="#667085">उनकी मेहनत के अनुरूप वेतन और सुविधाएँ कब?</text>
-<rect x="42" y="590" width="1116" height="125" rx="22" fill="url(#gold)"/>
-<text x="600" y="635" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="32" font-weight="900" fill="#10233f">हमारी माँगें</text>
-<text x="600" y="680" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="28" font-weight="800" fill="#10233f">सम्मानजनक वेतन  •  वार्षिक Increment  •  उचित सुविधाएँ</text>
-<text x="600" y="745" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="20" font-weight="700" fill="#10233f">एकता ही हमारी ताकत • MAJDOOR EKTA — एक मंच, हजारों आवाज़ें!</text>
+<rect width="1404" height="1536" rx="22" fill="url(#paper)"/>
+<rect width="1404" height="12" fill="#138808"/><rect width="470" height="12" fill="#ff9933"/>
+<text x="702" y="105" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="66" font-weight="900" fill="#102542">मज़दूर संघर्ष अभियान</text>
+<text x="702" y="155" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="34" font-weight="600" fill="#526174">कर्मचारी डिजिटल मंच • वेतन वृद्धि का सवाल</text>
+<rect x="38" y="190" width="1328" height="164" rx="25" fill="url(#navy)" filter="url(#shadow)"/>
+<text x="702" y="250" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="46" font-weight="800" fill="#fff">अप्रैल 2025 से अब तक</text>
+<text x="702" y="315" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="49" font-weight="900" fill="#ffe45c">कॉन्ट्रैक्ट कर्मचारियों की सैलरी में वृद्धि नहीं!</text>
+<!-- Main information panel -->
+<rect x="38" y="385" width="1328" height="785" rx="24" fill="url(#green)" stroke="#d9e0e8" stroke-width="5" filter="url(#shadow)"/>
+<!-- Electrical substation motif -->
+<g opacity=".32" stroke="#c7d8e7" fill="none" stroke-width="8">
+ <path d="M65 620V470h40v150M85 470l-45 65h90zM145 620V440h38v180M164 440l-48 74h96z"/>
+ <path d="M55 675H255M75 710H260M90 745H250"/>
+ <path d="M215 470v180m-32-130h64m-64 40h64m-64 40h64"/>
+</g>
+<!-- worker silhouette -->
+<g transform="translate(55 470)">
+ <path d="M115 160Q125 100 195 95Q270 100 290 170L330 580H40Z" fill="#162d4b" stroke="#8197aa" stroke-width="8"/>
+ <path d="M110 168Q145 210 195 210Q250 205 290 168L315 550H55Z" fill="#263f5e"/>
+ <path d="M75 245L315 245L300 285L65 285Z" fill="#d7e0e7"/>
+ <path d="M60 440L305 440L315 482L55 482Z" fill="#d7e0e7"/>
+ <text x="190" y="365" text-anchor="middle" font-family="Arial,sans-serif" font-size="46" font-weight="900" fill="#fff">BSES</text>
+ <path d="M115 105Q120 28 198 20Q276 28 282 105L262 140H133Z" fill="#f3bd22" stroke="#d28a00" stroke-width="8"/>
+ <path d="M112 105Q195 70 285 105" fill="none" stroke="#ffdf64" stroke-width="13"/>
+ <text x="198" y="105" text-anchor="middle" font-family="Arial,sans-serif" font-size="36" font-weight="900" fill="#a20d16">BSES</text>
+</g>
+<!-- headline -->
+<rect x="400" y="425" width="930" height="150" rx="18" fill="#fff" opacity=".96"/>
+<text x="865" y="490" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="48" font-weight="900" fill="#111">BSES का कारोबार जारी है,</text>
+<text x="865" y="548" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="52" font-weight="900" fill="#a80018">मुनाफे पर भी सवाल उठ रहे हैं...</text>
+<!-- chart/coins -->
+<g transform="translate(1100 405)">
+ <rect x="0" y="115" width="38" height="62" fill="#d7192d"/><rect x="52" y="80" width="38" height="97" fill="#d7192d"/><rect x="104" y="35" width="38" height="142" fill="#d7192d"/>
+ <path d="M-5 100L65 55L112 16L157 -5" stroke="#e31b2b" stroke-width="12" fill="none"/><path d="M130 -8L160 -9L151 22" fill="none" stroke="#e31b2b" stroke-width="12"/>
+ <ellipse cx="76" cy="195" rx="42" ry="15" fill="#f3b51b"/><rect x="34" y="177" width="84" height="20" fill="#d99500"/><ellipse cx="76" cy="177" rx="42" ry="15" fill="#ffd64a" stroke="#b77c00" stroke-width="4"/>
+ <text x="76" y="187" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="900" fill="#8a4d00">₹</text>
+</g>
+<!-- compare columns -->
+<g font-family="Noto Sans Devanagari,sans-serif" font-weight="800">
+ <circle cx="500" cy="660" r="34" fill="#19b84a"/><path d="M481 660l14 14 27-31" stroke="#fff" stroke-width="11" fill="none"/>
+ <text x="555" y="650" font-size="37" fill="#fff">स्थायी कर्मचारियों</text><text x="555" y="698" font-size="37" fill="#ffe45c">की सैलरी बढ़ रही है।</text>
+ <circle cx="500" cy="790" r="34" fill="#19b84a"/><path d="M481 790l14 14 27-31" stroke="#fff" stroke-width="11" fill="none"/>
+ <text x="555" y="780" font-size="37" fill="#ffe45c">ठेकेदार और वेंडरों के</text><text x="555" y="828" font-size="37" fill="#fff">रेट बढ़ने की बात सामने आती है।</text>
+ <path d="M900 625V850" stroke="#d8e1e8" stroke-width="4"/>
+ <circle cx="980" cy="690" r="36" fill="#e51e35"/><path d="M960 670l40 40m0-40l-40 40" stroke="#fff" stroke-width="12"/>
+ <text x="1040" y="660" font-size="34" fill="#fff">लेकिन ज़मीनी स्तर पर</text>
+ <text x="1040" y="710" font-size="34" fill="#fff">काम करने वाले</text>
+ <text x="1040" y="760" font-size="34" fill="#fff">कॉन्ट्रैक्ट कर्मचारियों की</text>
+ <text x="1040" y="810" font-size="34" fill="#fff">सैलरी में अप्रैल 2025</text>
+ <rect x="1015" y="830" width="310" height="60" rx="12" fill="url(#red)"/>
+ <text x="1170" y="873" text-anchor="middle" font-size="31" fill="#ffe45c">से अब तक वृद्धि नहीं!</text>
+</g>
+<!-- demands strip -->
+<path d="M70 930Q120 900 180 925L1290 910Q1340 930 1320 990L1340 1095Q1290 1130 1220 1100L140 1120Q65 1105 75 1045Z" fill="url(#gold)"/>
+<g transform="translate(95 960) rotate(-15)">
+ <path d="M0 55L105 0L130 35L35 100Z" fill="#d8172d"/><path d="M95 2L145 25L115 70L80 48Z" fill="#fff"/>
+ <path d="M15 90L-5 145L25 135L48 100Z" fill="#d8172d"/>
+</g>
+<text x="310" y="1015" font-family="Noto Sans Devanagari,sans-serif" font-size="55" font-weight="900" fill="#8f0016">हमारी माँग:</text>
+<g font-family="Noto Sans Devanagari,sans-serif" font-size="34" font-weight="900" fill="#151515">
+ <circle cx="690" cy="970" r="20" fill="#b10e20"/><path d="M679 970l9 9 15-19" stroke="#fff" stroke-width="7" fill="none"/>
+ <text x="730" y="982">सभी कर्मचारियों के लिए समान और न्यायसंगत वेतन</text>
+ <circle cx="690" cy="1030" r="20" fill="#b10e20"/><path d="M679 1030l9 9 15-19" stroke="#fff" stroke-width="7" fill="none"/>
+ <text x="730" y="1042">वार्षिक वेतन वृद्धि (Increment)</text>
+ <circle cx="690" cy="1090" r="20" fill="#b10e20"/><path d="M679 1090l9 9 15-19" stroke="#fff" stroke-width="7" fill="none"/>
+ <text x="730" y="1102">ज़मीनी कर्मचारियों के लिए बेहतर सुविधाएँ</text>
+</g>
+<text x="702" y="1215" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="34" font-weight="800" fill="#14233a">ज़मीनी कर्मचारी दिन-रात बिजली व्यवस्था और शिकायतों के समाधान में योगदान देते हैं।</text>
+<text x="702" y="1270" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="31" font-weight="700" fill="#526174">उनकी मेहनत के अनुरूप वेतन और सुविधाएँ कब?</text>
+<rect x="38" y="1320" width="1328" height="160" rx="22" fill="#fff" stroke="#d7dfe7" stroke-width="4"/>
+<text x="702" y="1380" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="36" font-weight="900" fill="#a80018">सम्मानजनक वेतन • वार्षिक Increment • उचित सुविधाएँ</text>
+<text x="702" y="1440" text-anchor="middle" font-family="Noto Sans Devanagari,sans-serif" font-size="34" font-weight="900" fill="#102542">एकता ही हमारी ताकत! • MAJDOOR EKTA — एक मंच, हजारों आवाज़ें!</text>
 </svg>
