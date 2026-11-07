@@ -12,10 +12,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.webkit.WebViewAssetLoader
+import com.onesignal.OneSignal
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
     private var fileCallback: ValueCallback<Array<Uri>>? = null
+
+    private val oneSignalAppId = "c56abe56-5435-4815-9ee8-9f1303ef7dd3"
 
     private val filePicker = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -39,12 +45,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        OneSignal.initWithContext(this, oneSignalAppId)
         WebView.setWebContentsDebuggingEnabled(false)
         webView = WebView(this)
         setContentView(webView)
         configureWebView()
         webView.loadUrl("https://labourrights-png.github.io/majdoor-awaaz/")
         requestNeededPermissions()
+        requestNotificationPermission()
     }
 
     private fun configureWebView() {
@@ -110,6 +118,12 @@ class MainActivity : AppCompatActivity() {
 
         webView.setDownloadListener { url, _, _, _, _ ->
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        }
+    }
+
+    private fun requestNotificationPermission() {
+        CoroutineScope(Dispatchers.Main).launch {
+            OneSignal.Notifications.requestPermission(true)
         }
     }
 
