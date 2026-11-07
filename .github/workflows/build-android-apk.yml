@@ -1,4 +1,4 @@
-name: Build Majdoor Awaaz APK
+name: Build MAJDOOR EKTA APK
 
 on:
   push:
@@ -25,9 +25,11 @@ jobs:
       - name: Build debug APK
         run: gradle --no-daemon :app:assembleDebug
         working-directory: android-app
+      - name: Rename APK
+        run: cp android-app/app/build/outputs/apk/debug/app-debug.apk android-app/app/build/outputs/apk/debug/MAJDOOR-EKTA.apk
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: majdoor-awaaz-apk
-          path: android-app/app/build/outputs/apk/debug/app-debug.apk
+          name: MAJDOOR-EKTA-APK
+          path: android-app/app/build/outputs/apk/debug/MAJDOOR-EKTA.apk
           if-no-files-found: error
