@@ -173,10 +173,11 @@ function saveMember_(d){
     var ss=ensureSheets(),sh=ss.getSheetByName('Responses'),phone=cleanPhone_(d.phone);if(!sh)throw new Error('Responses sheet is not available');
     if(!validPhone_(phone))throw new Error('Valid 10-digit mobile required');
     if(!validPin_(d.pin))throw new Error('PIN must be 4 digits');
-    var existing=findExistingMemberAcrossSheets_(ss,phone);if(existing)throw new Error('Mobile already registered. Please login.');
+    var designation=requireLength_(d.category,30,'Designation');
+    var existing=findExistingMemberAcrossSheets_(ss,phone);if(existing)throw new Error('This mobile number is already registered. Duplicate registration is not allowed. Please login.');
     var name=requireLength_(d.name,100,'Name');
     var memberId=MEMBER_ID_PREFIX+String(Math.max(1,sh.getLastRow())).padStart(4,'0');
-    sh.appendRow([new Date(),memberId,name,phone,limit_(d.category,30),limit_(d.vendor,100),limit_(d.division,80),limit_(d.joinYear,10),limit_(d.experience,30),limit_(d.salary,30),limit_(d.demands,1000),hashPin_(d.pin)]);
+    sh.appendRow([new Date(),memberId,name,phone,designation,limit_(d.vendor,100),limit_(d.division,80),limit_(d.joinYear,10),limit_(d.experience,30),limit_(d.salary,30),limit_(d.demands,1000),hashPin_(d.pin)]);
     var ref=String(d.referralCode||'').trim(),referrer='';
     if(ref&&ref!==memberId){
       var all=rows_('Responses'),found=all.some(function(x){if(String(x.MemberID||'').trim()===ref){referrer=ref;return true}return false});
@@ -185,6 +186,40 @@ function saveMember_(d){
     var session=issueSession_(phone);
     return jsonOut_({success:true,message:'Registration successful',member:{memberId:memberId,name:name,phone:phone,division:d.division,category:d.category},sessionToken:session.token,expiresAt:session.expiresAt});
   }finally{lock.releaseLock()}
+}
+
+
+// Spreadsheet guard: reject a newly entered duplicate mobile number in Responses!D.
+// The first existing record is preserved; only the duplicate cell being edited is cleared.
+function onEdit(e){
+  try{
+    if(!e||!e.range)return;
+    var sh=e.range.getSheet();
+    if(sh.getName()!=='Responses')return;
+    var firstCol=e.range.getColumn(),lastCol=e.range.getLastColumn();
+    if(firstCol>4||lastCol<4)return;
+    var firstRow=Math.max(2,e.range.getRow()),lastRow=e.range.getLastRow();
+    var last=sh.getLastRow();if(last<2)return;
+    var all=sh.getRange(2,4,last-1,1).getDisplayValues(),seen={};
+    for(var i=0;i<all.length;i++){
+      var phone=cleanPhone_(all[i][0]);if(!phone)continue;
+      var row=i+2;
+      if(seen[phone]){
+        if(row>=firstRow&&row<=lastRow){
+          sh.getRange(row,4).clearContent();
+          SpreadsheetApp.getActive().toast('Duplicate mobile blocked. This number is already registered in row '+seen[phone]+'.','MAJDOOR EKTA',6);
+        }
+      }else seen[phone]=row;
+    }
+  }catch(err){try{SpreadsheetApp.getActive().toast('Duplicate check error: '+err.message,'MAJDOOR EKTA',6)}catch(ignore){}}
+}
+
+// Run once from Apps Script to add a strict designation dropdown to Responses column E.
+function setupMemberSheetRules(){
+  var ss=ensureSheets(),sh=ss.getSheetByName('Responses');
+  var rule=SpreadsheetApp.newDataValidation().requireValueInList(['TO','LM','ALM','अन्य'],true).setAllowInvalid(false).setHelpText('Designation अनिवार्य है: TO, LM, ALM या अन्य में से चुनें।').build();
+  sh.getRange(2,5,Math.max(sh.getMaxRows()-1,1),1).setDataValidation(rule);
+  ss.toast('Designation dropdown added to Responses column E. Duplicate mobile check is active.','MAJDOOR EKTA',6);
 }
 
 function myReferralStats_(d){
